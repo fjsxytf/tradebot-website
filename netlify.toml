@@ -1,10 +1,11 @@
 [build]
-  publish = "."
+     publish = "."
 
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
+   [[redirects]]
+     from = "/api/*"
+     to = "/.netlify/functions/:splat"
+     status = 200
 
-[functions]
-  node_bundler = "esbuild"
+   [functions]
+     node_bundler = "esbuild"
+     node_version = "18"
