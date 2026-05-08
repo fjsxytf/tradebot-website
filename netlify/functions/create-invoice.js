@@ -1,5 +1,3 @@
-netlify/functions/create-invoice.js
-
 const https = require('https');
 
 const headers = {
@@ -41,9 +39,9 @@ function makeRequest(options, postData) {
           const parsed = JSON.parse(data);
           resolve({ statusCode: res.statusCode, data: parsed });
         } catch (e) {
-``javascript
           resolve({ statusCode: res.statusCode, data: data });
         }
+``javascript
       });
     });
     req.on('error', reject);
@@ -72,11 +70,14 @@ exports.handler = async (event) => {
       price_currency: 'usd',
       order_id: orderId,
       order_description: product.name_en,
+      pay_currency: 'usdttrc20',
       success_url: ${SUCCESS_URL}?
 tier=${tier}&order=${orderId}${email ? '&email=' + encodeURIComponent(email) : ''},
       cancel_url: ${CANCEL_URL}?tier=${tier},
       ipn_callback_url: ${process.env.URL || ''}/.netlify/functions/payment-webhook`
     };
+
+    console.log('Creating invoice:', JSON.stringify(body));
 
     const options = {
       hostname: 'api.nowpayments.io',
@@ -91,91 +92,24 @@ tier=${tier}&order=${orderId}${email ? '&email=' + encodeURIComponent(email) : '
     const result = await makeRequest(options, JSON.stringify(body));
 
     if (result.statusCode < 200 || result.statusCode >= 300) {
+      console.error('NOWPayments error:', JSON.stringify(result.data));
       return {
         statusCode: result.statusCode,
-        body: JSON.stringify({ error: result.data.message || 'Payment service error' })
+        body: JSON.stringify({
+error: result.data.message || 'Payment service error' })
       };
     }
 
     return {
       statusCode: 200,
       body: JSON.stringify({
-invoice_url: result.data.invoice_url,
+        invoice_url: result.data.invoice_url,
         invoice_id: result.data.id,
         order_id: orderId
       })
     };
   } catch (err) {
-    return { statusCode: 500, body: JSON.stringify({ error: err.message || 'Internal server error' }) };
-  }
-};
-
-文件 2: netlify/functions/check-payment.jsjavascript
-const https = require('https');
-
-const headers = {
-  'x-api-key': process.env.NOWPAYMENTS_API_KEY
-};
-
-function makeRequest(options) {
-  return new Promise((resolve, reject) => {
-    const req = https.request(options, (res) => {
-      let data = '';
-      res.on('data', (chunk) => data += chunk);
-      res.on('end', () => {
-        try {
-          const parsed = JSON.parse(data);
-          resolve({ statusCode: res.statusCode, data: parsed });
-        } catch (e) {
-resolve({ statusCode: res.statusCode, data: data });
-        }
-      });
-    });
-    req.on('error', reject);
-    req.end();
-  });
-}
-
-exports.handler = async (event) => {
-  if (event.httpMethod !== 'GET') {
-    return { statusCode: 405, body: JSON.stringify({ error: 'Method not allowed' }) };
-  }
-
-  const invoiceId = event.queryStringParameters?.invoice_id;
-
-  if (!invoiceId) {
-    return { statusCode: 400, body: JSON.stringify({ error: 'Missing invoice_id' }) };
-  }
-
-  try {
-    const options = {
-      hostname: 'api.nowpayments.io',
-      path: /v1/invoice/${invoiceId},
-      method: 'GET',
-      headers
-    };
-
-    const result = await makeRequest(options);
-
-    if (result.statusCode < 200 || result.statusCode >= 300) {
-      return { statusCode: result.statusCode, body: JSON.stringify({
-error: result.data.message || 'Check failed' }) };
-    }
-
-    const data = result.data;
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        status: data.status || 'unknown',
-        price_amount: data.price_amount,
-        price_currency: data.price_currency,
-        pay_currency: data.pay_currency,
-        pay_amount: data.pay_amount,
-        order_id: data.order_id,
-        updated_at: data.updated_at
-      })
-    };
-  } catch (err) {
+    console.error('Function error:', err);
     return { statusCode: 500, body: JSON.stringify({ error: err.message || 'Internal server error' }) };
   }
 };
