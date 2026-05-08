@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TradeBot Skill Package - 让AI替你交易</title>
+  <meta name="description" content="加密货币自动交易策略包，支持多交易所，让AI帮你告别FOMO和FUD，稳定增长资产。">
+  <style>
+    :root {
+      --primary: #00d4aa;
+      --primary-dark: #00b894;
+      --bg: #0d0d0f;
+      --bg-card: #16161a;
+      --bg-card2: #1e1e24;
+      --text: #e8e8f0;
+      --text-muted: #8888a0;
+      --accent: #ff6b6b;
+      --accent2: #ffd93d;
+      --border: #2a2a35;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    a { color: var(--primary); text-decoration: none; }
+    .container { max-width: 640px; margin: 0 auto; padding: 0 20px; }
+    .btn {
+      display: inline-block;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 16px;
+      text-align: center;
+      cursor: pointer;
+      border: none;
+      width: 100%;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #000;
+      box-shadow: 0 4px 20px rgba(0, 212, 170, 0.3);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(0, 212, 170, 0.4); }
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+    /* HERO */
+    .hero {
+      padding: 60px 0 40px;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(0,212,170,0.1);
+      color: var(--primary);
+      border: 1px solid rgba(0,212,170,0.3);
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 13px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .hero h1 span { color: var(--primary); }
+    .hero p { color: var(--text-muted); font-size: 16px; margin-bottom: 32px; }
+    .hero-cta { margin-bottom: 12px; }
+    .hero-note { color: var(--text-muted); font-size: 13px; margin-top: 12px; }
+    /* EXCHANGES */
+    .exchanges-section {
+      padding: 20px 0 40px;
+      text-align: center;
+    }
+    .exchanges-section h3 {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      font-weight: 400;
+    }
+    .exchanges-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+    .exchange-tag {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .exchange-tag .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--primary);
+      border-radius: 50%;
+    }
+    /* PAIN */
+    .pain-section { padding: 40px 0; }
+    .pain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .pain-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .pain-item .emoji { font-size: 20px; margin-bottom: 6px; display: block; }
+    /* WHAT IS */
+    .what-section { padding: 40px 0; }
+    .what-section h2 { font-size: 22px; font-weight: 700; margin-bottom: 20px; text-align: center; }
+    .what-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .what-features { display: grid; gap: 14px; margin-top: 20px; }
+    .what-feature { display: flex; align-items: center; gap: 12px; font-size: 15px; }
+    .what-feature .icon {
+      width: 36px; height: 36px;
+      background: rgba(0,212,170,0.1);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    /* PRICING */
+    .pricing-section { padding: 40px 0; }
+    .pricing-section h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; text-align: center; }
+    .pricing-section .subtitle { color: var(--text-muted); text-align: center; font-size: 14px; margin-bottom: 24px; }
+    .pricing-grid { display: grid; gap: 14px; }
+    .pricing-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .pricing-card.popular {
+      border-color: var(--primary);
+      position: relative;
+    }
+    .pricing-card.popular::before {
+      content: "推荐";
+      position: absolute; top: -1px; right: 20px;
+      background: var(--primary); color: #000;
+      font-size: 11px; font-weight: 700;
+      padding: 3px 12px; border-radius: 0 0 8px 8px;
+    }
+    .pricing-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .pricing-name { font-size: 16px; font-weight: 700; }
+    .pricing-price { font-size: 28px; font-weight: 800; color: var(--primary); }
+    .pricing-price small { font-size: 14px; color: var(--text-muted); font-weight: 400; }
+    .pricing-desc { color: var(--text-muted); font-size: 13px; margin-bottom: 16px; }
+    .pricing-features { list-style: none; display: grid; gap: 8px; margin-bottom: 20px; }
+    .pricing-features li { font-size: 14px; color: var(--text-muted); padding-left: 20px; position: relative; }
+    .pricing-features li::before { content: "✅"; position: absolute; left: 0; }
+    /* STEPS */
+    .steps-section { padding: 40px 0; }
+    .steps-section h2 { font-size: 22px; font-weight: 700; margin-bottom: 24px; text-align: center; }
+    .step-list { display: grid; gap: 14px; }
+    .step {
+      display: flex; gap: 14px; align-items: flex-start;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 18px;
+    }
+    .step-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--primary); color: #000;
+      font-weight: 800; font-size: 14px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .step-text h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .step-text p { font-size: 13px; color: var(--text-muted); }
+    /* RISK */
+    .risk-section { padding: 40px 0; }
+    .risk-box {
+      background: rgba(255,107,107,0.08);
+      border: 1px solid rgba(255,107,107,0.3);
+      border-radius: 16px; padding: 24px;
+    }
+    .risk-box h3 { color: var(--accent); font-size: 16px; margin-bottom: 12px; }
+    .risk-box ul { list-style: none; display: grid; gap: 8px; }
+    .risk-box li { font-size: 14px; color: var(--text-muted); padding-left: 20px; position: relative; }
+    .risk-box li::before { content: "⚠️"; position: absolute; left: 0; }
+    /* FAQ */
+    .faq-section { padding: 40px 0; }
+    .faq-section h2 { font-size: 22px; font-weight: 700; margin-bottom: 20px; text-align: center; }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+    }
+    .faq-item:first-child { border-top: 1px solid var(--border); }
+    .faq-q { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+    .faq-a { font-size: 14px; color: var(--text-muted); }
+    /* FOOTER */
+    .footer { padding: 40px 0; text-align: center; border-top: 1px solid var(--border); }
+    .footer p { color: var(--text-muted); font-size: 13px; }
+    .footer .tos { margin-top: 12px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .footer .tos a { color: var(--text-muted); font-size: 13px; }
+
+    /* ===== MODAL (通用) ===== */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 999; align-items: flex-end; justify-content: center;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal {
+      background: var(--bg-card2);
+      border-radius: 24px 24px 0 0;
+      padding: 32px 24px 48px;
+      width: 100%; max-width: 640px;
+      max-height: 90vh; overflow-y: auto;
+    }
+    .modal h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .modal .close {
+      float: right; background: none; border: none; color: var(--text-muted);
+      font-size: 24px; cursor: pointer; padding: 4px;
+    }
+    .tier-tabs { display: flex; gap: 8px; margin: 20px 0; }
+    .tier-tab {
+      flex: 1; padding: 10px; text-align: center;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600;
+      color: var(--text-muted);
+    }
+    .tier-tab.active { border-color: var(--primary); color: var(--primary); background: rgba(0,212,170,0.08); }
+    .wallet-info {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px; margin: 16px 0;
+      font-size: 13px; word-break: break-all;
+    }
+    .wallet-label { color: var(--text-muted); font-size: 12px; margin-bottom: 6px; }
+    .wallet-address { color: var(--primary); font-family: monospace; }
+    .payment-note { font-size: 12px; color: var(--text-muted); margin-top: 12px; }
+    .payment-note span { color: var(--accent2); }
+    .inline-warning {
+      background: rgba(255,107,107,0.08);
+      border: 1px solid rgba(255,107,107,0.3);
+      border-radius: 10px; padding: 14px;
+      font-size: 13px; color: var(--accent); margin: 16px 0;
+    }
+
+    /* ===== 内嵌聊天窗口样式 ===== */
+    .chat-widget {
+      position: fixed; bottom: 24px; right: 20px;
+      z-index: 998;
+    }
+    .chat-fab {
+      width: 58px; height: 58px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #000; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; cursor: pointer;
+      box-shadow: 0 4px 24px rgba(0,212,170,0.45);
+      transition: transform 0.25s, opacity 0.25s;
+      animation: chat-pulse 2.5s infinite;
+      border: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .chat-fab:hover { transform: scale(1.08); }
+    .chat-fab.hidden { opacity: 0; pointer-events: none; transform: scale(0.5); }
+    @keyframes chat-pulse {
+      0% { box-shadow: 0 4px 24px rgba(0,212,170,0.45); }
+      50% { box-shadow: 0 4px 36px rgba(0,212,170,0.65); }
+      100% { box-shadow: 0 4px 24px rgba(0,212,170,0.45); }
+    }
+
+    /* 聊天窗口主体 */
+    .chat-window {
+      position: fixed; bottom: 90px; right: 20px;
+      width: 340px; height: 480px;
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      z-index: 997;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+      transition: all 0.3s ease;
+      transform-origin: bottom right;
+      transform: scale(0) translateY(20px);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .chat-window.open {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* 聊天头部 */
+    .chat-header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      padding: 14px 16px;
+      display: flex; align-items: center; gap: 10px;
+      flex-shrink: 0;
+    }
+    .chat-avatar {
+      width: 36px; height: 36px;
+      background: rgba(0,0,0,0.25);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .chat-title-area { flex: 1; }
+    .chat-title { font-size: 14px; font-weight: 700; color: #000; }
+    .chat-status { font-size: 11px; color: rgba(0,0,0,0.55); }
+    .chat-status .dot {
+      display: inline-block; width: 7px; height: 7px;
+      background: #22c55e; border-radius: 50%;
+      margin-right: 4px; vertical-align: middle;
+      animation: dot-blink 1.5s infinite;
+    }
+    @keyframes dot-blink { 0%,100%{opacity:1} 50%{opacity:0.35} }
+    .chat-close-btn {
+      background: rgba(0,0,0,0.2); border: none;
+      color: #000; width: 28px; height: 28px;
+      border-radius: 50%; cursor: pointer;
+      font-size: 16px; display: flex; align-items: center; justify-content: center;
+    }
+
+    /* 聊天消息区 */
+    .chat-messages {
+      flex: 1; overflow-y: auto;
+      padding: 16px;
+      display: flex; flex-direction: column; gap: 10px;
+      scroll-behavior: smooth;
+    }
+    .chat-msg {
+      max-width: 85%;
+      padding: 10px 14px;
+      border-radius: 16px;
+      font-size: 13.5px; line-height: 1.5;
+      word-wrap: break-word;
+      animation: msg-in 0.25s ease;
+    }
+    @keyframes msg-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .chat-msg.bot {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      color: var(--text);
+    }
+    .chat-msg.user {
+      background: var(--primary);
+      color: #000;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+      font-weight: 500;
+    }
+    .chat-msg-time {
+      font-size: 10px; color: var(--text-muted);
+      margin-top: 4px; display: block;
+    }
+    .chat-msg.user .chat-msg-time { color: rgba(0,0,0,0.45); }
+
+    /* 打字动画 */
+    .typing-indicator {
+      display: flex; gap: 4px; padding: 12px 16px;
+      align-self: flex-start;
+    }
+    .typing-dot {
+      width: 8px; height: 8px;
+      background: var(--text-muted);
+      border-radius: 50%;
+      animation: typing-bounce 1.4s infinite ease-in-out both;
+    }
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes typing-bounce {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1); }
+    }
+
+    /* 快捷回复 */
+    .quick-replies {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 10px 16px;
+      border-top: 1px solid var(--border);
+      background: rgba(0,0,0,0.1);
+      flex-shrink: 0;
+    }
+    .quick-reply-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 6px 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .quick-reply-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* 输入区 */
+    .chat-input-area {
+      display: flex;
+      gap: 10px;
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      background: rgba(0,0,0,0.15);
+      flex-shrink: 0;
+    }
+    .chat-input {
+      flex: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 10px 16px;
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+    .chat-input:focus { border-color: var(--primary); }
+    .chat-input::placeholder { color: var(--text-muted); }
+    .chat-send-btn {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border: none; border-radius: 50%;
+      color: #000; font-size: 17px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: transform 0.2s;
+    }
+    .chat-send-btn:hover { transform: scale(1.05); }
+    .chat-send-btn:active { transform: scale(0.95); }
+
+    /* 聊天窗口底部提示 */
+    .chat-footer-hint {
+      text-align: center;
+      padding: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      background: rgba(0,0,0,0.15);
+      flex-shrink: 0;
+    }
+
+    /* 移动端适配 */
+    @media (max-width: 400px) {
+      .chat-window {
+        width: calc(100vw - 20px); right: 10px;
+        height: 420px; bottom: 80px;
+      }
+      .chat-fab { bottom: 16px; right: 16px; width: 52px; height: 52px; font-size: 23px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">🤖 自动化交易 · 告别情绪化</div>
+    <h1>让 <span>AI</span> 替你交易<br>把情绪关在门外</h1>
+    <p>TradeBot 策略包 · 支持多交易所自动执行经过验证的交易策略，无需盯盘，告别 FOMO / FUD / 扛单。</p>
+    <div class="hero-cta">
+      <button class="btn btn-primary" onclick="showPayment()">立即购买 · $0.9 起</button>
+    </div>
+    <p class="hero-note">支持 USDT / USDC 支付 · 付款后即时发货</p>
+  </div>
+</section>
+
+<!-- EXCHANGES -->
+<section class="exchanges-section">
+  <div class="container">
+    <h3>支持平台</h3>
+    <div class="exchanges-grid">
+      <div class="exchange-tag"><span class="dot"></span>Hyperliquid</div>
+      <div class="exchange-tag"><span class="dot"></span>Binance</div>
+      <div class="exchange-tag"><span class="dot"></span>OKX</div>
+      <div class="exchange-tag"><span class="dot"></span>dYdX</div>
+      <div class="exchange-tag"><span class="dot"></span>Apex</div>
+      <div class="exchange-tag"><span class="dot"></span>GMX</div>
+      <div class="exchange-tag"><span class="dot"></span>更多...</div>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN POINTS -->
+<section class="pain-section">
+  <div class="container">
+    <div class="pain-grid">
+      <div class="pain-item"><span class="emoji">😰</span>看到别人赚钱就忍不住追高</div>
+      <div class="pain-item"><span class="emoji">💸</span>恐慌抛售后错过大反弹</div>
+      <div class="pain-item"><span class="emoji">🌙</span>持仓时焦虑到睡不着觉</div>
+      <div class="pain-item"><span class="emoji">🤷</span>不知道什么时候该买该卖</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT IS IT -->
+<section class="what-section">
+  <div class="container">
+    <h2>Skill Package 是什么？</h2>
+    <div class="what-card">
+      <p style="font-size:15px; color:var(--text-muted);">一套完整的<strong style="color:var(--text)">自动交易解决方案</strong>。购买后获得策略包 + 安装教程 + AI 客服，30 分钟完成部署，之后 AI 24h 自动为你执行交易。</p>
+      <div class="what-features">
+        <div class="what-feature"><div class="icon">📦</div><div><strong>策略包</strong><br><span style="color:var(--text-muted); font-size:13px;">配置好的参数，即开即用，无需编程</span></div></div>
+        <div class="what-feature"><div class="icon">🤖</div><div><strong>AI 自动执行</strong><br><span style="color:var(--text-muted); font-size:13px;">24h 运行，无需盯盘，策略自动下单</span></div></div>
+        <div class="what-feature"><div class="icon">🛡️</div><div><strong>自动止损</strong><br><span style="color:var(--text-muted); font-size:13px;">内置止损逻辑，控制单笔最大亏损</span></div></div>
+        <div class="what-feature"><div class="icon">💬</div><div><strong>AI 客服 24h</strong><br><span style="color:var(--text-muted); font-size:13px;">安装问题随时问，专属客服支持</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="steps-section">
+  <div class="container">
+    <h2>4步开始自动交易</h2>
+    <div class="step-list">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <h4>购买策略包</h4>
+          <p>选择套餐，使用 USDT/USDC 支付，付款后即时收到下载链接。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <h4>安装部署（30分钟）</h4>
+          <p>按教程配置 Python 环境 + API Key，有问题 AI 客服随时帮你。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <h4>启动策略</h4>
+          <p>运行脚本，AI 自动开始监控信号，发现机会自动下单。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text">
+          <h4>躺平收钱</h4>
+          <p>无需盯盘，睡前、工作中、通勤时，AI 都在帮你执行策略。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section">
+  <div class="container">
+    <h2>选择你的套餐</h2>
+    <p class="subtitle">按需选择，体验 / 标准 / 高级三种方案</p>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-header">
+          <span class="pricing-name">体验版 Starter</span>
+          <span class="pricing-price">$0.9</span>
+        </div>
+        <p class="pricing-desc">尝鲜体验，先试试水</p>
+        <ul class="pricing-features">
+          <li>单个核心策略包</li>
+          <li>完整图文安装教程</li>
+          <li>基础 AI 客服支持</li>
+          <li>风险提示书</li>
+        </ul>
+        <button class="btn btn-outline" onclick="selectTier('starter')">选择体验版</button>
+      </div>
+      <div class="pricing-card popular">
+        <div class="pricing-header">
+          <span class="pricing-name">标准版 Standard</span>
+          <span class="pricing-price">$4.99</span>
+        </div>
+        <p class="pricing-desc">认真使用，稳定运行</p>
+        <ul class="pricing-features">
+          <li>3 个核心策略包</li>
+          <li>完整图文安装教程</li>
+          <li>优先 AI 客服（更快响应）</li>
+          <li>风险提示书</li>
+        </ul>
+        <button class="btn btn-primary" onclick="selectTier('standard')">选择标准版 ⭐</button>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-header">
+          <span class="pricing-name">高级版 Premium</span>
+          <span class="pricing-price">$14.99</span>
+        </div>
+        <p class="pricing-desc">深度用户，持续更新</p>
+        <ul class="pricing-features">
+          <li>全部策略包（含未来更新）</li>
+          <li>图文 + 视频教程</li>
+          <li>专属优先 AI 客服</li>
+          <li>策略更新服务（3个月）</li>
+          <li>一对一安装协助 × 1次</li>
+        </ul>
+        <button class="btn btn-outline" onclick="selectTier('premium')">选择高级版</button>
+      </div>
+    </div>
+    <p style="text-align:center; color:var(--text-muted); font-size:12px; margin-top:20px;">
+      ⚠️ 加密货币交易有风险，请阅读 <a href="#" onclick="showRisk()">风险提示书</a>
+    </p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <div class="container">
+    <h2>常见问题</h2>
+    <div class="faq-item">
+      <div class="faq-q">资金安全吗？谁在操作我的账户？</div>
+      <div class="faq-a">资金永远在你自己交易所账户，我们只提供策略包，不接触你的资金。API Key 完全由你掌控，可随时撤销。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">我需要懂编程吗？</div>
+      <div class="faq-a">不需要。教程专为非技术背景编写，30 分钟按步骤操作即可。有问题随时找 AI 客服。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">策略能保证赚钱吗？</div>
+      <div class="faq-a">没有任何策略能保证盈利。策略基于技术分析（EMA、RSI、MACD等），趋势行情中表现好，震荡行情中可能小幅亏损。过去的回测结果不代表未来表现。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">付款后多久能收到？</div>
+      <div class="faq-a">TRC20 链通常 3 秒内确认，确认后即时自动发货。ERC20/BEP20 约 1-5 分钟。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">可以退款吗？</div>
+      <div class="faq-a">不支持。产品为虚拟商品，一经售出概不退换。购买前请完整阅读产品介绍和风险提示。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">支持哪些交易所？</div>
+      <div class="faq-a">目前支持 Hyperliquid、Binance、OKX、dYdX、Apex、GMX 等主流中心化及去中心化合约平台。每个策略包包含多平台适配版本。</div>
+    </div>
+  </div>
+</section>
+
+<!-- RISK BOX -->
+<section class="risk-section">
+  <div class="container">
+    <div class="risk-box">
+      <h3>⚠️ 重要风险提示（购买前必读）</h3>
+      <ul>
+        <li>加密货币交易存在极高风险，可能导致本金全部损失</li>
+        <li>本产品可能使用杠杆交易，亏损会被同步放大</li>
+        <li>策略过往表现不代表未来收益</li>
+        <li>请勿使用借贷资金或生活必需资金进行交易</li>
+        <li>本产品不构成投资建议，盈亏由用户自行承担</li>
+        <li>一经售出，概不退换</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <p style="font-size:16px; font-weight:700; margin-bottom:8px;">TradeBot Skill Package</p>
+    <p>让情绪成为过去，让利润自己走进来。</p>
+    <div class="tos">
+      <a href="#" onclick="showRisk()">风险提示</a>
+      <a href="#" onclick="showFAQ()">使用条款</a>
+      <a href="#" onclick="showPolicy()">客服政策</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== PAYMENT MODAL ===== -->
+<div class="modal-overlay" id="paymentModal">
+  <div class="modal">
+    <button class="close" onclick="closeModal()">&times;</button>
+    <h3>💰 购买 <span id="modalTier">标准版</span></h3>
+    <p style="color:var(--text-muted); font-size:14px; margin-top:4px;">实付：<strong style="color:var(--primary); font-size:20px;" id="modalPrice">$4.99</strong> USDT</p>
+
+    <div class="wallet-info">
+      <p style="color:var(--text); font-size:14px; margin-bottom:12px;">点击下方按钮，将跳转到 NOWPayments 安全支付页面完成付款。</p>
+      <p style="color:var(--text-muted); font-size:13px;">✅ 支持 USDT TRC20（手续费最低）<br>✅ 支持 USDC / 其他加密货币<br>✅ 支付完成后自动通知发货</p>
+    </div>
+
+    <div class="inline-warning">
+      ⚠️ 支付完成后请保留截图，如有问题可联系客服处理。
+    </div>
+
+    <button class="btn btn-primary" onclick="confirmPayment()">立即支付 · NOWPayments</button>
+    <p class="payment-note">💡 推荐使用 <span>TRC20</span> 链 USDT，手续费最低（≈ $0.2）</p>
+  </div>
+</div>
+
+<!-- ===== 内嵌聊天窗口 ===== -->
+<div class="chat-widget">
+  <!-- 悬浮按钮 -->
+  <button class="chat-fab" id="chatFab" onclick="toggleChat()" title="联系 AI 客服">💬</button>
+
+  <!-- 聊天窗口 -->
+  <div class="chat-window" id="chatWindow">
+    <!-- 头部 -->
+    <div class="chat-header">
+      <div class="chat-avatar">🤖</div>
+      <div class="chat-title-area">
+        <div class="chat-title">TradeBot AI 客服</div>
+        <div class="chat-status"><span class="dot"></span>在线 · 平均响应 &lt;1分钟</div>
+      </div>
+      <button class="chat-close-btn" onclick="toggleChat()">&#215;</button>
+    </div>
+
+    <!-- 消息区 -->
+    <div class="chat-messages" id="chatMessages"></div>
+
+    <!-- 快捷回复 -->
+    <div class="quick-replies" id="quickReplies">
+      <button class="quick-reply-btn" onclick="sendQuick('我想了解产品详情')">📦 产品详情</button>
+      <button class="quick-reply-btn" onclick="sendQuick('怎么安装？')">🔧 安装教程</button>
+      <button class="quick-reply-btn" onclick="sendQuick('我已经付款了')">💰 我已付款</button>
+      <button class="quick-reply-btn" onclick="sendQuick('遇到报错了')">🐛 报错求助</button>
+    </div>
+
+    <!-- 输入区 -->
+    <div class="chat-input-area">
+      <input type="text" class="chat-input" id="chatInput" placeholder="输入消息..." onkeypress="handleKeyPress(event)">
+      <button class="chat-send-btn" onclick="sendMessage()">➤</button>
+    </div>
+
+    <!-- 底部提示 -->
+    <div class="chat-footer-hint">
+      🔒 对话已加密 · AI 客服 24h 在线
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== NOWPayments 支付集成 =====
+// 使用预创建的支付链接（安全，无需暴露 API Key）
+const NOWPAYMENTS_LINKS = {
+  starter: 'https://nowpayments.io/payment/?iid=INSERT_STARTER_LINK_ID',
+  standard: 'https://nowpayments.io/payment/?iid=INSERT_STANDARD_LINK_ID',
+  premium: 'https://nowpayments.io/payment/?iid=INSERT_PREMIUM_LINK_ID'
+};
+
+const prices = { starter: 0.9, standard: 4.99, premium: 14.99 };
+const priceText = { starter: '$0.9', standard: '$4.99', premium: '$14.99' };
+const tierNames = { starter: '体验版', standard: '标准版', premium: '高级版' };
+let currentTier = 'standard';
+
+function showPayment() { selectTier('standard'); }
+
+function selectTier(tier) {
+  currentTier = tier;
+  document.getElementById('modalTier').textContent = tierNames[tier];
+  document.getElementById('modalPrice').textContent = priceText[tier];
+  document.getElementById('paymentModal').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('paymentModal').classList.remove('show');
+}
+
+// 跳转到 NOWPayments 支付页面
+function confirmPayment() {
+  const btn = document.querySelector('.modal .btn-primary');
+  btn.textContent = '跳转支付页面...';
+  btn.disabled = true;
+
+  // 方案1：使用预创建的支付链接（推荐）
+  // 方案2：如果没有预创建链接，显示钱包地址手动支付
+  const link = NOWPAYMENTS_LINKS[currentTier];
+  if (link && !link.includes('INSERT_')) {
+    window.location.href = link;
+  } else {
+    // 备用方案：显示钱包地址手动支付
+    closeModal();
+    if (!chatOpen) toggleChat();
+    setTimeout(() => {
+      addMessage('bot', '💰 请通过以下方式完成支付：\n\n' +
+        '【方式一】NOWPayments 在线支付（推荐）\n' +
+        '请访问：https://nowpayments.io/payment/?iid=YOUR_LINK\n\n' +
+        '【方式二】直接转账（备用）\n' +
+        '地址：TY58AoPsaDo5gpEaaddHTphVhZRHpFtC1j\n' +
+        '金额：' + prices[currentTier] + ' USDT（TRC20）\n\n' +
+        '转账后请截图发给我，立即发货！');
+    }, 300);
+  }
+}
+
+// ===== 聊天窗口 =====
+let chatOpen = false;
+const chatMessages = document.getElementById('chatMessages');
+
+// 初始化欢迎消息
+function initChat() {
+  addMessage('bot', '👋 你好！我是 TradeBot AI 客服。\n\n有什么可以帮你的？您可以问我：\n• 产品介绍和定价\n• 如何安装部署\n• 付款和发货问题\n• 技术支持');
+}
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  const win = document.getElementById('chatWindow');
+  const fab = document.getElementById('chatFab');
+  win.classList.toggle('open', chatOpen);
+  fab.classList.toggle('hidden', chatOpen);
+  if (chatOpen && chatMessages.children.length === 0) {
+    initChat();
+  }
+}
+
+function addMessage(sender, text) {
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + sender;
+  const time = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+  div.innerHTML = text.replace(/\n/g, '<br>') + '<span class="chat-msg-time">' + time + '</span>';
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function showTyping() {
+  const div = document.createElement('div');
+  div.className = 'typing-indicator';
+  div.id = 'typing';
+  div.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function hideTyping() {
+  const t = document.getElementById('typing');
+  if (t) t.remove();
+}
+
+function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  addMessage('user', text);
+  input.value = '';
+  showTyping();
+
+  // 模拟 AI 回复 + 邮件转发
+  setTimeout(() => {
+    hideTyping();
+    const reply = getAIReply(text);
+    addMessage('bot', reply);
+    // 发送到 Formspree
+    fetch('https://formspree.io/f/xeenjryy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: text,
+        reply: reply,
+        time: new Date().toISOString(),
+        source: 'TradeBot Website Chat'
+      })
+    }).catch(() => {});
+  }, 600 + Math.random() * 800);
+}
+
+function sendQuick(text) {
+  document.getElementById('chatInput').value = text;
+  sendMessage();
+}
+
+function handleKeyPress(e) {
+  if (e.key === 'Enter') sendMessage();
+}
+
+function getAIReply(userMsg) {
+  const msg = userMsg.toLowerCase();
+  if (msg.includes('付款') || msg.includes('转账') || msg.includes('支付')) {
+    return '💰 付款相关问题：\n\n1. 选择套餐后，复制页面显示的 USDT 地址\n2. 使用您的钱包转账（推荐 TRC20，手续费最低）\n3. 转账后点击「我已转账」按钮，或直接在这里发送转账截图\n4. 客服确认后会立即发送下载链接\n\n⚠️ 请务必保留转账截图（含交易哈希）';
+  }
+  if (msg.includes('安装') || msg.includes('部署') || msg.includes('怎么')) {
+    return '🔧 安装步骤（约30分钟）：\n\n1. 安装 Python 3.8+\n2. 安装依赖：pip install requests pandas numpy\n3. 配置交易所 API Key（只给读取+交易权限，不给提现权限）\n4. 修改 config.json 填入 API Key\n5. 运行 python ema10_strategy.py\n\n详细教程在下载的策略包内，遇到问题随时问我！';
+  }
+  if (msg.includes('价格') || msg.includes('多少钱') || msg.includes('套餐')) {
+    return '📦 当前套餐：\n\n• 体验版 Starter - $0.9（单个策略，尝鲜）\n• 标准版 Standard - $4.99（3个策略，推荐⭐）\n• 高级版 Premium - $14.99（全部策略+更新+1对1协助）\n\n支持 USDT/USDC 支付，TRC20/ERC20 均可。';
+  }
+  if (msg.includes('交易所') || msg.includes('平台') || msg.includes('binance') || msg.includes('okx') || msg.includes('hyperliquid')) {
+    return '🏦 支持的交易平台：\n\n• Hyperliquid（去中心化，推荐）\n• Binance（币安，全球最大）\n• OKX（欧易，国内友好）\n• dYdX、Apex、GMX（去中心化合约）\n\n每个策略包包含多平台适配版本，购买后告诉我您用的平台即可。';
+  }
+  if (msg.includes('退款') || msg.includes('退钱')) {
+    return '❌ 退款政策：\n\n本产品为虚拟商品，一经售出概不退换。\n\n购买前请：\n• 仔细阅读产品介绍\n• 确认了解交易风险\n• 建议先买 $0.9 体验版试用\n\n如有疑问，购买前请充分咨询。';
+  }
+  if (msg.includes('安全') || msg.includes('风险') || msg.includes('api')) {
+    return '🛡️ 安全保障：\n\n• 资金在您自己交易所账户，我们不接触\n• API Key 只给「读取+交易」权限，不给「提现」权限\n• 可随时在交易所撤销 API Key\n• 策略在您的本地/服务器运行，代码开源可审计\n\n⚠️ 但请注意：交易本身有风险，可能亏损本金。';
+  }
+  return '🤔 收到您的问题！我已将消息转发给人工客服，他们会尽快回复您。\n\n常见问题可以直接问我：\n• 「怎么安装」- 获取安装教程\n• 「多少钱」- 查看套餐价格\n• 「支持哪些交易所」- 查看平台列表\n• 「安全吗」- 了解安全保障';
+}
+
+// 点击外部关闭弹窗
+document.getElementById('paymentModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+</script>
+
+</body>
+</html>

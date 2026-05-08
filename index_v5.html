@@ -1,0 +1,421 @@
+
+
+  <script>
+    // ===== MULTI-LANGUAGE SUPPORT =====
+    const i18n = {
+      zh: {
+        heroBadge: 'AI 自动交易 · 24h 运行',
+        heroTitle: '让 AI 替你交易\n把情绪关在门外',
+        heroDesc: 'TradeBot 策略包 · 支持多交易所自动执行经过验证的交易策略，无需盯盘，告别 FOMO / FUD / 扛单。',
+        heroCta: '立即购买 →',
+        heroNote: '支持 Hyperliquid、Binance、OKX 等多平台',
+        exchangesTitle: '支持交易所',
+        pain1: '看到别人赚钱就忍不住追高',
+        pain2: '恐慌抛售后错过大反弹',
+        pain3: '持仓时焦虑到睡不着觉',
+        pain4: '不知道什么时候该买该卖',
+        whatTitle: 'Skill Package 是什么？',
+        whatDesc: '一套完整的自动交易解决方案。购买后获得策略包 + 安装教程 + AI 客服，30 分钟完成部署，之后 AI 24h 自动为你执行交易。',
+        feature1Title: '策略包',
+        feature1Desc: '配置好的参数，即开即用，无需编程',
+        feature2Title: 'AI 自动执行',
+        feature2Desc: '24h 运行，无需盯盘，策略自动下单',
+        feature3Title: '自动止损',
+        feature3Desc: '内置止损逻辑，控制单笔最大亏损',
+        feature4Title: 'AI 客服 24h',
+        feature4Desc: '安装问题随时问，专属客服支持',
+        stepsTitle: '4步开始自动交易',
+        step1Title: '购买策略包',
+        step1Desc: '选择套餐，使用 USDT/USDC 支付，付款后即时收到下载链接。',
+        step2Title: '安装部署（30分钟）',
+        step2Desc: '按教程配置 Python 环境 + API Key，有问题 AI 客服随时帮你。',
+        step3Title: '启动策略',
+        step3Desc: '运行脚本，AI 自动开始监控信号，发现机会自动下单。',
+        step4Title: '躺平收钱',
+        step4Desc: '无需盯盘，睡前、工作中、通勤时，AI 都在帮你执行策略。',
+        pricingTitle: '选择你的套餐',
+        pricingSubtitle: '按需选择，体验 / 标准 / 高级三种方案',
+        starterName: '体验版 Starter',
+        starterDesc: '尝鲜体验，先试试水',
+        starterFeat1: '单个核心策略包',
+        starterFeat2: '完整图文安装教程',
+        starterFeat3: '基础 AI 客服支持',
+        starterFeat4: '风险提示书',
+        selectStarter: '选择体验版',
+        standardName: '标准版 Standard',
+        standardDesc: '认真使用，稳定运行',
+        standardFeat1: '3 个核心策略包',
+        standardFeat2: '完整图文安装教程',
+        standardFeat3: '优先 AI 客服（更快响应）',
+        standardFeat4: '风险提示书',
+        selectStandard: '选择标准版 ⭐',
+        premiumName: '高级版 Premium',
+        premiumDesc: '深度用户，持续更新',
+        premiumFeat1: '全部策略包（含未来更新）',
+        premiumFeat2: '图文 + 视频教程',
+        premiumFeat3: '专属优先 AI 客服',
+        premiumFeat4: '策略更新服务（3个月）',
+        premiumFeat5: '一对一安装协助 × 1次',
+        selectPremium: '选择高级版',
+        riskWarning: '加密货币交易有风险，请阅读',
+        riskLink: '风险提示书',
+        faqTitle: '常见问题',
+        faq1Q: '资金安全吗？谁在操作我的账户？',
+        faq1A: '资金永远在你自己交易所账户，我们只提供策略包，不接触你的资金。API Key 完全由你掌控，可随时撤销。',
+        faq2Q: '我需要懂编程吗？',
+        faq2A: '不需要。教程专为非技术背景编写，30 分钟按步骤操作即可。有问题随时找 AI 客服。',
+        faq3Q: '策略能保证赚钱吗？',
+        faq3A: '没有任何策略能保证盈利。策略基于技术分析（EMA、RSI、MACD等），趋势行情中表现好，震荡行情中可能小幅亏损。过去的回测结果不代表未来表现。',
+        faq4Q: '付款后多久能收到？',
+        faq4A: 'TRC20 链通常 3 秒内确认，确认后即时自动发货。ERC20/BEP20 约 1-5 分钟。',
+        faq5Q: '可以退款吗？',
+        faq5A: '不支持。产品为虚拟商品，一经售出概不退换。购买前请完整阅读产品介绍和风险提示。',
+        faq6Q: '支持哪些交易所？',
+        faq6A: '目前支持 Hyperliquid、Binance、OKX、dYdX、Apex、GMX 等主流中心化及去中心化合约平台。每个策略包包含多平台适配版本。',
+        riskBoxTitle: '⚠️ 重要风险提示（购买前必读）',
+        risk1: '加密货币交易存在极高风险，可能导致本金全部损失',
+        risk2: '本产品可能使用杠杆交易，亏损会被同步放大',
+        risk3: '策略过往表现不代表未来收益',
+        risk4: '请勿使用借贷资金或生活必需资金进行交易',
+        risk5: '本产品不构成投资建议，盈亏由用户自行承担',
+        risk6: '一经售出，概不退换',
+        footerSlogan: '让情绪成为过去，让利润自己走进来。',
+        footerRisk: '风险提示',
+        footerTerms: '使用条款',
+        footerSupport: '客服政策',
+        buy: '购买',
+        payAmount: '实付',
+        scanToPay: '扫码支付 USDT (TRC20)',
+        qrHint: '使用 TRON 钱包扫描二维码',
+        orCopyAddress: '或复制地址转账：',
+        network: '网络',
+        amount: '金额',
+        step1: '复制上方地址或扫描二维码',
+        step2: '在你的钱包中发起转账（TRC20 网络）',
+        step3: '支付完成后截图保存',
+        step4: '点击下方按钮联系客服发货',
+        paymentWarning: '请务必使用 TRC20 网络，其他网络可能导致资金丢失',
+        contactSupport: '💬 我已支付，联系客服发货',
+        trc20Note: '推荐使用 TRC20 链 USDT，手续费最低（≈ $0.2）',
+        online: '在线 · 平均响应 <1分钟',
+        quickProduct: '📦 产品详情',
+        quickInstall: '🔧 安装教程',
+        quickPaid: '💰 我已付款',
+        quickError: '🐛 报错求助',
+        encrypted: '对话已加密 · AI 客服 24h 在线',
+        typeMessage: '输入消息...',
+        tierStarter: '体验版',
+        tierStandard: '标准版',
+        tierPremium: '高级版'
+      },
+      en: {
+        heroBadge: 'AI Auto Trading · 24/7 Running',
+        heroTitle: 'Let AI Trade For You\nTrade Without Emotions',
+        heroDesc: 'TradeBot Strategy Package · Automated execution across multiple exchanges. No need to watch charts, say goodbye to FOMO / FUD / bag holding.',
+        heroCta: 'Buy Now →',
+        heroNote: 'Supports Hyperliquid, Binance, OKX & more',
+        exchangesTitle: 'Supported Exchanges',
+        pain1: 'FOMO buying when seeing others profit',
+        pain2: 'Panic selling then missing the rebound',
+        pain3: 'Can\'t sleep while holding positions',
+        pain4: 'Don\'t know when to buy or sell',
+        whatTitle: 'What is Skill Package?',
+        whatDesc: 'A complete automated trading solution. Get strategy package + installation guide + AI support. Deploy in 30 minutes, then AI trades 24/7 for you.',
+        feature1Title: 'Strategy Package',
+        feature1Desc: 'Pre-configured parameters, ready to use, no coding needed',
+        feature2Title: 'AI Auto Execution',
+        feature2Desc: 'Runs 24/7, no monitoring needed, auto order placement',
+        feature3Title: 'Auto Stop Loss',
+        feature3Desc: 'Built-in stop loss logic to control max loss per trade',
+        feature4Title: '24h AI Support',
+        feature4Desc: 'Ask anytime for installation help, dedicated support',
+        stepsTitle: '4 Steps to Start Auto Trading',
+        step1Title: 'Buy Package',
+        step1Desc: 'Choose plan, pay with USDT/USDC, receive download link instantly.',
+        step2Title: 'Install (30 min)',
+        step2Desc: 'Follow guide to setup Python + API Key, AI support always available.',
+        step3Title: 'Launch Strategy',
+        step3Desc: 'Run script, AI starts monitoring signals and placing orders.',
+        step4Title: 'Relax & Profit',
+        step4Desc: 'No need to watch charts, AI works while you sleep, work, commute.',
+        pricingTitle: 'Choose Your Plan',
+        pricingSubtitle: 'Three tiers: Starter / Standard / Premium',
+        starterName: 'Starter',
+        starterDesc: 'Try it out, get a taste',
+        starterFeat1: '1 core strategy package',
+        starterFeat2: 'Complete installation guide',
+        starterFeat3: 'Basic AI support',
+        starterFeat4: 'Risk disclosure',
+        selectStarter: 'Choose Starter',
+        standardName: 'Standard',
+        standardDesc: 'For serious users',
+        standardFeat1: '3 core strategy packages',
+        standardFeat2: 'Complete installation guide',
+        standardFeat3: 'Priority AI support',
+        standardFeat4: 'Risk disclosure',
+        selectStandard: 'Choose Standard ⭐',
+        premiumName: 'Premium',
+        premiumDesc: 'Power users, continuous updates',
+        premiumFeat1: 'All strategies (incl. future updates)',
+        premiumFeat2: 'Guide + video tutorials',
+        premiumFeat3: 'Exclusive priority support',
+        premiumFeat4: 'Strategy updates (3 months)',
+        premiumFeat5: 'One-on-one setup assistance',
+        selectPremium: 'Choose Premium',
+        riskWarning: 'Crypto trading involves risks. Please read',
+        riskLink: 'Risk Disclosure',
+        faqTitle: 'FAQ',
+        faq1Q: 'Is my fund safe? Who operates my account?',
+        faq1A: 'Funds stay in your exchange account. We only provide strategy packages, never touch your funds. You control the API Key and can revoke anytime.',
+        faq2Q: 'Do I need coding skills?',
+        faq2A: 'No. Guides are written for non-technical users, follow step-by-step in 30 minutes. AI support available anytime.',
+        faq3Q: 'Can strategies guarantee profits?',
+        faq3A: 'No strategy can guarantee profits. Based on technical analysis (EMA, RSI, MACD), performs well in trending markets, may have small losses in ranging markets. Past results don\'t guarantee future performance.',
+        faq4Q: 'How soon after payment?',
+        faq4A: 'TRC20 confirms in ~3 seconds, instant delivery after confirmation. ERC20/BEP20 takes 1-5 minutes.',
+        faq5Q: 'Can I get a refund?',
+        faq5A: 'No refunds. Digital product, all sales final. Please read product description and risk disclosure before purchase.',
+        faq6Q: 'Which exchanges are supported?',
+        faq6A: 'Hyperliquid, Binance, OKX, dYdX, Apex, GMX and more CEX/DEX platforms. Each package includes multi-platform versions.',
+        riskBoxTitle: '⚠️ Important Risk Warning (Read Before Purchase)',
+        risk1: 'Crypto trading carries extreme risk, may result in total loss of capital',
+        risk2: 'This product may use leverage, losses will be magnified',
+        risk3: 'Past performance does not indicate future results',
+        risk4: 'Do not trade with borrowed money or living expenses',
+        risk5: 'This product is not investment advice, profits/losses are your responsibility',
+        risk6: 'All sales final, no refunds',
+        footerSlogan: 'Leave emotions behind, let profits come to you.',
+        footerRisk: 'Risk Disclosure',
+        footerTerms: 'Terms',
+        footerSupport: 'Support',
+        buy: 'Buy',
+        payAmount: 'Pay',
+        scanToPay: 'Scan to Pay USDT (TRC20)',
+        qrHint: 'Scan with TRON wallet',
+        orCopyAddress: 'Or copy address:',
+        network: 'Network',
+        amount: 'Amount',
+        step1: 'Copy address or scan QR code',
+        step2: 'Send from your wallet (TRC20 network)',
+        step3: 'Save screenshot after payment',
+        step4: 'Click button below to contact support',
+        paymentWarning: 'Must use TRC20 network, other networks may lose funds',
+        contactSupport: '💬 I\'ve Paid, Contact Support',
+        trc20Note: 'TRC20 USDT recommended, lowest fee (~$0.2)',
+        online: 'Online · Avg response <1 min',
+        quickProduct: '📦 Product Details',
+        quickInstall: '🔧 Installation',
+        quickPaid: '💰 I\'ve Paid',
+        quickError: '🐛 Error Help',
+        encrypted: 'Encrypted · AI Support 24/7',
+        typeMessage: 'Type message...',
+        tierStarter: 'Starter',
+        tierStandard: 'Standard',
+        tierPremium: 'Premium'
+      }
+    };
+
+    let currentLang = 'zh';
+    let chatOpen = false;
+    const prices = { starter: 0.9, standard: 4.99, premium: 14.99 };
+    const priceText = { starter: '$0.9', standard: '$4.99', premium: '$14.99' };
+    let currentTier = 'standard';
+
+    // Language functions
+    function toggleLang() {
+      document.getElementById('langDropdown').classList.toggle('show');
+    }
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.getElementById('currentLang').textContent = 
+        lang === 'zh' ? '🇨🇳 中文' :
+        lang === 'en' ? '🇺🇸 English' :
+        lang === 'ja' ? '🇯🇵 日本語' :
+        lang === 'ko' ? '🇰🇷 한국어' :
+        lang === 'ru' ? '🇷🇺 Русский' :
+        lang === 'tr' ? '🇹🇷 Türkçe' :
+        lang === 'vi' ? '🇻🇳 Tiếng Việt' :
+        lang === 'es' ? '🇪🇸 Español' :
+        lang === 'pt' ? '🇵🇹 Português' : '🇨🇳 中文';
+      
+      document.querySelectorAll('.lang-option').forEach(el => el.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('langDropdown').classList.remove('show');
+      
+      updatePageLanguage();
+    }
+
+    function updatePageLanguage() {
+      const texts = i18n[currentLang] || i18n['en'];
+      
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (texts[key]) {
+          el.textContent = texts[key];
+        }
+      });
+      
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (texts[key]) {
+          el.placeholder = texts[key];
+        }
+      });
+    }
+
+    // Payment functions
+    function selectTier(tier) {
+      currentTier = tier;
+      const texts = i18n[currentLang] || i18n['en'];
+      const tierKey = 'tier' + tier.charAt(0).toUpperCase() + tier.slice(1);
+      document.getElementById('modalTier').textContent = texts[tierKey] || tier;
+      document.getElementById('modalPrice').textContent = priceText[tier];
+      document.getElementById('payAmount').textContent = priceText[tier];
+      document.getElementById('paymentModal').classList.add('show');
+    }
+
+    function closeModal() {
+      document.getElementById('paymentModal').classList.remove('show');
+    }
+
+    function copyAddress() {
+      const address = 'TY58AoPsaDo5gpEaaddHTphVhZRHpFtC1j';
+      navigator.clipboard.writeText(address).then(() => {
+        const el = document.getElementById('walletAddress');
+        el.classList.add('copied');
+        setTimeout(() => el.classList.remove('copied'), 2000);
+      });
+    }
+
+    function contactSupportAfterPay() {
+      closeModal();
+      if (!chatOpen) toggleChat();
+      const texts = i18n[currentLang] || i18n['en'];
+      setTimeout(() => {
+        addMessage('user', texts.quickPaid);
+        setTimeout(() => {
+          addMessage('bot', currentLang === 'zh' 
+            ? '✅ 收到！请发送支付截图，我会立即为你发货。\n\n同时请告诉我你的邮箱地址，方便发送下载链接。'
+            : '✅ Received! Please send payment screenshot and I\'ll deliver immediately.\n\nAlso please provide your email for the download link.');
+        }, 500);
+      }, 300);
+    }
+
+    // Chat functions
+    function toggleChat() {
+      chatOpen = !chatOpen;
+      document.getElementById('chatWindow').classList.toggle('show', chatOpen);
+      document.getElementById('chatFab').style.display = chatOpen ? 'none' : 'block';
+      if (chatOpen && document.getElementById('chatMessages').children.length === 0) {
+        const texts = i18n[currentLang] || i18n['en'];
+        const greeting = currentLang === 'zh'
+          ? '👋 你好！我是 TradeBot AI 客服。\n\n有什么可以帮你的？您可以问我：\n• 产品介绍和定价\n• 如何安装部署\n• 付款和发货问题\n• 技术支持'
+          : '👋 Hi! I\'m TradeBot AI Support.\n\nHow can I help? You can ask about:\n• Product details & pricing\n• Installation guide\n• Payment & delivery\n• Technical support';
+        addMessage('bot', greeting);
+      }
+    }
+
+    function addMessage(sender, text) {
+      const div = document.createElement('div');
+      div.className = 'chat-message ' + sender;
+      div.textContent = text;
+      document.getElementById('chatMessages').appendChild(div);
+      document.getElementById('chatMessages').scrollTop = 999999;
+    }
+
+    function sendMessage() {
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text) return;
+      addMessage('user', text);
+      input.value = '';
+      
+      // Simple auto-reply
+      setTimeout(() => {
+        const texts = i18n[currentLang] || i18n['en'];
+        const reply = currentLang === 'zh'
+          ? '收到你的消息！我是 AI 客服，复杂问题会转给人工处理。\n\n如需立即协助，请直接说明你的问题。'
+          : 'Message received! I\'m AI support, complex issues will be escalated.\n\nFor immediate help, please describe your issue.';
+        addMessage('bot', reply);
+      }, 1000);
+    }
+
+    function sendQuick(type) {
+      const texts = i18n[currentLang] || i18n['en'];
+      const quickTexts = {
+        product: texts.quickProduct,
+        install: texts.quickInstall,
+        paid: texts.quickPaid,
+        error: texts.quickError
+      };
+      addMessage('user', quickTexts[type]);
+      
+      setTimeout(() => {
+        let reply = '';
+        if (type === 'product') {
+          reply = currentLang === 'zh'
+            ? '📦 我们提供三种套餐：\n\n• 体验版 $0.9 - 单个策略\n• 标准版 $4.99 - 3个策略（推荐）\n• 高级版 $14.99 - 全部策略+更新\n\n支持 Hyperliquid、Binance、OKX 等交易所。'
+            : '📦 We offer three tiers:\n\n• Starter $0.9 - 1 strategy\n• Standard $4.99 - 3 strategies (recommended)\n• Premium $14.99 - All strategies + updates\n\nSupports Hyperliquid, Binance, OKX, etc.';
+        } else if (type === 'install') {
+          reply = currentLang === 'zh'
+            ? '🔧 安装步骤：\n\n1. 安装 Python 3.8+\n2. 安装依赖: pip install -r requirements.txt\n3. 配置 API Key\n4. 运行 python strategy.py\n\n详细教程在购买后提供，有问题随时问我！'
+            : '🔧 Installation steps:\n\n1. Install Python 3.8+\n2. Install deps: pip install -r requirements.txt\n3. Configure API Key\n4. Run python strategy.py\n\nDetailed guide provided after purchase!';
+        } else if (type === 'paid') {
+          reply = currentLang === 'zh'
+            ? '💰 请发送支付截图，我会立即为你发货！\n\n同时请提供你的邮箱地址，方便发送下载链接。'
+            : '💰 Please send payment screenshot and I\'ll deliver immediately!\n\nAlso provide your email for the download link.';
+        } else if (type === 'error') {
+          reply = currentLang === 'zh'
+            ? '🐛 请描述你遇到的错误信息，包括：\n\n• 错误截图\n• 运行环境（Windows/Mac/Linux）\n• Python 版本\n\n我会尽快帮你解决！'
+            : '🐛 Please describe the error with:\n\n• Screenshot\n• Environment (Windows/Mac/Linux)\n• Python version\n\nI\'ll help you fix it ASAP!';
+        }
+        addMessage('bot', reply);
+      }, 800);
+    }
+
+    function handleKeyPress(e) {
+      if (e.key === 'Enter') sendMessage();
+    }
+
+    // FAQ toggle
+    document.querySelectorAll('.faq-q').forEach(q => {
+      q.addEventListener('click', () => {
+        q.parentElement.classList.toggle('active');
+      });
+    });
+
+    // Close modal on overlay click
+    document.getElementById('paymentModal').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeModal();
+    });
+
+    // Close lang dropdown on outside click
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.lang-selector')) {
+        document.getElementById('langDropdown').classList.remove('show');
+      }
+    });
+
+    // Show functions
+    function showRisk() {
+      document.querySelector('.risk-section').scrollIntoView({ behavior: 'smooth' });
+    }
+    function showFAQ() {
+      document.querySelector('.faq-section').scrollIntoView({ behavior: 'smooth' });
+    }
+    function showPolicy() {
+      toggleChat();
+      const texts = i18n[currentLang] || i18n['en'];
+      setTimeout(() => {
+        addMessage('user', currentLang === 'zh' ? '客服政策' : 'Support Policy');
+        setTimeout(() => {
+          addMessage('bot', currentLang === 'zh'
+            ? '📋 客服政策：\n\n• 24h AI 客服在线\n• 安装问题优先处理\n• 付款确认后即时发货\n• 不提供投资建议\n• 策略风险自负'
+            : '📋 Support Policy:\n\n• 24/7 AI support\n• Installation help priority\n• Instant delivery after payment\n• No investment advice\n• Strategy risks are yours');
+        }, 500);
+      }, 300);
+    }
+  </script>
+</body>
+</html>
