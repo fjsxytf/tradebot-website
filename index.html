@@ -1189,9 +1189,7 @@ function handleImageUpload(event) {
     document.getElementById('chatFileInput').value = '';
     setTimeout(() => {
       const reply = currentLang === 'zh'
-        ? '📸 收到截图！请稍等，我正在验证付款...
-
-同时请告诉我你的邮箱地址，方便发送下载链接。'
+        ? '📸 收到截图！请稍等，我正在验证付款...\n\n同时请告诉我你的邮箱地址，方便发送下载链接。'
         : '📸 Screenshot received! Please wait while I verify the payment...\n\nAlso provide your email for the download link.';
       addMessage('bot', reply);
     }, 800);
