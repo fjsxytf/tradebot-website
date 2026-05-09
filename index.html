@@ -555,49 +555,49 @@
   </div>
 </footer>
 
-<!-- ===== PAYMENT MODAL (NOWPayments) ===== -->
+<!-- ===== PAYMENT MODAL (Direct TRC20) ===== -->
 <div class="modal-overlay" id="paymentModal">
   <div class="modal">
     <button class="close" onclick="closeModal()">&times;</button>
-    <!-- Step 1: Choose payment -->
-    <div id="payStep1">
-      <h3>💰 <span data-i18n="buy">购买</span> <span id="modalTier">标准版</span></h3>
-      <p style="color:var(--text-muted); font-size:14px; margin-top:4px;"><span data-i18n="payAmount">实付</span>：<strong style="color:var(--primary); font-size:20px;" id="modalPrice">$4.99</strong> USDT</p>
-      <div style="margin-top:16px; text-align:center;">
-        <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;" data-i18n="securePay">🔒 安全支付 - 支持 USDT / USDC / 信用卡</p>
-        <button class="btn btn-primary" onclick="createInvoice()" id="payNowBtn" style="width:100%; font-size:16px; padding:14px;">🚀 <span data-i18n="payNow">立即支付</span></button>
-      </div>
-      <div style="margin-top:16px; font-size:12px; color:var(--text-muted); text-align:center;">
-        <p>✓ Powered by NOWPayments</p>
-        <p data-i18n="autoDeliver">付款确认后自动发货（<1分钟）</p>
-      </div>
-      <div class="inline-warning" style="margin-top:12px;">
-        ⚠️ <span data-i18n="paymentNote">请勿关闭此页面，付款后将自动跳转</span>
-      </div>
+    <h3>💰 <span data-i18n="buy">购买</span> <span id="modalTier">标准版</span></h3>
+    <p style="color:var(--text-muted); font-size:14px; margin-top:4px;"><span data-i18n="payAmount">实付</span>：<strong style="color:var(--primary); font-size:22px;" id="modalPrice">$4.99</strong> <span style="color:var(--primary);">USDT</span></p>
+
+    <!-- Wallet Address -->
+    <div class="wallet-info">
+      <div class="wallet-label">📋 TRC20 钱包地址 (USDT)</div>
+      <div class="wallet-address" id="walletAddress">TY58AoPsaDo5gpEaaddHTphVhZRHpFtC1j</div>
+      <button class="copy-btn" onclick="copyAddress()">📋 一键复制地址</button>
     </div>
-    <!-- Step 2: Checking payment -->
-    <div id="payStep2" style="display:none; text-align:center; padding:20px 0;">
-      <div style="font-size:48px; animation: pulse 1.5s infinite;">⏳</div>
-      <p style="font-size:16px; margin-top:12px;" data-i18n="waitingPayment">等待付款确认...</p>
-      <p style="font-size:13px; color:var(--text-muted); margin-top:8px;" data-i18n="waitingHint">请在跳转的页面中完成付款</p>
-      <div id="pollCount" style="font-size:12px; color:var(--text-muted); margin-top:16px;"></div>
-      <button class="btn btn-outline" onclick="cancelPayment()" style="margin-top:16px;" data-i18n="cancelPay">取消支付</button>
+
+    <!-- Amount -->
+    <div class="wallet-info" style="margin-top:12px;">
+      <div class="wallet-label">💵 转账金额</div>
+      <div style="font-size:20px; font-weight:700; color:var(--primary);" id="usdtAmount">4.99 USDT</div>
     </div>
-    <!-- Step 3: Payment success -->
-    <div id="payStep3" style="display:none; text-align:center; padding:20px 0;">
-      <div style="font-size:48px;">🎉</div>
-      <p style="font-size:18px; margin-top:12px; color:var(--primary);" data-i18n="paySuccess">支付成功！</p>
-      <p style="font-size:14px; color:var(--text-muted); margin-top:8px;" data-i18n="downloading">正在准备下载链接...</p>
-      <div id="downloadArea" style="margin-top:16px;"></div>
-      <button class="btn btn-outline" onclick="closeModal()" style="margin-top:16px;" data-i18n="closeBtn">关闭</button>
+
+    <!-- Warning -->
+    <div class="inline-warning">
+      ⚠️ <span data-i18n="paymentWarning">请务必使用 TRC20 网络，其他网络可能导致资金丢失</span>
     </div>
-    <!-- Step 4: Payment failed/expired -->
-    <div id="payStep4" style="display:none; text-align:center; padding:20px 0;">
-      <div style="font-size:48px;">😔</div>
-      <p style="font-size:16px; margin-top:12px; color:#ff6b6b;" data-i18n="payFailed">支付未完成</p>
-      <p style="font-size:13px; color:var(--text-muted); margin-top:8px;" data-i18n="retryHint">你可以重新尝试支付</p>
-      <button class="btn btn-primary" onclick="retryPayment()" style="margin-top:16px;" data-i18n="retryPay">重新支付</button>
+
+    <p class="payment-note"><span data-i18n="trc20Note">推荐使用 TRC20 链 USDT，手续费最低（≈ $0.2）</span></p>
+
+    <!-- Steps -->
+    <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:16px; margin:16px 0;">
+      <p style="font-size:14px; font-weight:600; margin-bottom:12px;">📝 支付步骤：</p>
+      <p style="font-size:13px; color:var(--text-muted); margin-bottom:6px;">1️⃣ 复制上方 TRC20 地址</p>
+      <p style="font-size:13px; color:var(--text-muted); margin-bottom:6px;">2️⃣ 在钱包中选择 <strong style="color:var(--text);">TRC20 网络</strong>，转账对应金额 USDT</p>
+      <p style="font-size:13px; color:var(--text-muted); margin-bottom:6px;">3️⃣ 支付完成后<strong style="color:var(--text);">截图保存</strong>交易凭证</p>
+      <p style="font-size:13px; color:var(--text-muted);">4️⃣ 点击下方按钮联系客服发货 👇</p>
     </div>
+
+    <button class="btn btn-primary" onclick="contactSupportAfterPay()" style="font-size:16px; padding:14px;">
+      💬 <span data-i18n="contactSupport">我已支付，联系客服发货</span>
+    </button>
+
+    <p style="margin-top:12px; font-size:11px; color:var(--text-muted); text-align:center;">
+      付款确认后即时发货（通常 &lt;1 分钟）
+    </p>
   </div>
 </div>
 
@@ -1051,12 +1051,7 @@ function updatePageLanguage() {
   });
 }
 
-// Payment (NOWPayments)
-let currentInvoiceId = null;
-let paymentPollTimer = null;
-let pollCount = 0;
-const POLL_INTERVAL = 5000; // 5 seconds
-const POLL_MAX = 60; // 5 minutes max
+// Payment (Direct TRC20)
 
 function selectTier(tier) {
   currentTier = tier;
@@ -1064,150 +1059,31 @@ function selectTier(tier) {
   const tierKey = 'tier' + tier.charAt(0).toUpperCase() + tier.slice(1);
   document.getElementById('modalTier').textContent = texts[tierKey] || tier;
   document.getElementById('modalPrice').textContent = priceText[tier];
-  // Reset to step 1
-  showPayStep(1);
+  document.getElementById('usdtAmount').textContent = prices[tier] + ' USDT';
   document.getElementById('paymentModal').classList.add('show');
 }
 
 function closeModal() {
-  if (paymentPollTimer) { clearInterval(paymentPollTimer); paymentPollTimer = null; }
   document.getElementById('paymentModal').classList.remove('show');
-  showPayStep(1);
-  currentInvoiceId = null;
-  pollCount = 0;
 }
 
-function showPayStep(step) {
-  ['payStep1','payStep2','payStep3','payStep4'].forEach((id, i) => {
-    document.getElementById(id).style.display = (i + 1 === step) ? 'block' : 'none';
+function copyAddress() {
+  const addr = document.getElementById('walletAddress').textContent;
+  navigator.clipboard.writeText(addr).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = '✅ 已复制！';
+    setTimeout(() => { btn.textContent = '📋 一键复制地址'; }, 2000);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = addr;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = '✅ 已复制！';
+    setTimeout(() => { btn.textContent = '📋 一键复制地址'; }, 2000);
   });
-}
-
-function showPayError(msg) {
-  const texts = i18n[currentLang] || i18n['en'];
- const btn = document.getElementById('payNowBtn');
-  btn.textContent = texts.errorRetry || '⚠️ ' + msg + ' - 点击重试';
-  btn.disabled = false;
-}
-
-async function createInvoice() {
-  const btn = document.getElementById('payNowBtn');
-  const texts = i18n[currentLang] || i18n['en'];
-  btn.textContent = texts.creating || '⏳ 创建订单中...';
-  btn.disabled = true;
-
-  try {
-    const resp = await fetch('/api/create-invoice', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tier: currentTier })
-    });
-    const data = await resp.json();
-
-    if (!resp.ok || !data.invoice_url) {
-      showPayError(data.error || (texts.createFailed || '创建订单失败'));
-      return;
-    }
-
-    currentInvoiceId = data.invoice_id;
-
-    // Open payment page in new tab
-    window.open(data.invoice_url, '_blank');
-
-    // Switch to polling view
-    showPayStep(2);
-    pollCount = 0;
-    startPaymentPolling();
-
-  } catch (err) {
-    showPayError(texts.networkError || '网络错误，请重试');
-  }
-}
-
-function startPaymentPolling() {
-  if (paymentPollTimer) clearInterval(paymentPollTimer);
-  paymentPollTimer = setInterval(checkPaymentStatus, POLL_INTERVAL);
-  updatePollCount();
-}
-
-function updatePollCount() {
-  const el = document.getElementById('pollCount');
-  if (el) {
-    const seconds = pollCount * POLL_INTERVAL / 1000;
-    el.textContent = `⏱ ${seconds}s`;
-  }
-}
-
-async function checkPaymentStatus() {
-  if (!currentInvoiceId) return;
-  pollCount++;
-  updatePollCount();
-
-  try {
-    const resp = await fetch(`/api/check-payment?invoice_id=${currentInvoiceId}`);
-    const data = await resp.json();
-
-    if (data.status === 'paid' || data.status === 'finished' || data.status === 'confirmed') {
-      // Payment successful!
-      clearInterval(paymentPollTimer);
-      paymentPollTimer = null;
-      onPaymentSuccess(data);
-    } else if (data.status === 'expired' || data.status === 'failed') {
-      clearInterval(paymentPollTimer);
-      paymentPollTimer = null;
-      onPaymentFailed();
-    }
-    // 'new' or 'pending' -> keep polling
-
-    if (pollCount >= POLL_MAX) {
-      clearInterval(paymentPollTimer);
-      paymentPollTimer = null;
-      onPaymentExpired();
-    }
-  } catch (err) {
-    // Network error, keep polling
-  }
-}
-
-function onPaymentSuccess(data) {
-  showPayStep(3);
-  const tier = currentTier;
-  const downloadLinks = {
-    starter: { label: '📦 Download Starter Package', url: 'https://tradebot-products.pages.dev/starter' },
-    standard: { label: '📦 Download Standard Package', url: 'https://tradebot-products.pages.dev/standard' },
-    premium: { label: '📦 Download Premium Package', url: 'https://tradebot-products.pages.dev/premium' }
-  };
-  const dl = downloadLinks[tier] || downloadLinks.standard;
-  const area = document.getElementById('downloadArea');
-  area.innerHTML = `
-    <a href="${dl.url}" class="btn btn-primary" style="display:inline-block; font-size:16px; padding:14px 32px; text-decoration:none; margin-top:8px;" download>
-      ${dl.label}
-    </a>
-    <p style="font-size:12px; color:var(--text-muted); margin-top:12px;">${currentLang === 'zh' ? '下载链接已发送到您的邮箱（如有提供）' : 'Download link sent to your email (if provided)'}</p>
-  `;
-}
-
-function onPaymentFailed() {
-  showPayStep(4);
-}
-
-function onPaymentExpired() {
-  showPayStep(4);
-}
-
-function cancelPayment() {
-  if (paymentPollTimer) { clearInterval(paymentPollTimer); paymentPollTimer = null; }
-  showPayStep(1);
-}
-
-function retryPayment() {
-  currentInvoiceId = null;
-  pollCount = 0;
-  showPayStep(1);
-  const btn = document.getElementById('payNowBtn');
-  const texts = i18n[currentLang] || i18n['en'];
-  btn.textContent = '🚀 ' + (texts.payNow || '立即支付');
-  btn.disabled = false;
 }
 
 function contactSupportAfterPay() {
@@ -1222,25 +1098,6 @@ function contactSupportAfterPay() {
     }, 500);
   }, 300);
 }
-
-// Auto-check payment on page load (if redirected back from NOWPayments)
-(function checkReturnPayment() {
-  const params = new URLSearchParams(window.location.search);
-  const invoiceId = params.get('iid');
-  const tier = params.get('tier');
-  if (invoiceId && tier) {
-    currentTier = tier;
-    currentInvoiceId = invoiceId;
-    const texts = i18n[currentLang] || i18n['en'];
-    const tierKey = 'tier' + tier.charAt(0).toUpperCase() + tier.slice(1);
-    document.getElementById('modalTier').textContent = texts[tierKey] || tier;
-    document.getElementById('modalPrice').textContent = priceText[tier];
-    showPayStep(2);
-    document.getElementById('paymentModal').classList.add('show');
-    pollCount = 0;
-    startPaymentPolling();
-  }
-})();
 
 // Chat
 function toggleChat() {
