@@ -1146,14 +1146,62 @@ function sendMessage() {
       reply = currentLang === 'zh'
         ? '💰 付款方式：\n\n1. 选择套餐 → 复制 TRC20 地址\n2. 钱包转账 USDT\n3. 截图发给我 → 立即发货\n\n⚠️ 请保留转账截图'
         : '💰 Payment steps:\n\n1. Choose plan → Copy TRC20 address\n2. Send USDT from wallet\n3. Send screenshot → Instant delivery\n\n⚠️ Keep your tx screenshot';
-    } else if (msg.includes('安装') || msg.includes('部署') || msg.includes('install') || msg.includes('setup')) {
+    } else if (msg.includes('价格') || msg.includes('多少钱') || msg.includes('费用') || msg.includes('price') || msg.includes('cost') || msg.includes('how much')) {
+      reply = currentLang === 'zh'
+        ? '📦 套餐价格：\n\n• 入门版 $0.9（体验）\n• 标准版 $4.99（主力）\n• 高级版 $14.99（专业）\n\n💎 支持加密货币 USDT/USDC'
+        : '📦 Pricing:\n\n• Starter $0.9 (Trial)\n• Standard $4.99 (Main)\n• Premium $14.99 (Pro)\n\n💎 Accept USDT/USDC';
+    } else if (msg.includes('安全') || msg.includes('风险') || msg.includes('亏损') || msg.includes('safe') || msg.includes('risk') || msg.includes('loss')) {
+      reply = currentLang === 'zh'
+        ? '⚠️ 风险提示：\n\n• 资金始终在你自己的交易所账户\n• 我们无法接触你的资金\n• API Key 只能交易，不能提现\n• 杠杆交易有高风险，请谨慎'
+        : '⚠️ Risk Warning:\n\n• Funds stay in YOUR exchange account\n• We can NEVER touch your funds\n• API Key = trade only, no withdraw\n• Leverage = high risk, trade carefully';
+    } else if (msg.includes('退款') || msg.includes('退钱') || msg.includes('refund')) {
+      reply = currentLang === 'zh'
+        ? '❌ 不支持退款\n\n数字商品一经售出，概不退换。\n建议先购买入门版 $0.9 体验。'
+        : '❌ No Refunds\n\nDigital products, all sales final.\nTry Starter $0.9 first.';
+    } else if (msg.includes('支持') || msg.includes('哪些交易所') || msg.includes('交易所') || msg.includes('exchange') || msg.includes('binance') || msg.includes('hyperliquid')) {
+      reply = currentLang === 'zh'
+        ? '🏦 支持的交易所：\n\n• Hyperliquid ✅\n• Binance ✅\n• OKX ✅\n• dYdX ✅\n• Apex ✅\n• GMX ✅\n\n只要有 API 都能接！'
+        : '🏦 Supported Exchanges:\n\n• Hyperliquid ✅\n• Binance ✅\n• OKX ✅\n• dYdX ✅\n• Apex ✅\n• GMX ✅\n\nAny exchange with API works!';
+    } else if (msg.includes('安装') || msg.includes('部署') || msg.includes('设置') || msg.includes('install') || msg.includes('setup')) {
       reply = currentLang === 'zh'
         ? '🔧 安装步骤（30分钟）：\n\n1. 安装 Python 3.8+\n2. pip install -r requirements.txt\n3. 配置 API Key\n4. python strategy.py\n\n详细教程在策略包内！'
         : '🔧 Install steps (30 min):\n\n1. Install Python 3.8+\n2. pip install -r requirements.txt\n3. Configure API Key\n4. python strategy.py';
+    } else if (msg.includes('策略') || msg.includes('什么策略') || msg.includes('指标') || msg.includes('strategy') || msg.includes('indicator')) {
+      reply = currentLang === 'zh'
+        ? '📊 策略类型：\n\n• EMA 均线交叉\n• RSI 超买超卖\n• MACD 趋势跟踪\n• 布林带突破\n• 多时间框架确认\n\n支持 Pine Script + Python！'
+        : '📊 Strategy Types:\n\n• EMA crossover\n• RSI overbought/oversold\n• MACD trend following\n• Bollinger breakout\n• Multi-timeframe confirmation\n\nPine Script + Python supported!';
+    } else if (msg.includes('api') || msg.includes('密钥') || msg.includes('key')) {
+      reply = currentLang === 'zh'
+        ? '🔑 API Key 配置：\n\n1. 交易所后台 → API 管理\n2. 创建新密钥（只勾选「交易」权限）\n3. 复制 API Key + Secret\n4. 填入 config.json\n\n⚠️ 不要开启「提币」权限！'
+        : '🔑 API Key Setup:\n\n1. Exchange dashboard → API\n2. Create new key (Trade only)\n3. Copy API Key + Secret\n4. Add to config.json\n\n⚠️ NEVER enable Withdraw!';
+    } else if (msg.includes('杠杆') || msg.includes('几倍') || msg.includes('leverage')) {
+      reply = currentLang === 'zh'
+        ? '⚡ 杠杆设置：\n\n• 默认：5-10倍\n• 可自定义：1-50倍\n• 建议：新手 ≤ 5倍\n\n⚠️ 杠杆越高，风险越大！'
+        : '⚡ Leverage:\n\n• Default: 5-10x\n• Customizable: 1-50x\n• Recommended: ≤ 5x for beginners\n\n⚠️ Higher leverage = higher risk!';
+    } else if (msg.includes('止损') || msg.includes('止盈') || msg.includes('stop') || msg.includes('take profit')) {
+      reply = currentLang === 'zh'
+        ? '🛡️ 止损/止盈：\n\n• 自动止损：每笔交易内置\n• 默认止损：-3% to -5%\n• 止盈：+5% to +10%\n• 可自定义参数\n\n保护本金第一！'
+        : '🛡️ Stop Loss/Take Profit:\n\n• Auto stop loss on every trade\n• Default SL: -3% to -5%\n• Default TP: +5% to +10%\n• Fully customizable\n\nProtect capital first!';
+    } else if (msg.includes('教程') || msg.includes('指南') || msg.includes('tutorial') || msg.includes('guide')) {
+      reply = currentLang === 'zh'
+        ? '📖 教程内容：\n\n• 视频教程（15分钟）\n• 图文步骤（截图详细）\n• 常见问题解答\n• AI 客服 24h 在线\n\n购买后立即获取！'
+        : '📖 Tutorial Included:\n\n• Video guide (15 min)\n• Step-by-step screenshots\n• FAQ section\n• 24/7 AI support\n\nGet instant access after purchase!';
+    } else if (msg.includes('更新') || msg.includes('新策略') || msg.includes('update') || msg.includes('new strategy')) {
+      reply = currentLang === 'zh'
+        ? '🔄 更新策略：\n\n• 高级版含 3 个月更新\n• 新策略持续开发中\n• 社群优先体验\n\n订阅后自动推送！'
+        : '🔄 Strategy Updates:\n\n• Premium = 3 months updates\n• New strategies in development\n• Community early access\n\nAuto-delivered to subscribers!';
+    } else if (msg.includes('怎么用') || msg.includes('使用') || msg.includes('如何') || msg.includes('how to') || msg.includes('how do')) {
+      reply = currentLang === 'zh'
+        ? '🚀 使用方法：\n\n1. 购买策略包\n2. 安装 Python 环境\n3. 配置 API Key\n4. 运行策略脚本\n\nAI 全天自动交易，你不用盯盘！'
+        : '🚀 How to Use:\n\n1. Buy strategy package\n2. Install Python\n3. Configure API Key\n4. Run strategy script\n\nAI trades 24/7, no chart watching!';
+    } else if (msg.includes('python') || msg.includes('编程') || msg.includes('代码') || msg.includes('code') || msg.includes('programming')) {
+      reply = currentLang === 'zh'
+        ? '💻 技术细节：\n\n• Python 3.8+ 环境\n• 不需要编程基础\n• 配置文件傻瓜式操作\n• 源代码可自定义\n\n技术党可深度定制！'
+        : '💻 Technical Details:\n\n• Python 3.8+ required\n• No coding experience needed\n• Simple config file\n• Source code customizable\n\nAdvanced users can modify!';
     } else {
       reply = currentLang === 'zh'
-        ? '🤔 收到！我会尽快回复你。\n\n常见问题可直接问：\n• 「怎么安装」\n• 「多少钱」\n• 「安全吗」'
-        : '🤔 Message received! I\'ll reply ASAP.\n\nCommon questions:\n• "How to install"\n• "How much"\n• "Is it safe"';
+        ? '🤔 收到！我需要人工处理这个问题。\n\n常见问题可直接问：\n• 「多少钱」\n• 「怎么安装」\n• 「支持哪些交易所」\n• 「安全吗」\n• 「怎么退款」\n\n人工客服会在24小时内回复。'
+        : '🤔 Got it! Need human support for this.\n\nCommon questions:\n• "How much"\n• "How to install"\n• "Which exchanges"\n• "Is it safe"\n• "Refund policy"\n\nHuman support replies within 24h.';
     }
     addMessage('bot', reply);
   }, 800);
