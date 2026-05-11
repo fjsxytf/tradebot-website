@@ -6,368 +6,150 @@
   <title>TradeBot Skill Package - AI Auto Trading</title>
   <meta name="description" content="加密货币自动交易策略包，支持多交易所，让AI帮你告别FOMO和FUD，稳定增长资产。">
   <style>
-    :root {
-      --primary: #00d4aa;
-      --primary-dark: #00b894;
-      --bg: #0d0d0f;
-      --bg-card: #16161a;
-      --bg-card2: #1e1e24;
-      --text: #e8e8f0;
-      --text-muted: #8888a0;
-      --accent: #ff6b6b;
-      --accent2: #ffd93d;
-      --border: #2a2a35;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-    }
-    a { color: var(--primary); text-decoration: none; }
-    .container { max-width: 640px; margin: 0 auto; padding: 0 20px; }
-    .btn {
-      display: inline-block;
-      padding: 14px 28px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 16px;
-      text-align: center;
-      cursor: pointer;
-      border: none;
-      width: 100%;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: #000;
-      box-shadow: 0 4px 20px rgba(0, 212, 170, 0.3);
-    }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(0, 212, 170, 0.4); }
-    .btn-outline {
-      background: transparent;
-      color: var(--primary);
-      border: 2px solid var(--primary);
-    }
-    /* Language Selector */
-    .lang-selector {
-      position: fixed; top: 12px; right: 12px; z-index: 1000;
-    }
-    .lang-btn {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 13px;
-      cursor: pointer;
-    }
-    .lang-dropdown {
-      display: none;
-      position: absolute; top: 40px; right: 0;
-      background: var(--bg-card2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 6px 0;
-      min-width: 140px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-    }
-    .lang-dropdown.show { display: block; }
-    .lang-option {
-      padding: 8px 16px;
-      cursor: pointer;
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-    .lang-option:hover { background: var(--bg-card); color: var(--text); }
-    .lang-option.active { color: var(--primary); }
-    /* HERO */
-    .hero { padding: 60px 0 40px; text-align: center; }
-    .hero-badge {
-      display: inline-block;
-      background: rgba(0,212,170,0.1);
-      color: var(--primary);
-      border: 1px solid rgba(0,212,170,0.3);
-      padding: 6px 16px;
-      border-radius: 50px;
-      font-size: 13px;
-      margin-bottom: 24px;
-    }
-    .hero h1 { font-size: 32px; font-weight: 800; line-height: 1.2; margin-bottom: 16px; }
-    .hero h1 span { color: var(--primary); }
-    .hero p { color: var(--text-muted); font-size: 16px; margin-bottom: 32px; }
-    .hero-cta { margin-bottom: 12px; }
-    .hero-note { color: var(--text-muted); font-size: 13px; margin-top: 12px; }
-    /* EXCHANGES */
-    .exchanges-section { padding: 20px 0 40px; text-align: center; }
-    .exchanges-section h3 { font-size: 14px; color: var(--text-muted); margin-bottom: 16px; font-weight: 400; }
-    .exchanges-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
-    .exchange-tag {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 8px 16px;
-      font-size: 13px;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .exchange-tag .dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; }
-    /* PAIN */
-    .pain-section { padding: 40px 0; }
-    .pain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .pain-item {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      font-size: 14px;
-      color: var(--text-muted);
-    }
-    .pain-item .emoji { font-size: 20px; margin-bottom: 6px; display: block; }
-    /* WHAT IS */
-    .what-section { padding: 40px 0; }
-    .what-section h2 { font-size: 22px; font-weight: 700; margin-bottom: 20px; text-align: center; }
-    .what-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
-    .what-features { display: grid; gap: 14px; margin-top: 20px; }
-    .what-feature { display: flex; align-items: center; gap: 12px; font-size: 15px; }
-    .what-feature .icon {
-      width: 36px; height: 36px;
-      background: rgba(0,212,170,0.1);
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; flex-shrink: 0;
-    }
-    /* PRICING */
-    .pricing-section { padding: 40px 0; }
-    .pricing-section h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; text-align: center; }
-    .pricing-section .subtitle { color: var(--text-muted); text-align: center; font-size: 14px; margin-bottom: 24px; }
-    .pricing-grid { display: grid; gap: 14px; }
-    .pricing-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
-    .pricing-card.popular { border-color: var(--primary); position: relative; }
-    .pricing-card.popular::before {
-      content: "⭐";
-      position: absolute; top: -1px; right: 20px;
-      background: var(--primary); color: #000;
-      font-size: 11px; font-weight: 700;
-      padding: 3px 12px; border-radius: 0 0 8px 8px;
-    }
-    .pricing-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .pricing-name { font-size: 16px; font-weight: 700; }
-    .pricing-price { font-size: 28px; font-weight: 800; color: var(--primary); }
-    .pricing-desc { color: var(--text-muted); font-size: 13px; margin-bottom: 16px; }
-    .pricing-features { list-style: none; display: grid; gap: 8px; margin-bottom: 20px; }
-    .pricing-features li { font-size: 14px; color: var(--text-muted); padding-left: 20px; position: relative; }
-    .pricing-features li::before { content: "✅"; position: absolute; left: 0; }
-    /* STEPS */
-    .steps-section { padding: 40px 0; }
-    .steps-section h2 { font-size: 22px; font-weight: 700; margin-bottom: 24px; text-align: center; }
-    .step-list { display: grid; gap: 14px; }
-    .step {
-      display: flex; gap: 14px; align-items: flex-start;
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 14px; padding: 18px;
-    }
-    .step-num {
-      width: 32px; height: 32px; border-radius: 50%;
-      background: var(--primary); color: #000;
-      font-weight: 800; font-size: 14px;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .step-text h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
-    .step-text p { font-size: 13px; color: var(--text-muted); }
-    /* RISK */
-    .risk-section { padding: 40px 0; }
-    .risk-box {
-      background: rgba(255,107,107,0.08);
-      border: 1px solid rgba(255,107,107,0.3);
-      border-radius: 16px; padding: 24px;
-    }
-    .risk-box h3 { color: var(--accent); font-size: 16px; margin-bottom: 12px; }
-    .risk-box ul { list-style: none; display: grid; gap: 8px; }
-    .risk-box li { font-size: 14px; color: var(--text-muted); padding-left: 20px; position: relative; }
-    .risk-box li::before { content: "⚠️"; position: absolute; left: 0; }
-    /* FAQ */
-    .faq-section { padding: 40px 0; }
-    .faq-section h2 { font-size: 22px; font-weight: 700; margin-bottom: 20px; text-align: center; }
-    .faq-item { border-bottom: 1px solid var(--border); padding: 16px 0; cursor: pointer; }
-    .faq-item:first-child { border-top: 1px solid var(--border); }
-    .faq-q { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
-    .faq-a { font-size: 14px; color: var(--text-muted); display: none; }
-    .faq-item.active .faq-a { display: block; }
-    /* FOOTER */
-    .footer { padding: 40px 0; text-align: center; border-top: 1px solid var(--border); }
-    .footer p { color: var(--text-muted); font-size: 13px; }
-    .footer .tos { margin-top: 12px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-    .footer .tos a { color: var(--text-muted); font-size: 13px; }
-
-    /* ===== MODAL ===== */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.85);
-      z-index: 999; align-items: flex-end; justify-content: center;
-    }
-    .modal-overlay.show { display: flex; }
-    .modal {
-      background: var(--bg-card2);
-      border-radius: 24px 24px 0 0;
-      padding: 32px 24px 48px;
-      width: 100%; max-width: 640px;
-      max-height: 90vh; overflow-y: auto;
-    }
-    .modal h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
-    .modal .close {
-      float: right; background: none; border: none; color: var(--text-muted);
-      font-size: 24px; cursor: pointer; padding: 4px;
-    }
-    .wallet-info {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 12px; padding: 16px; margin: 16px 0;
-      font-size: 13px; word-break: break-all;
-    }
-    .wallet-label { color: var(--text-muted); font-size: 12px; margin-bottom: 6px; }
-    .wallet-address { color: var(--primary); font-family: monospace; }
-    .payment-note { font-size: 12px; color: var(--text-muted); margin-top: 12px; }
-    .payment-note span { color: var(--accent2); }
-    .inline-warning {
-      background: rgba(255,107,107,0.08);
-      border: 1px solid rgba(255,107,107,0.3);
-      border-radius: 10px; padding: 14px;
-      font-size: 13px; color: var(--accent); margin: 16px 0;
-    }
-    .copy-btn {
-      background: var(--bg-card); border: 1px solid var(--primary);
-      color: var(--primary); padding: 8px 16px; border-radius: 8px;
-      cursor: pointer; font-size: 13px; margin-top: 8px; width: 100%;
-    }
-    .copy-btn:active { background: rgba(0,212,170,0.1); }
-
-    /* ===== CHAT ===== */
-    .chat-widget { position: fixed; bottom: 24px; right: 20px; z-index: 998; }
-    .chat-fab {
-      width: 58px; height: 58px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: #000; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 26px; cursor: pointer;
-      box-shadow: 0 4px 24px rgba(0,212,170,0.45);
-      animation: chat-pulse 2.5s infinite;
-      border: none;
-    }
-    .chat-fab:hover { transform: scale(1.08); }
-    @keyframes chat-pulse {
-      0% { box-shadow: 0 4px 24px rgba(0,212,170,0.45); }
-      50% { box-shadow: 0 4px 36px rgba(0,212,170,0.65); }
-      100% { box-shadow: 0 4px 24px rgba(0,212,170,0.45); }
-    }
-    .chat-window {
-      position: fixed; bottom: 90px; right: 20px;
-      width: 340px; height: 480px;
-      background: var(--bg-card2);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      display: none; flex-direction: column;
-      overflow: hidden; z-index: 997;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
-    }
-    .chat-window.show { display: flex; }
-    .chat-header {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      padding: 14px 16px;
-      display: flex; align-items: center; gap: 10px; flex-shrink: 0;
-    }
-    .chat-avatar {
-      width: 36px; height: 36px;
-      background: rgba(0,0,0,0.25);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; flex-shrink: 0;
-    }
-    .chat-title-area { flex: 1; }
-    .chat-title { font-size: 14px; font-weight: 700; color: #000; }
-    .chat-status { font-size: 11px; color: rgba(0,0,0,0.55); }
-    .chat-status .dot {
-      display: inline-block; width: 7px; height: 7px;
-      background: #22c55e; border-radius: 50%;
-      margin-right: 4px; vertical-align: middle;
-      animation: dot-blink 1.5s infinite;
-    }
-    @keyframes dot-blink { 0%,100%{opacity:1} 50%{opacity:0.35} }
-    .chat-close-btn {
-      background: rgba(0,0,0,0.2); border: none;
-      color: #000; width: 28px; height: 28px;
-      border-radius: 50%; cursor: pointer;
-      font-size: 16px; display: flex; align-items: center; justify-content: center;
-    }
-    .chat-messages {
-      flex: 1; overflow-y: auto; padding: 16px;
-      display: flex; flex-direction: column; gap: 10px;
-    }
-    .chat-message { max-width: 85%; padding: 10px 14px; border-radius: 16px; font-size: 13.5px; line-height: 1.5; word-wrap: break-word; }
-    .chat-message.bot {
-      background: var(--bg-card); border: 1px solid var(--border);
-      align-self: flex-start; border-bottom-left-radius: 4px; color: var(--text);
-    }
-    .chat-message.user {
-      background: var(--primary); color: #000;
-      align-self: flex-end; border-bottom-right-radius: 4px; font-weight: 500;
-    }
-    .quick-replies {
-      display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 16px;
-      border-top: 1px solid var(--border); background: rgba(0,0,0,0.1); flex-shrink: 0;
-    }
-    .quick-reply-btn {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 16px; padding: 6px 12px; font-size: 12px;
-      color: var(--text-muted); cursor: pointer; white-space: nowrap;
-    }
-    .quick-reply-btn:hover { border-color: var(--primary); color: var(--primary); }
-    .chat-input-area {
-      display: flex; gap: 10px; padding: 12px 16px;
-      border-top: 1px solid var(--border); background: rgba(0,0,0,0.15); flex-shrink: 0;
-    }
-    .chat-input {
-      flex: 1; background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 20px; padding: 10px 16px; color: var(--text);
-      font-size: 14px; outline: none; font-family: inherit;
-    }
-    .chat-input:focus { border-color: var(--primary); }
-    .chat-input::placeholder { color: var(--text-muted); }
-    .chat-send-btn {
-      width: 40px; height: 40px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      border: none; border-radius: 50%; color: #000; font-size: 17px;
-      cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .chat-upload-btn {
-      width: 40px; height: 40px;
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 50%; color: var(--text-muted); font-size: 18px;
-      cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-      margin-right: 8px;
-    }
-    .chat-upload-btn:hover { border-color: var(--primary); color: var(--primary); }
-    .chat-image-preview {
-      max-width: 200px; max-height: 150px;
-      border-radius: 12px; margin: 8px 0;
-      border: 1px solid var(--border);
-    }
-    .chat-file-input { display: none; }
-    .chat-footer-hint {
-      text-align: center; padding: 8px; font-size: 11px;
-      color: var(--text-muted); border-top: 1px solid var(--border); flex-shrink: 0;
-    }
-    @media (max-width: 400px) {
-      .chat-window { width: calc(100vw - 20px); right: 10px; height: 420px; bottom: 80px; }
-      .chat-fab { bottom: 16px; right: 16px; width: 52px; height: 52px; font-size: 23px; }
-    }
+    :root{--primary:#00d4aa;--primary-dark:#00b894;--bg:#0d0d0f;--bg-card:#16161a;--bg-card2:#1e1e24;--text:#e8e8f0;--text-muted:#8888a0;--accent:#ff6b6b;--accent2:#ffd93d;--border:#2a2a35}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+    a{color:var(--primary);text-decoration:none}
+    .container{max-width:640px;margin:0 auto;padding:0 20px}
+    .btn{display:inline-block;padding:14px 28px;border-radius:12px;font-weight:700;font-size:16px;text-align:center;cursor:pointer;border:none;width:100%;transition:transform .2s,box-shadow .2s}
+    .btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#000;box-shadow:0 4px 20px rgba(0,212,170,.3)}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(0,212,170,.4)}
+    .btn-outline{background:transparent;color:var(--primary);border:2px solid var(--primary)}
+    .lang-selector{position:fixed;top:12px;right:12px;z-index:1000}
+    .lang-btn{background:var(--bg-card);border:1px solid var(--border);color:var(--text);padding:6px 14px;border-radius:20px;font-size:13px;cursor:pointer}
+    .lang-dropdown{display:none;position:absolute;top:40px;right:0;background:var(--bg-card2);border:1px solid var(--border);border-radius:12px;padding:6px 0;min-width:140px;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+    .lang-dropdown.show{display:block}
+    .lang-option{padding:8px 16px;cursor:pointer;font-size:13px;color:var(--text-muted)}
+    .lang-option:hover{background:var(--bg-card);color:var(--text)}
+    .lang-option.active{color:var(--primary)}
+    .hero{padding:60px 0 40px;text-align:center}
+    .hero-badge{display:inline-block;background:rgba(0,212,170,.1);color:var(--primary);border:1px solid rgba(0,212,170,.3);padding:6px 16px;border-radius:50px;font-size:13px;margin-bottom:24px}
+    .hero h1{font-size:32px;font-weight:800;line-height:1.2;margin-bottom:16px}
+    .hero h1 span{color:var(--primary)}
+    .hero p{color:var(--text-muted);font-size:16px;margin-bottom:32px}
+    .hero-cta{margin-bottom:12px}
+    .hero-note{color:var(--text-muted);font-size:13px;margin-top:12px}
+    .exchanges-section{padding:20px 0 40px;text-align:center}
+    .exchanges-section h3{font-size:14px;color:var(--text-muted);margin-bottom:16px;font-weight:400}
+    .exchanges-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+    .exchange-tag{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:13px;color:var(--text-muted);display:flex;align-items:center;gap:6px}
+    .exchange-tag .dot{width:6px;height:6px;background:var(--primary);border-radius:50%}
+    .pain-section{padding:40px 0}
+    .pain-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .pain-item{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:16px;font-size:14px;color:var(--text-muted)}
+    .pain-item .emoji{font-size:20px;margin-bottom:6px;display:block}
+    .what-section{padding:40px 0}
+    .what-section h2{font-size:22px;font-weight:700;margin-bottom:20px;text-align:center}
+    .what-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:24px}
+    .what-features{display:grid;gap:14px;margin-top:20px}
+    .what-feature{display:flex;align-items:center;gap:12px;font-size:15px}
+    .what-feature .icon{width:36px;height:36px;background:rgba(0,212,170,.1);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+    .pricing-section{padding:40px 0}
+    .pricing-section h2{font-size:22px;font-weight:700;margin-bottom:8px;text-align:center}
+    .pricing-section .subtitle{color:var(--text-muted);text-align:center;font-size:14px;margin-bottom:24px}
+    .pricing-grid{display:grid;gap:14px}
+    .pricing-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:24px}
+    .pricing-card.popular{border-color:var(--primary);position:relative}
+    .pricing-card.popular::before{content:"⭐";position:absolute;top:-1px;right:20px;background:var(--primary);color:#000;font-size:11px;font-weight:700;padding:3px 12px;border-radius:0 0 8px 8px}
+    .pricing-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .pricing-name{font-size:16px;font-weight:700}
+    .pricing-price{font-size:28px;font-weight:800;color:var(--primary)}
+    .pricing-desc{color:var(--text-muted);font-size:13px;margin-bottom:16px}
+    .pricing-features{list-style:none;display:grid;gap:8px;margin-bottom:20px}
+    .pricing-features li{font-size:14px;color:var(--text-muted);padding-left:20px;position:relative}
+    .pricing-features li::before{content:"✅";position:absolute;left:0}
+    .steps-section{padding:40px 0}
+    .steps-section h2{font-size:22px;font-weight:700;margin-bottom:24px;text-align:center}
+    .step-list{display:grid;gap:14px}
+    .step{display:flex;gap:14px;align-items:flex-start;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:18px}
+    .step-num{width:32px;height:32px;border-radius:50%;background:var(--primary);color:#000;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .step-text h4{font-size:15px;font-weight:600;margin-bottom:4px}
+    .step-text p{font-size:13px;color:var(--text-muted)}
+    .risk-section{padding:40px 0}
+    .risk-box{background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.3);border-radius:16px;padding:24px}
+    .risk-box h3{color:var(--accent);font-size:16px;margin-bottom:12px}
+    .risk-box ul{list-style:none;display:grid;gap:8px}
+    .risk-box li{font-size:14px;color:var(--text-muted);padding-left:20px;position:relative}
+    .risk-box li::before{content:"⚠️";position:absolute;left:0}
+    .faq-section{padding:40px 0}
+    .faq-section h2{font-size:22px;font-weight:700;margin-bottom:20px;text-align:center}
+    .faq-item{border-bottom:1px solid var(--border);padding:16px 0;cursor:pointer}
+    .faq-item:first-child{border-top:1px solid var(--border)}
+    .faq-q{font-size:15px;font-weight:600;margin-bottom:8px}
+    .faq-a{font-size:14px;color:var(--text-muted);display:none}
+    .faq-item.active .faq-a{display:block}
+    .footer{padding:40px 0;text-align:center;border-top:1px solid var(--border)}
+    .footer p{color:var(--text-muted);font-size:13px}
+    .footer .tos{margin-top:12px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+    .footer .tos a{color:var(--text-muted);font-size:13px}
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:999;align-items:flex-end;justify-content:center}
+    .modal-overlay.show{display:flex}
+    .modal{background:var(--bg-card2);border-radius:24px 24px 0 0;padding:32px 24px 48px;width:100%;max-width:640px;max-height:90vh;overflow-y:auto}
+    .modal h3{font-size:20px;font-weight:700;margin-bottom:8px}
+    .modal .close{float:right;background:none;border:none;color:var(--text-muted);font-size:24px;cursor:pointer;padding:4px}
+    .pay-tabs{display:flex;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:4px;margin:16px 0;gap:4px}
+    .pay-tab{flex:1;padding:10px 8px;border-radius:9px;border:none;background:transparent;color:var(--text-muted);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;text-align:center}
+    .pay-tab.active{background:var(--primary);color:#000}
+    .pay-tab:hover:not(.active){background:rgba(0,212,170,.1);color:var(--text)}
+    .pay-panel{display:none}.pay-panel.active{display:block}
+    .wallet-info{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;font-size:13px;word-break:break-all}
+    .wallet-label{color:var(--text-muted);font-size:12px;margin-bottom:6px}
+    .wallet-address{color:var(--primary);font-family:monospace}
+    .copy-btn{background:var(--bg-card);border:1px solid var(--primary);color:var(--primary);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;margin-top:8px;width:100%}
+    .payment-note{font-size:12px;color:var(--text-muted);margin-top:12px}
+    .inline-warning{background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.3);border-radius:10px;padding:14px;font-size:13px;color:var(--accent);margin:16px 0}
+    .card-info{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0}
+    .card-info-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+    .card-info-row:last-child{border-bottom:none}
+    .card-info-label{color:var(--text-muted);font-size:13px}
+    .card-info-value{font-size:13px;font-weight:600;color:var(--text)}
+    .card-icons{display:flex;gap:6px;align-items:center}
+    .card-badge{background:rgba(0,212,170,.1);border:1px solid var(--primary);border-radius:6px;padding:2px 8px;font-size:11px;color:var(--primary);font-weight:600}
+    .pay-amount-display{text-align:center;margin:12px 0}
+    .pay-amount-display .amount{font-size:36px;font-weight:800;color:var(--primary)}
+    .pay-amount-display .currency{font-size:18px;color:var(--text-muted);margin-left:4px}
+    .pay-btn-stripe{background:#635bff;color:#fff;border:none;border-radius:10px;padding:14px;font-size:16px;font-weight:700;width:100%;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s;margin-top:12px}
+    .pay-btn-stripe:hover{background:#5046e5}
+    .pay-btn-stripe .spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;display:none}
+    .pay-btn-stripe.loading .spinner{display:block}
+    .pay-btn-stripe.loading{pointer-events:none;opacity:.8}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .secure-note{text-align:center;font-size:11px;color:var(--text-muted);margin-top:10px}
+    .chat-widget{position:fixed;bottom:24px;right:20px;z-index:998}
+    .chat-fab{width:58px;height:58px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;box-shadow:0 4px 24px rgba(0,212,170,.45);animation:chat-pulse 2.5s infinite;border:none}
+    .chat-fab:hover{transform:scale(1.08)}
+    @keyframes chat-pulse{0%,100%{box-shadow:0 4px 24px rgba(0,212,170,.45)}50%{box-shadow:0 4px 36px rgba(0,212,170,.65)}}
+    .chat-window{position:fixed;bottom:90px;right:20px;width:340px;height:480px;background:var(--bg-card2);border:1px solid var(--border);border-radius:20px;display:none;flex-direction:column;overflow:hidden;z-index:997;box-shadow:0 8px 40px rgba(0,0,0,.5)}
+    .chat-window.show{display:flex}
+    .chat-header{background:linear-gradient(135deg,var(--primary),var(--primary-dark));padding:14px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+    .chat-avatar{width:36px;height:36px;background:rgba(0,0,0,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+    .chat-title-area{flex:1}
+    .chat-title{font-size:14px;font-weight:700;color:#000}
+    .chat-status{font-size:11px;color:rgba(0,0,0,.55)}
+    .chat-status .dot{display:inline-block;width:7px;height:7px;background:#22c55e;border-radius:50%;margin-right:4px;vertical-align:middle;animation:dot-blink 1.5s infinite}
+    @keyframes dot-blink{0%,100%{opacity:1}50%{opacity:.35}}
+    .chat-close-btn{background:rgba(0,0,0,.2);border:none;color:#000;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+    .chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+    .chat-message{max-width:85%;padding:10px 14px;border-radius:16px;font-size:13.5px;line-height:1.5;word-wrap:break-word}
+    .chat-message.bot{background:var(--bg-card);border:1px solid var(--border);align-self:flex-start;border-bottom-left-radius:4px;color:var(--text)}
+    .chat-message.user{background:var(--primary);color:#000;align-self:flex-end;border-bottom-right-radius:4px;font-weight:500}
+    .quick-replies{display:flex;flex-wrap:wrap;gap:8px;padding:10px 16px;border-top:1px solid var(--border);background:rgba(0,0,0,.1);flex-shrink:0}
+    .quick-reply-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:6px 12px;font-size:12px;color:var(--text-muted);cursor:pointer;white-space:nowrap}
+    .quick-reply-btn:hover{border-color:var(--primary);color:var(--primary)}
+    .chat-input-area{display:flex;gap:10px;padding:12px 16px;border-top:1px solid var(--border);background:rgba(0,0,0,.15);flex-shrink:0}
+    .chat-input{flex:1;background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:10px 16px;color:var(--text);font-size:14px;outline:none;font-family:inherit}
+    .chat-input:focus{border-color:var(--primary)}
+    .chat-input::placeholder{color:var(--text-muted)}
+    .chat-send-btn{width:40px;height:40px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));border:none;border-radius:50%;color:#000;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .chat-upload-btn{width:40px;height:40px;background:var(--bg-card);border:1px solid var(--border);border-radius:50%;color:var(--text-muted);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-right:8px}
+    .chat-upload-btn:hover{border-color:var(--primary);color:var(--primary)}
+    .chat-image-preview{max-width:200px;max-height:150px;border-radius:12px;margin:8px 0;border:1px solid var(--border)}
+    .chat-file-input{display:none}
+    .chat-footer-hint{text-align:center;padding:8px;font-size:11px;color:var(--text-muted);border-top:1px solid var(--border);flex-shrink:0}
+    @media(max-width:400px){.chat-window{width:calc(100vw - 20px);right:10px;height:420px;bottom:80px}.chat-fab{bottom:16px;right:16px;width:52px;height:52px;font-size:23px}}
   </style>
 </head>
 <body>
-
-<!-- Language Selector -->
 <div class="lang-selector">
   <button class="lang-btn" onclick="toggleLang()" id="currentLang">🇨🇳 中文</button>
   <div class="lang-dropdown" id="langDropdown">
@@ -383,20 +165,16 @@
   </div>
 </div>
 
-<!-- HERO -->
 <section class="hero">
   <div class="container">
     <div class="hero-badge" data-i18n="heroBadge">🤖 AI 自动交易 · 24h 运行</div>
     <h1><span data-i18n="heroLine1">让</span> <span>AI</span> <span data-i18n="heroLine2">替你交易</span><br><span data-i18n="heroLine3">把情绪关在门外</span></h1>
     <p data-i18n="heroDesc">TradeBot 策略包 · 支持多交易所自动执行经过验证的交易策略，无需盯盘，告别 FOMO / FUD / 扛单。</p>
-    <div class="hero-cta">
-      <button class="btn btn-primary" onclick="selectTier('standard')" data-i18n="heroCta">立即购买 · $0.9 起</button>
-    </div>
+    <div class="hero-cta"><button class="btn btn-primary" onclick="selectTier('standard')" data-i18n="heroCta">立即购买 · $0.9 起</button></div>
     <p class="hero-note" data-i18n="heroNote">支持 Hyperliquid、Binance、OKX 等多平台</p>
   </div>
 </section>
 
-<!-- EXCHANGES -->
 <section class="exchanges-section">
   <div class="container">
     <h3 data-i18n="exchangesTitle">支持平台</h3>
@@ -411,7 +189,6 @@
   </div>
 </section>
 
-<!-- PAIN POINTS -->
 <section class="pain-section">
   <div class="container">
     <div class="pain-grid">
@@ -423,23 +200,21 @@
   </div>
 </section>
 
-<!-- WHAT IS IT -->
 <section class="what-section">
   <div class="container">
     <h2 data-i18n="whatTitle">Skill Package 是什么？</h2>
     <div class="what-card">
-      <p style="font-size:15px; color:var(--text-muted);" data-i18n="whatDesc">一套完整的<strong style="color:var(--text)">自动交易解决方案</strong>。购买后获得策略包 + 安装教程 + AI 客服，30 分钟完成部署，之后 AI 24h 自动为你执行交易。</p>
+      <p style="font-size:15px;color:var(--text-muted)" data-i18n="whatDesc">一套完整的<strong style="color:var(--text)">自动交易解决方案</strong>。购买后获得策略包 + 安装教程 + AI 客服，30 分钟完成部署，之后 AI 24h 自动为你执行交易。</p>
       <div class="what-features">
-        <div class="what-feature"><div class="icon">📦</div><div><strong data-i18n="feature1Title">策略包</strong><br><span style="color:var(--text-muted); font-size:13px;" data-i18n="feature1Desc">配置好的参数，即开即用，无需编程</span></div></div>
-        <div class="what-feature"><div class="icon">🤖</div><div><strong data-i18n="feature2Title">AI 自动执行</strong><br><span style="color:var(--text-muted); font-size:13px;" data-i18n="feature2Desc">24h 运行，无需盯盘，策略自动下单</span></div></div>
-        <div class="what-feature"><div class="icon">🛡️</div><div><strong data-i18n="feature3Title">自动止损</strong><br><span style="color:var(--text-muted); font-size:13px;" data-i18n="feature3Desc">内置止损逻辑，控制单笔最大亏损</span></div></div>
-        <div class="what-feature"><div class="icon">💬</div><div><strong data-i18n="feature4Title">AI 客服 24h</strong><br><span style="color:var(--text-muted); font-size:13px;" data-i18n="feature4Desc">安装问题随时问，专属客服支持</span></div></div>
+        <div class="what-feature"><div class="icon">📦</div><div><strong data-i18n="feature1Title">策略包</strong><br><span style="color:var(--text-muted);font-size:13px" data-i18n="feature1Desc">配置好的参数，即开即用，无需编程</span></div></div>
+        <div class="what-feature"><div class="icon">🤖</div><div><strong data-i18n="feature2Title">AI 自动执行</strong><br><span style="color:var(--text-muted);font-size:13px" data-i18n="feature2Desc">24h 运行，无需盯盘，策略自动下单</span></div></div>
+        <div class="what-feature"><div class="icon">🛡️</div><div><strong data-i18n="feature3Title">自动止损</strong><br><span style="color:var(--text-muted);font-size:13px" data-i18n="feature3Desc">内置止损逻辑，控制单笔最大亏损</span></div></div>
+        <div class="what-feature"><div class="icon">💬</div><div><strong data-i18n="feature4Title">AI 客服 24h</strong><br><span style="color:var(--text-muted);font-size:13px" data-i18n="feature4Desc">安装问题随时问，专属客服支持</span></div></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- HOW IT WORKS -->
 <section class="steps-section">
   <div class="container">
     <h2 data-i18n="stepsTitle">4步开始自动交易</h2>
@@ -452,17 +227,13 @@
   </div>
 </section>
 
-<!-- PRICING -->
 <section class="pricing-section">
   <div class="container">
     <h2 data-i18n="pricingTitle">选择你的套餐</h2>
     <p class="subtitle" data-i18n="pricingSubtitle">按需选择，体验 / 标准 / 高级三种方案</p>
     <div class="pricing-grid">
       <div class="pricing-card">
-        <div class="pricing-header">
-          <span class="pricing-name" data-i18n="starterName">体验版 Starter</span>
-          <span class="pricing-price">$0.9</span>
-        </div>
+        <div class="pricing-header"><span class="pricing-name" data-i18n="starterName">体验版 Starter</span><span class="pricing-price">$0.9</span></div>
         <p class="pricing-desc" data-i18n="starterDesc">尝鲜体验，先试试水</p>
         <ul class="pricing-features">
           <li data-i18n="starterFeat1">单个核心策略包</li>
@@ -473,10 +244,7 @@
         <button class="btn btn-outline" onclick="selectTier('starter')" data-i18n="selectStarter">选择体验版</button>
       </div>
       <div class="pricing-card popular">
-        <div class="pricing-header">
-          <span class="pricing-name" data-i18n="standardName">标准版 Standard</span>
-          <span class="pricing-price">$4.99</span>
-        </div>
+        <div class="pricing-header"><span class="pricing-name" data-i18n="standardName">标准版 Standard</span><span class="pricing-price">$4.99</span></div>
         <p class="pricing-desc" data-i18n="standardDesc">认真使用，稳定运行</p>
         <ul class="pricing-features">
           <li data-i18n="standardFeat1">3 个核心策略包</li>
@@ -487,10 +255,7 @@
         <button class="btn btn-primary" onclick="selectTier('standard')" data-i18n="selectStandard">选择标准版 ⭐</button>
       </div>
       <div class="pricing-card">
-        <div class="pricing-header">
-          <span class="pricing-name" data-i18n="premiumName">高级版 Premium</span>
-          <span class="pricing-price">$14.99</span>
-        </div>
+        <div class="pricing-header"><span class="pricing-name" data-i18n="premiumName">高级版 Premium</span><span class="pricing-price">$14.99</span></div>
         <p class="pricing-desc" data-i18n="premiumDesc">深度用户，持续更新</p>
         <ul class="pricing-features">
           <li data-i18n="premiumFeat1">全部策略包（含未来更新）</li>
@@ -502,44 +267,22 @@
         <button class="btn btn-outline" onclick="selectTier('premium')" data-i18n="selectPremium">选择高级版</button>
       </div>
     </div>
-    <p style="text-align:center; color:var(--text-muted); font-size:12px; margin-top:20px;">
-      ⚠️ <span data-i18n="riskWarning">加密货币交易有风险，请阅读</span> <a href="#" onclick="showRisk()" data-i18n="riskLink">风险提示书</a>
-    </p>
+    <p style="text-align:center;color:var(--text-muted);font-size:12px;margin-top:20px">⚠️ <span data-i18n="riskWarning">加密货币交易有风险，请阅读</span> <a href="#" onclick="showRisk()" data-i18n="riskLink">风险提示书</a></p>
   </div>
 </section>
 
-<!-- FAQ -->
 <section class="faq-section">
   <div class="container">
     <h2 data-i18n="faqTitle">常见问题</h2>
-    <div class="faq-item">
-      <div class="faq-q" data-i18n="faq1Q">资金安全吗？谁在操作我的账户？</div>
-      <div class="faq-a" data-i18n="faq1A">资金永远在你自己交易所账户，我们只提供策略包，不接触你的资金。API Key 完全由你掌控，可随时撤销。</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q" data-i18n="faq2Q">我需要懂编程吗？</div>
-      <div class="faq-a" data-i18n="faq2A">不需要。教程专为非技术背景编写，30 分钟按步骤操作即可。有问题随时找 AI 客服。</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q" data-i18n="faq3Q">策略能保证赚钱吗？</div>
-      <div class="faq-a" data-i18n="faq3A">没有任何策略能保证盈利。策略基于技术分析（EMA、RSI、MACD等），趋势行情中表现好，震荡行情中可能小幅亏损。过去的回测结果不代表未来表现。</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q" data-i18n="faq4Q">付款后多久能收到？</div>
-      <div class="faq-a" data-i18n="faq4A">TRC20 链通常 3 秒内确认，确认后即时自动发货。ERC20/BEP20 约 1-5 分钟。</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q" data-i18n="faq5Q">可以退款吗？</div>
-      <div class="faq-a" data-i18n="faq5A">不支持。产品为虚拟商品，一经售出概不退换。购买前请完整阅读产品介绍和风险提示。</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q" data-i18n="faq6Q">支持哪些交易所？</div>
-      <div class="faq-a" data-i18n="faq6A">目前支持 Hyperliquid、Binance、OKX、dYdX、Apex、GMX 等主流中心化及去中心化合约平台。</div>
-    </div>
+    <div class="faq-item"><div class="faq-q" data-i18n="faq1Q">资金安全吗？谁在操作我的账户？</div><div class="faq-a" data-i18n="faq1A">资金永远在你自己交易所账户，我们只提供策略包，不接触你的资金。API Key 完全由你掌控，可随时撤销。</div></div>
+    <div class="faq-item"><div class="faq-q" data-i18n="faq2Q">我需要懂编程吗？</div><div class="faq-a" data-i18n="faq2A">不需要。教程专为非技术背景编写，30 分钟按步骤操作即可。有问题随时找 AI 客服。</div></div>
+    <div class="faq-item"><div class="faq-q" data-i18n="faq3Q">策略能保证赚钱吗？</div><div class="faq-a" data-i18n="faq3A">没有任何策略能保证盈利。策略基于技术分析（EMA、RSI、MACD等），趋势行情中表现好，震荡行情中可能小幅亏损。过去的回测结果不代表未来表现。</div></div>
+    <div class="faq-item"><div class="faq-q" data-i18n="faq4Q">付款后多久能收到？</div><div class="faq-a" data-i18n="faq4A">TRC20 链通常 3 秒内确认，确认后即时自动发货。ERC20/BEP20 约 1-5 分钟。</div></div>
+    <div class="faq-item"><div class="faq-q" data-i18n="faq5Q">可以退款吗？</div><div class="faq-a" data-i18n="faq5A">不支持。产品为虚拟商品，一经售出概不退换。购买前请完整阅读产品介绍和风险提示。</div></div>
+    <div class="faq-item"><div class="faq-q" data-i18n="faq6Q">支持哪些交易所？</div><div class="faq-a" data-i18n="faq6A">目前支持 Hyperliquid、Binance、OKX、dYdX、Apex、GMX 等主流中心化及去中心化合约平台。</div></div>
   </div>
 </section>
 
-<!-- RISK BOX -->
 <section class="risk-section">
   <div class="container">
     <div class="risk-box">
@@ -556,10 +299,9 @@
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer class="footer">
   <div class="container">
-    <p style="font-size:16px; font-weight:700; margin-bottom:8px;">TradeBot Skill Package</p>
+    <p style="font-size:16px;font-weight:700;margin-bottom:8px">TradeBot Skill Package</p>
     <p data-i18n="footerSlogan">让情绪成为过去，让利润自己走进来。</p>
     <div class="tos">
       <a href="#" onclick="showRisk()" data-i18n="footerRisk">风险提示</a>
@@ -569,49 +311,61 @@
   </div>
 </footer>
 
-<!-- ===== PAYMENT MODAL (Direct TRC20) ===== -->
+<!-- ===== PAYMENT MODAL ===== -->
 <div class="modal-overlay" id="paymentModal">
   <div class="modal">
-    <button class="close" onclick="closeModal()">&times;</button>
+    <button class="close" onclick="closeModal()">×</button>
     <h3>💰 <span data-i18n="buy">购买</span> <span id="modalTier">标准版</span></h3>
-    <p style="color:var(--text-muted); font-size:14px; margin-top:4px;"><span data-i18n="payAmount">实付</span>：<strong style="color:var(--primary); font-size:22px;" id="modalPrice">$4.99</strong> <span style="color:var(--primary);">USDT</span></p>
-
-    <!-- Wallet Address -->
-    <div class="wallet-info">
-      <div class="wallet-label">📋 TRC20 钱包地址 (USDT)</div>
-      <div class="wallet-address" id="walletAddress">TY58AoPsaDo5gpEaaddHTphVhZRHpFtC1j</div>
-      <button class="copy-btn" onclick="copyAddress()">📋 一键复制地址</button>
+    <div class="pay-tabs">
+      <button class="pay-tab active" id="tabCard" onclick="switchPayMethod('card')">💳 <span data-i18n="tabCard">信用卡</span></button>
+      <button class="pay-tab" id="tabCrypto" onclick="switchPayMethod('crypto')">🪙 <span data-i18n="tabCrypto">USDT</span></button>
     </div>
-
-    <!-- Amount -->
-    <div class="wallet-info" style="margin-top:12px;">
-      <div class="wallet-label">💵 转账金额</div>
-      <div style="font-size:20px; font-weight:700; color:var(--primary);" id="usdtAmount">4.99 USDT</div>
+    <div class="pay-panel active" id="panelCard">
+      <div class="pay-amount-display"><span class="amount" id="cardAmount">$4.99</span><span class="currency">USD</span></div>
+      <div class="card-info">
+        <div class="card-info-row"><span class="card-info-label" data-i18n="cardProduct">商品</span><span class="card-info-value" id="cardProductName">TradeBot 标准版</span></div>
+        <div class="card-info-row"><span class="card-info-label" data-i18n="cardDelivery">发货方式</span><span class="card-info-value">⬇️ <span data-i18n="cardDeliveryAuto">付款后自动发送下载链接</span></span></div>
+        <div class="card-info-row"><span class="card-info-label" data-i18n="cardPaymentMethod">支付方式</span><div class="card-icons"><span class="card-badge">Visa</span><span class="card-badge">MC</span><span class="card-badge">Amex</span></div></div>
+      </div>
+      <button class="pay-btn-stripe" id="stripeBtn" onclick="openStripePayment()"><span class="spinner"></span><span id="stripeBtnText" data-i18n="stripeBtn">🔒 安全支付 via Stripe</span></button>
+      <p class="secure-note" data-i18n="stripeSecureNote">🔒 由 Stripe 提供安全保障，支持 135+ 种货币</p>
     </div>
-
-    <!-- Warning -->
-    <div class="inline-warning">
-      ⚠️ <span data-i18n="paymentWarning">请务必使用 TRC20 网络，其他网络可能导致资金丢失</span>
+    <div class="pay-panel" id="panelCrypto">
+      <p style="color:var(--text-muted);font-size:14px;margin-bottom:8px" data-i18n="payAmount">实付</p>
+      <div class="pay-amount-display"><span class="amount" id="cryptoAmount">4.99</span><span class="currency">USDT</span></div>
+      <div class="wallet-info">
+        <div class="wallet-label">📋 TRC20 钱包地址 (USDT)</div>
+        <div class="wallet-address">TY58AoPsaDo5gpEaaddHTphVhZRHpFtC1j</div>
+        <button class="copy-btn" onclick="copyAddress()" data-i18n="copyAddressBtn">📋 一键复制地址</button>
+      </div>
+      <div class="inline-warning">⚠️ <span data-i18n="paymentWarning">请务必使用 TRC20 网络，其他网络可能导致资金丢失</span></div>
+      <p class="payment-note"><span data-i18n="trc20Note">推荐使用 TRC20 链 USDT，手续费最低（≈ $0.2）</span></p>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:16px">
+        <p style="font-size:14px;font-weight:600;margin-bottom:12px" data-i18n="payStepsTitle">📝 支付步骤：</p>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:6px" data-i18n="payStep1">1️⃣ 复制上方 TRC20 地址</p>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:6px" data-i18n="payStep2">2️⃣ 在钱包中选择 <strong style="color:var(--text)">TRC20 网络</strong>，转账对应金额 USDT</p>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:6px" data-i18n="payStep3">3️⃣ 支付完成后<strong style="color:var(--text)">截图保存</strong>交易凭证</p>
+        <p style="font-size:13px;color:var(--text-muted)" data-i18n="payStep4">4️⃣ 点击下方按钮联系客服发货 👇</p>
+      </div>
+      <button class="btn btn-primary" onclick="contactSupportAfterPay()" style="font-size:16px;padding:14px;margin-top:12px">💬 <span data-i18n="contactSupport">我已支付，联系客服发货</span></button>
+      <p style="margin-top:12px;font-size:11px;color:var(--text-muted);text-align:center" data-i18n="deliveryNote">付款确认后即时发货（通常 &lt;1 分钟）</p>
     </div>
+  </div>
+</div>
 
-    <p class="payment-note"><span data-i18n="trc20Note">推荐使用 TRC20 链 USDT，手续费最低（≈ $0.2）</span></p>
-
-    <!-- Steps -->
-    <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:16px; margin:16px 0;">
-      <p style="font-size:14px; font-weight:600; margin-bottom:12px;">📝 支付步骤：</p>
-      <p style="font-size:13px; color:var(--text-muted); margin-bottom:6px;">1️⃣ 复制上方 TRC20 地址</p>
-      <p style="font-size:13px; color:var(--text-muted); margin-bottom:6px;">2️⃣ 在钱包中选择 <strong style="color:var(--text);">TRC20 网络</strong>，转账对应金额 USDT</p>
-      <p style="font-size:13px; color:var(--text-muted); margin-bottom:6px;">3️⃣ 支付完成后<strong style="color:var(--text);">截图保存</strong>交易凭证</p>
-      <p style="font-size:13px; color:var(--text-muted);">4️⃣ 点击下方按钮联系客服发货 👇</p>
+<!-- ===== SUCCESS MODAL ===== -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal">
+    <div style="text-align:center;padding:20px 0">
+      <div style="font-size:64px;margin-bottom:16px">✅</div>
+      <h3 style="font-size:24px;margin-bottom:12px" data-i18n="paymentSuccessTitle">支付成功！</h3>
+      <p style="color:var(--text-muted);font-size:14px;margin-bottom:24px" data-i18n="paymentSuccessDesc">你的下载链接已生成，请点击下方按钮获取策略包。</p>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px">
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px" data-i18n="downloadHint">点击下方按钮下载（链接 48 小时内有效）</p>
+        <a href="#" id="downloadLink" class="btn btn-primary" style="text-decoration:none" target="_blank" data-i18n="downloadBtn">⬇️ 下载策略包</a>
+      </div>
+      <button onclick="closeSuccessModal()" class="btn btn-outline" style="font-size:14px;padding:10px 20px;width:auto;display:inline-block" data-i18n="closeBtn">关闭</button>
     </div>
-
-    <button class="btn btn-primary" onclick="contactSupportAfterPay()" style="font-size:16px; padding:14px;">
-      💬 <span data-i18n="contactSupport">我已支付，联系客服发货</span>
-    </button>
-
-    <p style="margin-top:12px; font-size:11px; color:var(--text-muted); text-align:center;">
-      付款确认后即时发货（通常 &lt;1 分钟）
-    </p>
   </div>
 </div>
 
@@ -621,10 +375,7 @@
   <div class="chat-window" id="chatWindow">
     <div class="chat-header">
       <div class="chat-avatar">🤖</div>
-      <div class="chat-title-area">
-        <div class="chat-title">TradeBot AI 客服</div>
-        <div class="chat-status"><span class="dot"></span><span data-i18n="online">在线 · 平均响应 &lt;1分钟</span></div>
-      </div>
+      <div class="chat-title-area"><div class="chat-title">TradeBot AI 客服</div><div class="chat-status"><span class="dot"></span><span data-i18n="online">在线 · 平均响应 &lt;1分钟</span></div></div>
       <button class="chat-close-btn" onclick="toggleChat()">✕</button>
     </div>
     <div class="chat-messages" id="chatMessages"></div>
@@ -636,7 +387,7 @@
     </div>
     <div class="chat-input-area">
       <input type="file" class="chat-file-input" id="chatFileInput" accept="image/*" onchange="handleImageUpload(event)">
-      <button class="chat-upload-btn" onclick="document.getElementById('chatFileInput').click()" title="上传图片">📎</button>
+      <button class="chat-upload-btn" onclick="document.getElementById('chatFileInput').click()">📎</button>
       <input type="text" class="chat-input" id="chatInput" data-i18n-placeholder="typeMessage" placeholder="输入消息..." onkeypress="handleKeyPress(event)">
       <button class="chat-send-btn" onclick="sendMessage()">➤</button>
     </div>
@@ -645,645 +396,35 @@
 </div>
 
 <script>
-// ===== MULTI-LANGUAGE =====
-const i18n = {
-  zh: {
-    heroBadge: '🤖 AI 自动交易 · 24h 运行',
-    heroLine1: '让',
-    heroLine2: '替你交易',
-    heroLine3: '把情绪关在门外',
-    heroDesc: 'TradeBot 策略包 · 支持多交易所自动执行经过验证的交易策略，无需盯盘，告别 FOMO / FUD / 扛单。',
-    heroCta: '立即购买 · $0.9 起',
-    heroNote: '支持 Hyperliquid、Binance、OKX 等多平台',
-    exchangesTitle: '支持平台',
-    exHyperliquid: 'Hyperliquid', exBinance: 'Binance', exOKX: 'OKX', exDyDx: 'dYdX', exApex: 'Apex', exGMX: 'GMX',
-    pain1: '看到别人赚钱就忍不住追高',
-    pain2: '恐慌抛售后错过大反弹',
-    pain3: '持仓时焦虑到睡不着觉',
-    pain4: '不知道什么时候该买该卖',
-    whatTitle: 'Skill Package 是什么？',
-    whatDesc: '一套完整的自动交易解决方案。购买后获得策略包 + 安装教程 + AI 客服，30 分钟完成部署，之后 AI 24h 自动为你执行交易。',
-    feature1Title: '策略包', feature1Desc: '配置好的参数，即开即用，无需编程',
-    feature2Title: 'AI 自动执行', feature2Desc: '24h 运行，无需盯盘，策略自动下单',
-    feature3Title: '自动止损', feature3Desc: '内置止损逻辑，控制单笔最大亏损',
-    feature4Title: 'AI 客服 24h', feature4Desc: '安装问题随时问，专属客服支持',
-    stepsTitle: '4步开始自动交易',
-    step1Title: '购买策略包', step1Desc: '选择套餐，使用 USDT/USDC 支付，付款后即时收到下载链接。',
-    step2Title: '安装部署（30分钟）', step2Desc: '按教程配置 Python 环境 + API Key，有问题 AI 客服随时帮你。',
-    step3Title: '启动策略', step3Desc: '运行脚本，AI 自动开始监控信号，发现机会自动下单。',
-    step4Title: '躺平收钱', step4Desc: '无需盯盘，睡前、工作中、通勤时，AI 都在帮你执行策略。',
-    pricingTitle: '选择你的套餐', pricingSubtitle: '按需选择，体验 / 标准 / 高级三种方案',
-    starterName: '体验版 Starter', starterDesc: '尝鲜体验，先试试水',
-    starterFeat1: '单个核心策略包', starterFeat2: '完整图文安装教程', starterFeat3: '基础 AI 客服支持', starterFeat4: '风险提示书',
-    selectStarter: '选择体验版',
-    standardName: '标准版 Standard', standardDesc: '认真使用，稳定运行',
-    standardFeat1: '3 个核心策略包', standardFeat2: '完整图文安装教程', standardFeat3: '优先 AI 客服（更快响应）', standardFeat4: '风险提示书',
-    selectStandard: '选择标准版 ⭐',
-    premiumName: '高级版 Premium', premiumDesc: '深度用户，持续更新',
-    premiumFeat1: '全部策略包（含未来更新）', premiumFeat2: '图文 + 视频教程', premiumFeat3: '专属优先 AI 客服',
-    premiumFeat4: '策略更新服务（3个月）', premiumFeat5: '一对一安装协助 × 1次',
-    selectPremium: '选择高级版',
-    riskWarning: '加密货币交易有风险，请阅读', riskLink: '风险提示书',
-    faqTitle: '常见问题',
-    faq1Q: '资金安全吗？谁在操作我的账户？', faq1A: '资金永远在你自己交易所账户，我们只提供策略包，不接触你的资金。API Key 完全由你掌控，可随时撤销。',
-    faq2Q: '我需要懂编程吗？', faq2A: '不需要。教程专为非技术背景编写，30 分钟按步骤操作即可。',
-    faq3Q: '策略能保证赚钱吗？', faq3A: '没有任何策略能保证盈利。过去的回测结果不代表未来表现。',
-    faq4Q: '付款后多久能收到？', faq4A: 'TRC20 链通常 3 秒内确认，确认后即时自动发货。',
-    faq5Q: '可以退款吗？', faq5A: '不支持。产品为虚拟商品，一经售出概不退换。',
-    faq6Q: '支持哪些交易所？', faq6A: '目前支持 Hyperliquid、Binance、OKX、dYdX、Apex、GMX 等。',
-    riskBoxTitle: '⚠️ 重要风险提示（购买前必读）',
-    risk1: '加密货币交易存在极高风险，可能导致本金全部损失', risk2: '本产品可能使用杠杆交易，亏损会被同步放大',
-    risk3: '策略过往表现不代表未来收益', risk4: '请勿使用借贷资金或生活必需资金进行交易',
-    risk5: '本产品不构成投资建议，盈亏由用户自行承担', risk6: '一经售出，概不退换',
-    footerSlogan: '让情绪成为过去，让利润自己走进来。', footerRisk: '风险提示', footerTerms: '使用条款', footerSupport: '客服政策',
-    buy: '购买', payAmount: '实付', scanToPay: '扫码或复制地址支付 USDT (TRC20)',
-    orCopyAddress: '或复制地址转账：', network: '网络', amount: '金额',
-    step1: '复制上方地址', step2: '在钱包中发起转账（TRC20 网络）', step3: '支付完成后截图保存', step4: '点击下方按钮联系客服发货',
-    paymentWarning: '请务必使用 TRC20 网络，其他网络可能导致资金丢失',
-    contactSupport: '💬 我已支付，联系客服发货', trc20Note: '推荐使用 TRC20 链 USDT，手续费最低（≈ $0.2）',
-    securePay: '🔒 安全支付 - 支持 USDT / USDC / 信用卡',
-    payNow: '立即支付',
-    autoDeliver: '付款确认后自动发货（<1分钟）',
-    paymentNote: '请勿关闭此页面，付款后将自动跳转',
-    waitingPayment: '等待付款确认...',
-    waitingHint: '请在跳转的页面中完成付款',
-    paySuccess: '支付成功！',
-    downloading: '正在准备下载链接...',
-    closeBtn: '关闭',
-    payFailed: '支付未完成',
-    retryHint: '你可以重新尝试支付',
-    retryPay: '重新支付',
-    cancelPay: '取消支付',
-    errorRetry: '创建失败，点击重试',
-    creating: '⏳ 创建订单中...',
-    createFailed: '创建订单失败',
-    networkError: '网络错误，请重试',
-    online: '在线 · 平均响应 <1分钟', quickProduct: '📦 产品详情', quickInstall: '🔧 安装教程',
-    quickPaid: '💰 我已付款', quickError: '🐛 报错求助', encrypted: '🔒 对话已加密 · AI 客服 24h 在线',
-    typeMessage: '输入消息...', tierStarter: '体验版', tierStandard: '标准版', tierPremium: '高级版'
-  },
-  en: {
-    heroBadge: '🤖 AI Auto Trading · 24/7 Running',
-    heroLine1: 'Let',
-    heroLine2: 'AI Trade For You',
-    heroLine3: 'No More Emotional Trading',
-    heroDesc: 'TradeBot Strategy Package · Automated execution across multiple exchanges. No need to watch charts, say goodbye to FOMO / FUD / bag holding.',
-    heroCta: 'Buy Now · From $0.9',
-    heroNote: 'Supports Hyperliquid, Binance, OKX & more',
-    exchangesTitle: 'Supported Exchanges',
-    exHyperliquid: 'Hyperliquid', exBinance: 'Binance', exOKX: 'OKX', exDyDx: 'dYdX', exApex: 'Apex', exGMX: 'GMX',
-    pain1: 'FOMO buying when seeing others profit', pain2: 'Panic selling then missing the rebound',
-    pain3: 'Can\'t sleep while holding positions', pain4: 'Don\'t know when to buy or sell',
-    whatTitle: 'What is Skill Package?', whatDesc: 'A complete automated trading solution. Get strategy package + installation guide + AI support. Deploy in 30 minutes, then AI trades 24/7 for you.',
-    feature1Title: 'Strategy Package', feature1Desc: 'Pre-configured, ready to use, no coding needed',
-    feature2Title: 'AI Auto Execution', feature2Desc: 'Runs 24/7, auto order placement',
-    feature3Title: 'Auto Stop Loss', feature3Desc: 'Built-in stop loss to control max loss per trade',
-    feature4Title: '24h AI Support', feature4Desc: 'Ask anytime for installation help',
-    stepsTitle: '4 Steps to Start', step1Title: 'Buy Package', step1Desc: 'Choose plan, pay with USDT/USDC, instant delivery.',
-    step2Title: 'Install (30 min)', step2Desc: 'Setup Python + API Key, AI support available.',
-    step3Title: 'Launch Strategy', step3Desc: 'AI starts monitoring signals and placing orders.',
-    step4Title: 'Relax & Profit', step4Desc: 'AI works while you sleep, work, commute.',
-    pricingTitle: 'Choose Your Plan', pricingSubtitle: 'Three tiers: Starter / Standard / Premium',
-    starterName: 'Starter', starterDesc: 'Try it out', starterFeat1: '1 core strategy', starterFeat2: 'Installation guide', starterFeat3: 'Basic AI support', starterFeat4: 'Risk disclosure', selectStarter: 'Choose Starter',
-    standardName: 'Standard', standardDesc: 'For serious users', standardFeat1: '3 core strategies', standardFeat2: 'Installation guide', standardFeat3: 'Priority AI support', standardFeat4: 'Risk disclosure', selectStandard: 'Choose Standard ⭐',
-    premiumName: 'Premium', premiumDesc: 'Power users, continuous updates', premiumFeat1: 'All strategies + future updates', premiumFeat2: 'Guide + video tutorials', premiumFeat3: 'Exclusive priority support', premiumFeat4: 'Strategy updates (3 months)', premiumFeat5: 'One-on-one setup assistance', selectPremium: 'Choose Premium',
-    riskWarning: 'Crypto trading involves risks. Please read', riskLink: 'Risk Disclosure',
-    faqTitle: 'FAQ', faq1Q: 'Is my fund safe?', faq1A: 'Funds stay in your exchange account. We never touch your funds. You control the API Key.', faq2Q: 'Do I need coding skills?', faq2A: 'No. Guides are written for non-technical users, follow step-by-step in 30 minutes.', faq3Q: 'Can strategies guarantee profits?', faq3A: 'No strategy can guarantee profits. Past results don\'t guarantee future performance.', faq4Q: 'How soon after payment?', faq4A: 'TRC20 confirms in ~3 seconds, instant delivery.', faq5Q: 'Can I get a refund?', faq5A: 'No refunds. Digital product, all sales final.', faq6Q: 'Which exchanges are supported?', faq6A: 'Hyperliquid, Binance, OKX, dYdX, Apex, GMX and more.',
-    riskBoxTitle: '⚠️ Important Risk Warning', risk1: 'Crypto trading carries extreme risk', risk2: 'Leverage magnifies losses', risk3: 'Past performance ≠ future results', risk4: 'Do not trade with borrowed money', risk5: 'Not investment advice', risk6: 'All sales final',
-    footerSlogan: 'Leave emotions behind, let profits come to you.', footerRisk: 'Risk Disclosure', footerTerms: 'Terms', footerSupport: 'Support',
-    buy: 'Buy', payAmount: 'Pay', scanToPay: 'Scan or copy address to pay USDT (TRC20)', orCopyAddress: 'Or copy address:', network: 'Network', amount: 'Amount',
-    step1: 'Copy address above', step2: 'Send from your wallet (TRC20)', step3: 'Save screenshot after payment', step4: 'Click button below to contact support',
-    paymentWarning: 'Must use TRC20 network, other networks may lose funds', contactSupport: '💬 I\'ve Paid, Contact Support', trc20Note: 'TRC20 USDT recommended, lowest fee (~$0.2)',
-    securePay: '🔒 Secure Payment - USDT / USDC / Credit Card',
-    payNow: 'Pay Now',
-    autoDeliver: 'Auto-delivery after payment confirmation (<1 min)',
-    paymentNote: 'Don\'t close this page, you will be redirected after payment',
-    waitingPayment: 'Waiting for payment confirmation...',
-    waitingHint: 'Complete payment on the redirected page',
-    paySuccess: 'Payment Successful!',
-    downloading: 'Preparing download link...',
-    closeBtn: 'Close',
-    payFailed: 'Payment Not Completed',
-    retryHint: 'You can try again',
-    retryPay: 'Retry Payment',
-    cancelPay: 'Cancel',
-    errorRetry: 'Failed, click to retry',
-    creating: '⏳ Creating order...',
-    createFailed: 'Failed to create order',
-    networkError: 'Network error, please retry',
-    online: 'Online · Avg response <1 min', quickProduct: '📦 Product Details', quickInstall: '🔧 Installation', quickPaid: '💰 I\'ve Paid', quickError: '🐛 Error Help',
-    encrypted: '🔒 Encrypted · AI Support 24/7', typeMessage: 'Type message...', tierStarter: 'Starter', tierStandard: 'Standard', tierPremium: 'Premium'
-  },
-  ja: {
-    heroBadge: '🤖 AI自動取引 · 24時間稼働',
-    heroLine1: 'AIに',
-    heroLine2: '取引を任せて',
-    heroLine3: '感情を締め出そう',
-    heroDesc: 'TradeBot戦略パッケージ · 複数取引所で自動実行。チャート監視不要、FOMO/FUD/ナンピンから解放。',
-    heroCta: '今すぐ購入 · $0.9〜',
-    heroNote: 'Hyperliquid、Binance、OKXなど対応',
-    exchangesTitle: '対応取引所',
-    pain1: '他人の利益を見てFOMO買い', pain2: 'パニック売りで反発を逃す',
-    pain3: 'ポジション保有で不眠', pain4: '買い時・売り時がわからない',
-    whatTitle: 'Skill Packageとは？', whatDesc: '完全な自動取引ソリューション。戦略パッケージ+導入ガイド+AIサポートを入手。30分で導入完了、AIが24時間取引。',
-    feature1Title: '戦略パッケージ', feature1Desc: '設定済み、すぐ使用、プログラミング不要',
-    feature2Title: 'AI自動実行', feature2Desc: '24時間稼働、自動注文',
-    feature3Title: '自動損切り', feature3Desc: '内蔵ロジックで最大損失を制御',
-    feature4Title: '24時間AIサポート', feature4Desc: '導入の質問はいつでも',
-    stepsTitle: '4ステップで開始', step1Title: 'パッケージ購入', step1Desc: 'プラン選択、USDT/USDC支払い、即時配信。',
-    step2Title: '導入（30分）', step2Desc: 'Python+APIキー設定、AIサポートあり。',
-    step3Title: '戦略起動', step3Desc: 'AIがシグナル監視と注文を開始。',
-    step4Title: 'リラックスして収益', step4Desc: 'AIが睡眠・仕事・通勤中も稼働。',
-    pricingTitle: 'プラン選択', pricingSubtitle: '3段階：スターター/スタンダード/プレミアム',
-    starterName: 'スターター', starterDesc: 'お試し', starterFeat1: '1つのコア戦略', starterFeat2: '導入ガイド', starterFeat3: '基本AIサポート', starterFeat4: 'リスク開示', selectStarter: 'スターターを選択',
-    standardName: 'スタンダード', standardDesc: '本格利用向け', standardFeat1: '3つのコア戦略', standardFeat2: '導入ガイド', standardFeat3: '優先AIサポート', standardFeat4: 'リスク開示', selectStandard: 'スタンダードを選択 ⭐',
-    premiumName: 'プレミアム', premiumDesc: 'パワーユーザー向け', premiumFeat1: '全戦略+今後の更新', premiumFeat2: 'ガイド+動画チュートリアル', premiumFeat3: '専属優先サポート', premiumFeat4: '戦略更新（3ヶ月）', premiumFeat5: '1対1導入支援', selectPremium: 'プレミアムを選択',
-    riskWarning: '暗号資産取引にはリスクがあります。', riskLink: 'リスク開示',
-    faqTitle: 'よくある質問', faq1Q: '資金は安全ですか？', faq1A: '資金は常にご自身の取引所アカウントに残ります。APIキーは完全にあなたが管理します。', faq2Q: 'プログラミングは必要ですか？', faq2A: 'いいえ。非技術者向けに作成されたガイドです。', faq3Q: '戦略は利益を保証しますか？', faq3A: 'いいえ。過去の結果は将来のパフォーマンスを保証しません。', faq4Q: '支払い後どのくらいで届きますか？', faq4A: 'TRC20は約3秒で確認、即時配信。', faq5Q: '返金はできますか？', faq5A: 'デジタル商品のため返金不可。', faq6Q: 'どの取引所に対応していますか？', faq6A: 'Hyperliquid、Binance、OKX、dYdX、Apex、GMXなど。',
-    riskBoxTitle: '⚠️ 重要なリスク警告', risk1: '暗号資産取引は極めて高リスク', risk2: 'レバレッジは損失を拡大', risk3: '過去のパフォーマンス≠将来の結果', risk4: '借入資金での取引は禁止', risk5: '投資助言ではありません', risk6: '返金不可',
-    footerSlogan: '感情を置き去りに、利益を手に入れよう。', footerRisk: 'リスク開示', footerTerms: '利用規約', footerSupport: 'サポート',
-    buy: '購入', payAmount: '支払額', scanToPay: 'USDT(TRC20)支払い用QRまたはアドレスをコピー',
-    orCopyAddress: 'またはアドレスをコピー：', network: 'ネットワーク', amount: '金額',
-    step1: '上記アドレスをコピー', step2: 'ウォレットで送金（TRC20）', step3: '支払い後スクリーンショット保存', step4: '下のボタンでサポートに連絡',
-    paymentWarning: '必ずTRC20ネットワークを使用してください', contactSupport: '💬 支払い完了、サポートに連絡', trc20Note: 'TRC20 USDT推奨、手数料最低（約$0.2）',
-    online: 'オンライン · 平均応答<1分', quickProduct: '📦 製品詳細', quickInstall: '🔧 導入方法',
-    quickPaid: '💰 支払い完了', quickError: '🐛 エラー対応', encrypted: '🔒 暗号化 · AIサポート24時間',
-    typeMessage: 'メッセージを入力...', tierStarter: 'スターター', tierStandard: 'スタンダード', tierPremium: 'プレミアム'
-  },
-  ko: {
-    heroBadge: '🤖 AI 자동 거래 · 24시간 실행',
-    heroLine1: 'AI에게',
-    heroLine2: '거래를 맡기고',
-    heroLine3: '감정을 배제하세요',
-    heroDesc: 'TradeBot 전략 패키지 · 여러 거래소에서 자동 실행. 차트 감시 불필요, FOMO/FUD/졸업에서 항복.',
-    heroCta: '지금 구매 · $0.9부터',
-    heroNote: 'Hyperliquid, Binance, OKX 등 지원',
-    exchangesTitle: '지원 거래소',
-    pain1: '타인 수익 보고 FOMO 매수', pain2: '공황 매도 후 반등 놓침',
-    pain3: '포지션 보유 시 불면증', pain4: '매수/매도 타이밍 모름',
-    whatTitle: 'Skill Package란?', whatDesc: '완전한 자동 거래 솔루션. 전략 패키지+설치 가이드+AI 지원 수령. 30분 설치, AI가 24시간 거래.',
-    feature1Title: '전략 패키지', feature1Desc: '사전 설정, 바로 사용, 코딩 불필요',
-    feature2Title: 'AI 자동 실행', feature2Desc: '24시간 실행, 자동 주문',
-    feature3Title: '자동 손절', feature3Desc: '내장 로직으로 최대 손실 제어',
-    feature4Title: '24시간 AI 지원', feature4Desc: '설치 질문은 언제든지',
-    stepsTitle: '4단계로 시작', step1Title: '패키지 구매', step1Desc: '플랜 선택, USDT/USDC 결제, 즉시 배송.',
-    step2Title: '설치 (30분)', step2Desc: 'Python+API 키 설정, AI 지원 가능.',
-    step3Title: '전략 실행', step3Desc: 'AI가 신호 모니터링과 주문 시작.',
-    step4Title: '편안하게 수익', step4Desc: 'AI가 수면/근무/통근 중에도 실행.',
-    pricingTitle: '플랜 선택', pricingSubtitle: '3단계: 스타터/스탠다드/프리미엄',
-    starterName: '스타터', starterDesc: '체험용', starterFeat1: '1개 핵심 전략', starterFeat2: '설치 가이드', starterFeat3: '기본 AI 지원', starterFeat4: '리스크 공개', selectStarter: '스타터 선택',
-    standardName: '스탠다드', standardDesc: '본격 이용', standardFeat1: '3개 핵심 전략', standardFeat2: '설치 가이드', standardFeat3: '우선 AI 지원', standardFeat4: '리스크 공개', selectStandard: '스탠다드 선택 ⭐',
-    premiumName: '프리미엄', premiumDesc: '파워 유저용', premiumFeat1: '모든 전략+향후 업데이트', premiumFeat2: '가이드+동영상 튜토리얼', premiumFeat3: '전속 우선 지원', premiumFeat4: '전략 업데이트(3개월)', premiumFeat5: '1대1 설치 지원', selectPremium: '프리미엄 선택',
-    riskWarning: '암호화폐 거래에는 리스크가 있습니다.', riskLink: '리스크 공개',
-    faqTitle: '자주 묻는 질문', faq1Q: '자금은 안전한가요?', faq1A: '자금은 항상 귀하의 거래소 계정에 남아있습니다. API 키는 완전히 귀하가 관리합니다.', faq2Q: '프로그래밍이 필요한가요?', faq2A: '아니요. 비기술자용으로 작성된 가이드입니다.', faq3Q: '전략이 수익을 보장하나요?', faq3A: '아니요. 과거 결과는 미래 성과를 보장하지 않습니다.', faq4Q: '결제 후 얼마나 걸리나요?', faq4A: 'TRC20은 약 3초 확인, 즉시 배송.', faq5Q: '환불 가능한가요?', faq5A: '디지털 상품으로 환불 불가.', faq6Q: '어떤 거래소를 지원하나요?', faq6A: 'Hyperliquid, Binance, OKX, dYdX, Apex, GMX 등.',
-    riskBoxTitle: '⚠️ 중요 리스크 경고', risk1: '암호화폐 거래는 극도의 리스크', risk2: '레버리지는 손실 확대', risk3: '과거 성과≠미래 결과', risk4: '대출 자금 거래 금지', risk5: '투자 조언 아님', risk6: '환불 불가',
-    footerSlogan: '감정은 버리고, 수익은 챙기세요.', footerRisk: '리스크 공개', footerTerms: '이용 약관', footerSupport: '지원',
-    buy: '구매', payAmount: '결제 금액', scanToPay: 'USDT(TRC20) 결제용 QR 또는 주소 복사',
-    orCopyAddress: '또는 주소 복사:', network: '네트워크', amount: '금액',
-    step1: '위 주소 복사', step2: '지갑에서 송금(TRC20)', step3: '결제 후 스크린샷 저장', step4: '아래 버튼으로 지원팀 연락',
-    paymentWarning: '반드시 TRC20 네트워크 사용', contactSupport: '💬 결제 완료, 지원팀 연락', trc20Note: 'TRC20 USDT 권장, 수수료 최저(약$0.2)',
-    online: '온라인 · 평균 응답<1분', quickProduct: '📦 제품 상세', quickInstall: '🔧 설치 방법',
-    quickPaid: '💰 결제 완료', quickError: '🐛 오류 대응', encrypted: '🔒 암호화 · AI 지원 24시간',
-    typeMessage: '메시지 입력...', tierStarter: '스타터', tierStandard: '스탠다드', tierPremium: '프리미엄'
-  },
-  ru: {
-    heroBadge: '🤖 AI Автотрейдинг · 24/7',
-    heroLine1: 'Пусть',
-    heroLine2: 'AI торгует за вас',
-    heroLine3: 'Без эмоций',
-    heroDesc: 'Пакет стратегий TradeBot · Автоматическое исполнение на множестве бирж. Не нужно следить за графиками, забудьте о FOMO/FUD/усреднении.',
-    heroCta: 'Купить сейчас · от $0.9',
-    heroNote: 'Поддержка Hyperliquid, Binance, OKX и др.',
-    exchangesTitle: 'Поддерживаемые биржи',
-    pain1: 'FOMO-покупки при виде чужой прибыли', pain2: 'Панические продажи и пропуск отскока',
-    pain3: 'Бессонница при открытых позициях', pain4: 'Не знаю когда покупать/продавать',
-    whatTitle: 'Что такое Skill Package?', whatDesc: 'Полное решение для автотрейдинга. Получите пакет стратегий + руководство + AI-поддержку. Установка за 30 минут, затем AI торгует 24/7.',
-    feature1Title: 'Пакет стратегий', feature1Desc: 'Преднастроено, готово к использованию, без программирования',
-    feature2Title: 'AI автоисполнение', feature2Desc: 'Работает 24/7, автоматические ордера',
-    feature3Title: 'Автостоп-лосс', feature3Desc: 'Встроенная логика контроля макс. убытка',
-    feature4Title: 'AI-поддержка 24ч', feature4Desc: 'Задавайте вопросы по установке в любое время',
-    stepsTitle: '4 шага к старту', step1Title: 'Купить пакет', step1Desc: 'Выберите план, оплатите USDT/USDC, мгновенная доставка.',
-    step2Title: 'Установка (30 мин)', step2Desc: 'Настройка Python + API ключа, доступна AI-поддержка.',
-    step3Title: 'Запуск стратегии', step3Desc: 'AI начинает мониторинг сигналов и размещение ордеров.',
-    step4Title: 'Отдыхайте и получайте прибыль', step4Desc: 'AI работает пока вы спите, работаете, едете.',
-    pricingTitle: 'Выберите план', pricingSubtitle: 'Три уровня: Starter / Standard / Premium',
-    starterName: 'Starter', starterDesc: 'Попробовать', starterFeat1: '1 основная стратегия', starterFeat2: 'Руководство по установке', starterFeat3: 'Базовая AI-поддержка', starterFeat4: 'Раскрытие рисков', selectStarter: 'Выбрать Starter',
-    standardName: 'Standard', standardDesc: 'Для серьезных пользователей', standardFeat1: '3 основные стратегии', standardFeat2: 'Руководство по установке', standardFeat3: 'Приоритетная AI-поддержка', standardFeat4: 'Раскрытие рисков', selectStandard: 'Выбрать Standard ⭐',
-    premiumName: 'Premium', premiumDesc: 'Для опытных, постоянные обновления', premiumFeat1: 'Все стратегии + будущие обновления', premiumFeat2: 'Руководство + видеоуроки', premiumFeat3: 'Эксклюзивная приоритетная поддержка', premiumFeat4: 'Обновления стратегий (3 мес)', premiumFeat5: 'Персональная помощь в установке', selectPremium: 'Выбрать Premium',
-    riskWarning: 'Криптотрейдинг связан с рисками.', riskLink: 'Раскрытие рисков',
-    faqTitle: 'FAQ', faq1Q: 'Безопасны ли мои средства?', faq1A: 'Средства остаются на вашем биржевом счете. API ключ полностью под вашим контролем.', faq2Q: 'Нужны ли навыки программирования?', faq2A: 'Нет. Руководства написаны для нетехнических пользователей.', faq3Q: 'Гарантируют ли стратегии прибыль?', faq3A: 'Никакая стратегия не гарантирует прибыль. Прошлые результаты не гарантируют будущее.', faq4Q: 'Сколько ждать после оплаты?', faq4A: 'TRC20 подтверждается за ~3 секунды, мгновенная доставка.', faq5Q: 'Возможен ли возврат?', faq5A: 'Возвратов нет. Цифровой товар, все продажи окончательны.', faq6Q: 'Какие биржи поддерживаются?', faq6A: 'Hyperliquid, Binance, OKX, dYdX, Apex, GMX и другие.',
-    riskBoxTitle: '⚠️ Важное предупреждение о рисках', risk1: 'Криптотрейдинг несет экстремальный риск', risk2: 'Плечо увеличивает убытки', risk3: 'Прошлая доходность ≠ будущей', risk4: 'Не торгуйте заемными средствами', risk5: 'Не является инвестсоветом', risk6: 'Все продажи окончательны',
-    footerSlogan: 'Оставьте эмоции позади, пусть прибыль придет к вам.', footerRisk: 'Раскрытие рисков', footerTerms: 'Условия', footerSupport: 'Поддержка',
-    buy: 'Купить', payAmount: 'К оплате', scanToPay: 'Отсканируйте или скопируйте адрес для оплаты USDT (TRC20)',
-    orCopyAddress: 'Или скопируйте адрес:', network: 'Сеть', amount: 'Сумма',
-    step1: 'Скопируйте адрес выше', step2: 'Отправьте с кошелька (TRC20)', step3: 'Сохраните скриншот после оплаты', step4: 'Нажмите кнопку ниже для связи',
-    paymentWarning: 'Обязательно используйте сеть TRC20', contactSupport: '💬 Я оплатил, связаться с поддержкой', trc20Note: 'Рекомендуется TRC20 USDT, мин. комиссия (~$0.2)',
-    online: 'Онлайн · Среднее время ответа <1 мин', quickProduct: '📦 О продукте', quickInstall: '🔧 Установка',
-    quickPaid: '💰 Я оплатил', quickError: '🐛 Помощь с ошибкой', encrypted: '🔒 Шифрование · AI-поддержка 24/7',
-    typeMessage: 'Введите сообщение...', tierStarter: 'Starter', tierStandard: 'Standard', tierPremium: 'Premium'
-  },
-  tr: {
-    heroBadge: '🤖 AI Otomatik Ticaret · 7/24 Çalışır',
-    heroLine1: 'AI',
-    heroLine2: 'Sizin İçin Ticaret Yapsın',
-    heroLine3: 'Duyguları Dışarıda Bırakın',
-    heroDesc: 'TradeBot Strateji Paketi · Birden fazla borsada otomatik çalıştırma. Grafik izlemeye gerek yok, FOMO/FUD/pozisyon tutmaya son.',
-    heroCta: 'Şimdi Satın Al · $0.9\'dan başlayan',
-    heroNote: 'Hyperliquid, Binance, OKX ve daha fazlası desteklenir',
-    exchangesTitle: 'Desteklenen Borsalar',
-    pain1: 'Başkalarının kazancını görünce FOMO alımı', pain2: 'Panik satışı ve tepkiyi kaçırma',
-    pain3: 'Pozisyon açıkken uyuyamama', pain4: 'Ne zaman alınacağı/satılacağı bilinmiyor',
-    whatTitle: 'Skill Package nedir?', whatDesc: 'Tam otomatik ticaret çözümü. Strateji paketi + kurulum kılavuzu + AI desteği alın. 30 dakikada kurulum, sonra AI 7/24 sizin için ticaret yapar.',
-    feature1Title: 'Strateji Paketi', feature1Desc: 'Önceden yapılandırılmış, kullanıma hazır, kodlama gerekmez',
-    feature2Title: 'AI Otomatik Çalıştırma', feature2Desc: '7/24 çalışır, otomatik emir',
-    feature3Title: 'Otomatik Zarar Durdurma', feature3Desc: 'Maksimum zararı kontrol etmek için yerleşik mantık',
-    feature4Title: '7/24 AI Destek', feature4Desc: 'Kurulum sorularınızı istediğiniz zaman sorun',
-    stepsTitle: 'Başlamak için 4 Adım', step1Title: 'Paket Satın Al', step1Desc: 'Plan seçin, USDT/USDC ile ödeyin, anında teslimat.',
-    step2Title: 'Kurulum (30 dk)', step2Desc: 'Python + API Anahtarı kurulumu, AI desteği mevcut.',
-    step3Title: 'Strateji Başlat', step3Desc: 'AI sinyal izleme ve emir vermeye başlar.',
-    step4Title: 'Rahatlayın ve Kazanın', step4Desc: 'AI uyurken, çalışırken, yolculukta çalışır.',
-    pricingTitle: 'Planınızı Seçin', pricingSubtitle: 'Üç seviye: Starter / Standard / Premium',
-    starterName: 'Starter', starterDesc: 'Deneyin', starterFeat1: '1 temel strateji', starterFeat2: 'Kurulum kılavuzu', starterFeat3: 'Temel AI desteği', starterFeat4: 'Risk açıklaması', selectStarter: 'Starter Seç',
-    standardName: 'Standard', standardDesc: 'Ciddi kullanıcılar için', standardFeat1: '3 temel strateji', standardFeat2: 'Kurulum kılavuzu', standardFeat3: 'Öncelikli AI desteği', standardFeat4: 'Risk açıklaması', selectStandard: 'Standard Seç ⭐',
-    premiumName: 'Premium', standardDesc: 'Güç kullanıcıları, sürekli güncellemeler', premiumFeat1: 'Tüm stratejiler + gelecek güncellemeler', premiumFeat2: 'Kılavuz + video eğitimleri', premiumFeat3: 'Özel öncelikli destek', premiumFeat4: 'Strateji güncellemeleri (3 ay)', premiumFeat5: 'Birebir kurulum yardımı', selectPremium: 'Premium Seç',
-    riskWarning: 'Kripto ticareti riskler içerir.', riskLink: 'Risk Açıklaması',
-    faqTitle: 'SSS', faq1Q: 'Param güvende mi?', faq1A: 'Fonlar her zaman sizin borsa hesabınızda kalır. API Anahtarı tamamen sizin kontrolünüzdedir.', faq2Q: 'Kodlama bilgisi gerekli mi?', faq2A: 'Hayır. Kılavuzlar teknik olmayan kullanıcılar için yazılmıştır.', faq3Q: 'Stratejiler kar garantisi verir mi?', faq3A: 'Hayır. Geçmiş sonuçlar gelecek performansı garanti etmez.', faq4Q: 'Ödeme sonrası ne kadar sürer?', faq4A: 'TRC20 ~3 saniyede onaylanır, anında teslimat.', faq5Q: 'İade yapılabilir mi?', faq5A: 'İade yok. Dijital ürün, tüm satışlar kesindir.', faq6Q: 'Hangi borsalar destekleniyor?', faq6A: 'Hyperliquid, Binance, OKX, dYdX, Apex, GMX ve daha fazlası.',
-    riskBoxTitle: '⚠️ Önemli Risk Uyarısı', risk1: 'Kripto ticareti aşırı risk taşır', risk2: 'Kaldıraç kayıpları büyütür', risk3: 'Geçmiş performans≠gelecek sonuç', risk4: 'Ödünç para ile ticaret yapmayın', risk5: 'Yatım tavsiyesi değildir', risk6: 'Tüm satışlar kesindir',
-    footerSlogan: 'Duyguları geride bırakın, kar sizin gelsin.', footerRisk: 'Risk Açıklaması', footerTerms: 'Şartlar', footerSupport: 'Destek',
-    buy: 'Satın Al', payAmount: 'Ödenecek', scanToPay: 'USDT (TRC20) ödemesi için tarayın veya adresi kopyalayın',
-    orCopyAddress: 'Veya adresi kopyalayın:', network: 'Ağ', amount: 'Tutar',
-    step1: 'Yukarıdaki adresi kopyalayın', step2: 'Cüzdanınızdan gönderin (TRC20)', step3: 'Ödeme sonrası ekran görüntüsü kaydedin', step4: 'Destekle iletişime geçmek için aşağıdaki butona tıklayın',
-    paymentWarning: 'Mutlaka TRC20 ağını kullanın', contactSupport: '💬 Ödedim, Destekle İletişime Geç', trc20Note: 'TRC20 USDT önerilir, en düşük ücret (~$0.2)',
-    online: 'Çevrimiçi · Ortalama yanıt <1 dk', quickProduct: '📦 Ürün Detayları', quickInstall: '🔧 Kurulum',
-    quickPaid: '💰 Ödeme Yaptım', quickError: '🐛 Hata Yardımı', encrypted: '🔒 Şifreli · AI Destek 7/24',
-    typeMessage: 'Mesaj yazın...', tierStarter: 'Starter', tierStandard: 'Standard', tierPremium: 'Premium'
-  },
-  vi: {
-    heroBadge: '🤖 AI Giao Dịch Tự Động · Chạy 24/7',
-    heroLine1: 'Để',
-    heroLine2: 'AI Giao Dịch Cho Bạn',
-    heroLine3: 'Loại Bỏ Cảm Xúc',
-    heroDesc: 'Gói Chiến Lược TradeBot · Thực thi tự động trên nhiều sàn. Không cần xem biểu đồ, tạm biệt FOMO/FUD/ôm lệnh.',
-    heroCta: 'Mua Ngay · Từ $0.9',
-    heroNote: 'Hỗ trợ Hyperliquid, Binance, OKX và nhiều sàn khác',
-    exchangesTitle: 'Sàn Giao Dịch Hỗ Trợ',
-    pain1: 'FOMO mua khi thấy ngườ khác lợi nhuận', pain2: 'Bán hoảng loạn rồi bỏ lỡ hồi phục',
-    pain3: 'Mất ngủ khi nắm giữ vị thế', pain4: 'Không biết khi nào nên mua/bán',
-    whatTitle: 'Skill Package là gì?', whatDesc: 'Giải pháp giao dịch tự động hoàn chỉnh. Nhận gói chiến lược + hướng dẫn cài đặt + hỗ trợ AI. Triển khai trong 30 phút, AI giao dịch 24/7 cho bạn.',
-    feature1Title: 'Gói Chiến Lược', feature1Desc: 'Đã cấu hình sẵn, sẵn sàng dùng, không cần lập trình',
-    feature2Title: 'AI Tự Động Thực Thi', feature2Desc: 'Chạy 24/7, tự động đặt lệnh',
-    feature3Title: 'Cắt Lỗ Tự Động', feature3Desc: 'Logic tích hợp kiểm soát lỗ tối đa',
-    feature4Title: 'Hỗ Trợ AI 24h', feature4Desc: 'Hỏi bất cứ lúc nào về cài đặt',
-    stepsTitle: '4 Bước Bắt Đầu', step1Title: 'Mua Gói', step1Desc: 'Chọn gói, thanh toán USDT/USDC, giao ngay.',
-    step2Title: 'Cài Đặt (30 phút)', step2Desc: 'Thiết lập Python + API Key, có hỗ trợ AI.',
-    step3Title: 'Khởi Chạy', step3Desc: 'AI bắt đầu giám sát tín hiệu và đặt lệnh.',
-    step4Title: 'Thư Giãn & Lợi Nhuận', step4Desc: 'AI làm việc khi bạn ngủ, làm việc, di chuyển.',
-    pricingTitle: 'Chọn Gói Củ Bạn', pricingSubtitle: 'Ba cấp: Starter / Standard / Premium',
-    starterName: 'Starter', starterDesc: 'Dùng thử', starterFeat1: '1 chiến lược cốt lõi', starterFeat2: 'Hướng dẫn cài đặt', starterFeat3: 'Hỗ trợ AI cơ bản', starterFeat4: 'Công bố rủi ro', selectStarter: 'Chọn Starter',
-    standardName: 'Standard', standardDesc: 'Dùng nghiêm túc', standardFeat1: '3 chiến lược cốt lõi', standardFeat2: 'Hướng dẫn cài đặt', standardFeat3: 'Hỗ trợ AI ưu tiên', standardFeat4: 'Công bố rủi ro', selectStandard: 'Chọn Standard ⭐',
-    premiumName: 'Premium', premiumDesc: 'Ngườ dùng chuyên sâu', premiumFeat1: 'Tất cả chiến lược + cập nhật', premiumFeat2: 'Hướng dẫn + video', premiumFeat3: 'Hỗ trợ ưu tiên độc quyền', premiumFeat4: 'Cập nhật chiến lược (3 tháng)', premiumFeat5: 'Hỗ trợ cài đặt 1-1', selectPremium: 'Chọn Premium',
-    riskWarning: 'Giao dịch crypto có rủi ro.', riskLink: 'Công Bố Rủi Ro',
-    faqTitle: 'FAQ', faq1Q: 'Tiền của tôi có an toàn không?', faq1A: 'Tiền luôn ở tài khoản sàn của bạn. Bạn kiểm soát API Key.', faq2Q: 'Tôi có cần biết lập trình không?', faq2A: 'Không. Hướng dẫn viết cho ngườ không kỹ thuật.', faq3Q: 'Chiến lược có đảm bảo lợi nhuận không?', faq3A: 'Không. Kết quả quá khứ không đảm bảo tương lai.', faq4Q: 'Thanh toán xong nhận hàng khi nào?', faq4A: 'TRC20 xác nhận ~3 giây, giao ngay.', faq5Q: 'Có hoàn tiền không?', faq5A: 'Không hoàn tiền. Sản phẩm số, bán là chính thức.', faq6Q: 'Hỗ trợ sàn nào?', faq6A: 'Hyperliquid, Binance, OKX, dYdX, Apex, GMX, v.v.',
-    riskBoxTitle: '⚠️ Cảnh Báo Rủi Ro Quan Trọng', risk1: 'Giao dịch crypto cực kỳ rủi ro', risk2: 'Đòn bẩy làm tăng lỗ', risk3: 'Quá khứ≠tương lai', risk4: 'Không dùng tiền vay để giao dịch', risk5: 'Không phải lờ khuyên đầu tư', risk6: 'Bán là chính thức',
-    footerSlogan: 'Bỏ qua cảm xúc, để lợi nhuận đến với bạn.', footerRisk: 'Công Bố Rủi Ro', footerTerms: 'Điều Khoản', footerSupport: 'Hỗ Trợ',
-    buy: 'Mua', payAmount: 'Thanh Toán', scanToPay: 'Quét hoặc sao chép địa chỉ để thanh toán USDT (TRC20)',
-    orCopyAddress: 'Hoặc sao chép địa chỉ:', network: 'Mạng', amount: 'Số Tiền',
-    step1: 'Sao chép địa chỉ bên trên', step2: 'Gửi từ ví của bạn (TRC20)', step3: 'Lưu ảnh chụp sau thanh toán', step4: 'Nhấn nút bên dưới để liên hệ hỗ trợ',
-    paymentWarning: 'Bắt buộc dùng mạng TRC20', contactSupport: '💬 Đã Thanh Toán, Liên Hệ Hỗ Trợ', trc20Note: 'Khuyên dùng TRC20 USDT, phí thấp nhất (~$0.2)',
-    online: 'Online · Phản hồi TB <1 phút', quickProduct: '📦 Chi Tiết Sản Phẩm', quickInstall: '🔧 Hướng Dẫn Cài Đặt',
-    quickPaid: '💰 Đã Thanh Toán', quickError: '🐛 Trợ Giúp Lỗi', encrypted: '🔒 Mã Hóa · Hỗ Trợ AI 24h',
-    typeMessage: 'Nhập tin nhắn...', tierStarter: 'Starter', tierStandard: 'Standard', tierPremium: 'Premium'
-  },
-  es: {
-    heroBadge: '🤖 Trading Automático con AI · 24/7',
-    heroLine1: 'Deja que el',
-    heroLine2: 'AI Opere Por Ti',
-    heroLine3: 'Sin Emociones',
-    heroDesc: 'Paquete de Estrategias TradeBot · Ejecución automática en múltiples exchanges. No necesitas ver gráficos, adiós FOMO/FUD/mantener posiciones.',
-    heroCta: 'Comprar Ahora · Desde $0.9',
-    heroNote: 'Soporta Hyperliquid, Binance, OKX y más',
-    exchangesTitle: 'Exchanges Soportados',
-    pain1: 'Comprar por FOMO al ver ganancias ajenas', pain2: 'Vender en pánico y perder el rebote',
-    pain3: 'No poder dormir con posiciones abiertas', pain4: 'No saber cuándo comprar o vender',
-    whatTitle: '¿Qué es Skill Package?', whatDesc: 'Una solución completa de trading automático. Obtén paquete de estrategias + guía de instalación + soporte AI. Despliegue en 30 minutos, luego el AI tradea 24/7 por ti.',
-    feature1Title: 'Paquete de Estrategias', feature1Desc: 'Preconfigurado, listo para usar, sin código',
-    feature2Title: 'Ejecución Automática AI', feature2Desc: 'Funciona 24/7, órdenes automáticas',
-    feature3Title: 'Stop Loss Automático', feature3Desc: 'Lógica integrada para controlar pérdidas',
-    feature4Title: 'Soporte AI 24h', feature4Desc: 'Pregunta cualquier cosa sobre instalación',
-    stepsTitle: '4 Pasos para Empezar', step1Title: 'Comprar Paquete', step1Desc: 'Elige plan, paga con USDT/USDC, entrega instantánea.',
-    step2Title: 'Instalar (30 min)', step2Desc: 'Configura Python + API Key, soporte AI disponible.',
-    step3Title: 'Lanzar Estrategia', step3Desc: 'El AI empieza a monitorear señales y colocar órdenes.',
-    step4Title: 'Relájate y Gana', step4Desc: 'El AI trabaja mientras duermes, trabajas, viajas.',
-    pricingTitle: 'Elige Tu Plan', pricingSubtitle: 'Tres niveles: Starter / Standard / Premium',
-    starterName: 'Starter', starterDesc: 'Pruébalo', starterFeat1: '1 estrategia principal', starterFeat2: 'Guía de instalación', starterFeat3: 'Soporte AI básico', starterFeat4: 'Divulgación de riesgos', selectStarter: 'Elegir Starter',
-    standardName: 'Standard', standardDesc: 'Para usuarios serios', standardFeat1: '3 estrategias principales', standardFeat2: 'Guía de instalación', standardFeat3: 'Soporte AI prioritario', standardFeat4: 'Divulgación de riesgos', selectStandard: 'Elegir Standard ⭐',
-    premiumName: 'Premium', premiumDesc: 'Usuarios avanzados, actualizaciones continuas', premiumFeat1: 'Todas las estrategias + futuras', premiumFeat2: 'Guía + video tutoriales', premiumFeat3: 'Soporte prioritario exclusivo', premiumFeat4: 'Actualizaciones (3 meses)', premiumFeat5: 'Asistencia 1-a-1', selectPremium: 'Elegir Premium',
-    riskWarning: 'El trading de criptos conlleva riesgos.', riskLink: 'Divulgación de Riesgos',
-    faqTitle: 'Preguntas Frecuentes', faq1Q: '¿Están seguros mis fondos?', faq1A: 'Los fondos permanecen en tu cuenta de exchange. Nunca tocamos tus fondos. Tú controlas la API Key.', faq2Q: '¿Necesito saber programar?', faq2A: 'No. Las guías están escritas para usuarios no técnicos.', faq3Q: '¿Las estrategias garantizan ganancias?', faq3A: 'Ninguna estrategia garantiza ganancias. Resultados pasados no garantizan futuro.', faq4Q: '¿Cuánto tarda después del pago?', faq4A: 'TRC20 se confirma en ~3 segundos, entrega instantánea.', faq5Q: '¿Hay reembolso?', faq5A: 'No hay reembolsos. Producto digital, todas las ventas son finales.', faq6Q: '¿Qué exchanges soportan?', faq6A: 'Hyperliquid, Binance, OKX, dYdX, Apex, GMX y más.',
-    riskBoxTitle: '⚠️ Advertencia de Riesgo Importante', risk1: 'El trading crypto tiene riesgo extremo', risk2: 'El apalancamiento amplía pérdidas', risk3: 'Rendimiento pasado ≠ futuro', risk4: 'No operes con dinero prestado', risk5: 'No es asesoramiento de inversión', risk6: 'Todas las ventas son finales',
-    footerSlogan: 'Deja las emociones atrás, deja que las ganancias vengan.', footerRisk: 'Divulgación de Riesgos', footerTerms: 'Términos', footerSupport: 'Soporte',
-    buy: 'Comprar', payAmount: 'Pagar', scanToPay: 'Escanea o copia la dirección para pagar USDT (TRC20)',
-    orCopyAddress: 'O copia la dirección:', network: 'Red', amount: 'Monto',
-    step1: 'Copia la dirección de arriba', step2: 'Envía desde tu wallet (TRC20)', step3: 'Guarda captura después del pago', step4: 'Haz clic abajo para contactar soporte',
-    paymentWarning: 'Debes usar la red TRC20', contactSupport: '💬 He Pagado, Contactar Soporte', trc20Note: 'USDT TRC20 recomendado, tarifa más baja (~$0.2)',
-    online: 'En línea · Respuesta promedio <1 min', quickProduct: '📦 Detalles del Producto', quickInstall: '🔧 Instalación',
-    quickPaid: '💰 He Pagado', quickError: '🐛 Ayuda con Error', encrypted: '🔒 Encriptado · Soporte AI 24/7',
-    typeMessage: 'Escribe mensaje...', tierStarter: 'Starter', tierStandard: 'Standard', tierPremium: 'Premium'
-  },
-  pt: {
-    heroBadge: '🤖 Trading Automático com IA · 24/7',
-    heroLine1: 'Deixe a',
-    heroLine2: 'IA Operar Por Você',
-    heroLine3: 'Sem Emoções',
-    heroDesc: 'Pacote de Estratégias TradeBot · Execução automática em múltiplas exchanges. Não precisa ver gráficos, adeus FOMO/FUD/segurar posições.',
-    heroCta: 'Comprar Agora · A partir de $0.9',
-    heroNote: 'Suporta Hyperliquid, Binance, OKX e mais',
-    exchangesTitle: 'Exchanges Suportadas',
-    pain1: 'Comprar por FOMO ao ver lucros alheios', pain2: 'Vender em pânico e perder a recuperação',
-    pain3: 'Não conseguir dormir com posições abertas', pain4: 'Não saber quando comprar ou vender',
-    whatTitle: 'O que é Skill Package?', whatDesc: 'Uma solução completa de trading automático. Receba pacote de estratégias + guia de instalação + suporte de IA. Implantação em 30 minutos, depois a IA opera 24/7 por você.',
-    feature1Title: 'Pacote de Estratégias', feature1Desc: 'Pré-configurado, pronto para usar, sem código',
-    feature2Title: 'Execução Automática IA', feature2Desc: 'Funciona 24/7, ordens automáticas',
-    feature3Title: 'Stop Loss Automático', feature3Desc: 'Lógica integrada para controlar perdas',
-    feature4Title: 'Suporte IA 24h', feature4Desc: 'Pergunte qualquer coisa sobre instalação',
-    stepsTitle: '4 Passos para Começar', step1Title: 'Comprar Pacote', step1Desc: 'Escolha o plano, pague com USDT/USDC, entrega instantânea.',
-    step2Title: 'Instalar (30 min)', step2Desc: 'Configure Python + API Key, suporte de IA disponível.',
-    step3Title: 'Lançar Estratégia', step3Desc: 'A IA começa a monitorar sinais e colocar ordens.',
-    step4Title: 'Relaxe e Lucre', step4Desc: 'A IA trabalha enquanto você dorme, trabalha, viaja.',
-    pricingTitle: 'Escolha Seu Plano', pricingSubtitle: 'Três níveis: Starter / Standard / Premium',
-    starterName: 'Starter', starterDesc: 'Experimente', starterFeat1: '1 estratégia principal', starterFeat2: 'Guia de instalação', starterFeat3: 'Suporte IA básico', starterFeat4: 'Divulgação de riscos', selectStarter: 'Escolher Starter',
-    standardName: 'Standard', standardDesc: 'Para usuários sérios', standardFeat1: '3 estratégias principais', standardFeat2: 'Guia de instalação', standardFeat3: 'Suporte IA prioritário', standardFeat4: 'Divulgação de riscos', selectStandard: 'Escolher Standard ⭐',
-    premiumName: 'Premium', premiumDesc: 'Usuários avançados, atualizações contínuas', premiumFeat1: 'Todas as estratégias + futuras', premiumFeat2: 'Guia + vídeo tutoriais', premiumFeat3: 'Suporte prioritário exclusivo', premiumFeat4: 'Atualizações (3 meses)', premiumFeat5: 'Assistência 1-a-1', selectPremium: 'Escolher Premium',
-    riskWarning: 'O trading de criptos envolve riscos.', riskLink: 'Divulgação de Riscos',
-    faqTitle: 'Perguntas Frequentes', faq1Q: 'Meus fundos estão seguros?', faq1A: 'Os fundos permanecem na sua conta da exchange. Nunca tocamos seus fundos. Você controla a API Key.', faq2Q: 'Preciso saber programar?', faq2A: 'Não. Os guias são escritos para usuários não técnicos.', faq3Q: 'As estratégias garantem lucros?', faq3A: 'Nenhuma estratégia garante lucros. Resultados passados não garantem futuro.', faq4Q: 'Quanto tempo após o pagamento?', faq4A: 'TRC20 confirma em ~3 segundos, entrega instantânea.', faq5Q: 'Há reembolso?', faq5A: 'Sem reembolsos. Produto digital, todas as vendas são finais.', faq6Q: 'Quais exchanges são suportadas?', faq6A: 'Hyperliquid, Binance, OKX, dYdX, Apex, GMX e mais.',
-    riskBoxTitle: '⚠️ Aviso Importante de Risco', risk1: 'O trading crypto tem risco extremo', risk2: 'A alavancagem amplia perdas', risk3: 'Performance passada ≠ futura', risk4: 'Não opere com dinheiro emprestado', risk5: 'Não é aconselhamento de investimento', risk6: 'Todas as vendas são finais',
-    footerSlogan: 'Deixe as emoções para trás, deixe os lucros virem.', footerRisk: 'Divulgação de Riscos', footerTerms: 'Termos', footerSupport: 'Suporte',
-    buy: 'Comprar', payAmount: 'Pagar', scanToPay: 'Escaneie ou copie o endereço para pagar USDT (TRC20)',
-    orCopyAddress: 'Ou copie o endereço:', network: 'Rede', amount: 'Valor',
-    step1: 'Copie o endereço acima', step2: 'Envie da sua carteira (TRC20)', step3: 'Salve captura após pagamento', step4: 'Clique abaixo para contatar suporte',
-    paymentWarning: 'Você deve usar a rede TRC20', contactSupport: '💬 Paguei, Contatar Suporte', trc20Note: 'USDT TRC20 recomendado, taxa mais baixa (~$0.2)',
-    online: 'Online · Resposta média <1 min', quickProduct: '📦 Detalhes do Produto', quickInstall: '🔧 Instalação',
-    quickPaid: '💰 Paguei', quickError: '🐛 Ajuda com Erro', encrypted: '🔒 Criptografado · Suporte IA 24/7',
-    typeMessage: 'Digite mensagem...', tierStarter: 'Starter', tierStandard: 'Standard', tierPremium: 'Premium'
-  }
-};
-
-let currentLang = 'zh';
-let chatOpen = false;
-const prices = { starter: 0.9, standard: 4.99, premium: 14.99 };
-const priceText = { starter: '$0.9', standard: '$4.99', premium: '$14.99' };
-let currentTier = 'standard';
-
-// Language
-function toggleLang() { document.getElementById('langDropdown').classList.toggle('show'); }
-function setLang(lang) {
-  currentLang = lang;
-  const langNames = {
-    zh: '🇨🇳 中文',
-    en: '🇺🇸 English',
-    ja: '🇯🇵 日本語',
-    ko: '🇰🇷 한국어',
-    ru: '🇷🇺 Русский',
-    tr: '🇹🇷 Türkçe',
-    vi: '🇻🇳 Tiếng Việt',
-    es: '🇪🇸 Español',
-    pt: '🇵🇹 Português'
-  };
-  document.getElementById('currentLang').textContent = langNames[lang] || '🇺🇸 English';
-  document.querySelectorAll('.lang-option').forEach(el => el.classList.remove('active'));
-  event.target.classList.add('active');
-  document.getElementById('langDropdown').classList.remove('show');
-  updatePageLanguage();
-}
-function updatePageLanguage() {
-  const texts = i18n[currentLang] || i18n['en'];
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    if (texts[key]) el.textContent = texts[key];
-  });
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-    const key = el.getAttribute('data-i18n-placeholder');
-    if (texts[key]) el.placeholder = texts[key];
-  });
-}
-
-// Payment (Direct TRC20)
-
-function selectTier(tier) {
-  currentTier = tier;
-  const texts = i18n[currentLang] || i18n['en'];
-  const tierKey = 'tier' + tier.charAt(0).toUpperCase() + tier.slice(1);
-  document.getElementById('modalTier').textContent = texts[tierKey] || tier;
-  document.getElementById('modalPrice').textContent = priceText[tier];
-  document.getElementById('usdtAmount').textContent = prices[tier] + ' USDT';
-  document.getElementById('paymentModal').classList.add('show');
-}
-
-function closeModal() {
-  document.getElementById('paymentModal').classList.remove('show');
-}
-
-function copyAddress() {
-  const addr = document.getElementById('walletAddress').textContent;
-  navigator.clipboard.writeText(addr).then(() => {
-    const btn = document.querySelector('.copy-btn');
-    btn.textContent = '✅ 已复制！';
-    setTimeout(() => { btn.textContent = '📋 一键复制地址'; }, 2000);
-  }).catch(() => {
-    const ta = document.createElement('textarea');
-    ta.value = addr;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    const btn = document.querySelector('.copy-btn');
-    btn.textContent = '✅ 已复制！';
-    setTimeout(() => { btn.textContent = '📋 一键复制地址'; }, 2000);
-  });
-}
-
-function contactSupportAfterPay() {
-  closeModal();
-  if (!chatOpen) toggleChat();
-  setTimeout(() => {
-    addMessage('user', currentLang === 'zh' ? '💰 我已付款' : '💰 I\'ve paid');
-    setTimeout(() => {
-      addMessage('bot', currentLang === 'zh'
-        ? '✅ 收到！请发送支付截图，我会立即为你发货。\n\n同时请告诉我你的邮箱地址，方便发送下载链接。'
-        : '✅ Received! Please send payment screenshot and I\'ll deliver immediately.\n\nAlso provide your email for the download link.');
-    }, 500);
-  }, 300);
-}
-
-// Chat
-function toggleChat() {
-  chatOpen = !chatOpen;
-  document.getElementById('chatWindow').classList.toggle('show', chatOpen);
-  document.getElementById('chatFab').style.display = chatOpen ? 'none' : 'block';
-  if (chatOpen && document.getElementById('chatMessages').children.length === 0) {
-    addMessage('bot', currentLang === 'zh'
-      ? '👋 你好！我是 TradeBot AI 客服。\n\n有什么可以帮你的？\n• 产品介绍和定价\n• 如何安装部署\n• 付款和发货问题'
-      : '👋 Hi! I\'m TradeBot AI Support.\n\nHow can I help?\n• Product details & pricing\n• Installation guide\n• Payment & delivery');
-  }
-}
-function addMessage(sender, text) {
-  const div = document.createElement('div');
-  div.className = 'chat-message ' + sender;
-  div.textContent = text;
-  document.getElementById('chatMessages').appendChild(div);
-  document.getElementById('chatMessages').scrollTop = 999999;
-}
-function sendMessage() {
-  const input = document.getElementById('chatInput');
-  const text = input.value.trim();
-  if (!text) return;
-  addMessage('user', text);
-  input.value = '';
-  setTimeout(() => {
-    const msg = text.toLowerCase();
-    let reply;
-    if (msg.includes('付款') || msg.includes('转账') || msg.includes('支付') || msg.includes('paid') || msg.includes('pay')) {
-      reply = currentLang === 'zh'
-        ? '💰 付款方式：\n\n1. 选择套餐 → 复制 TRC20 地址\n2. 钱包转账 USDT\n3. 截图发给我 → 立即发货\n\n⚠️ 请保留转账截图'
-        : '💰 Payment steps:\n\n1. Choose plan → Copy TRC20 address\n2. Send USDT from wallet\n3. Send screenshot → Instant delivery\n\n⚠️ Keep your tx screenshot';
-    } else if (msg.includes('价格') || msg.includes('多少钱') || msg.includes('费用') || msg.includes('price') || msg.includes('cost') || msg.includes('how much')) {
-      reply = currentLang === 'zh'
-        ? '📦 套餐价格：\n\n• 入门版 $0.9（体验）\n• 标准版 $4.99（主力）\n• 高级版 $14.99（专业）\n\n💎 支持加密货币 USDT/USDC'
-        : '📦 Pricing:\n\n• Starter $0.9 (Trial)\n• Standard $4.99 (Main)\n• Premium $14.99 (Pro)\n\n💎 Accept USDT/USDC';
-    } else if (msg.includes('安全') || msg.includes('风险') || msg.includes('亏损') || msg.includes('safe') || msg.includes('risk') || msg.includes('loss')) {
-      reply = currentLang === 'zh'
-        ? '⚠️ 风险提示：\n\n• 资金始终在你自己的交易所账户\n• 我们无法接触你的资金\n• API Key 只能交易，不能提现\n• 杠杆交易有高风险，请谨慎'
-        : '⚠️ Risk Warning:\n\n• Funds stay in YOUR exchange account\n• We can NEVER touch your funds\n• API Key = trade only, no withdraw\n• Leverage = high risk, trade carefully';
-    } else if (msg.includes('退款') || msg.includes('退钱') || msg.includes('refund')) {
-      reply = currentLang === 'zh'
-        ? '❌ 不支持退款\n\n数字商品一经售出，概不退换。\n建议先购买入门版 $0.9 体验。'
-        : '❌ No Refunds\n\nDigital products, all sales final.\nTry Starter $0.9 first.';
-    } else if (msg.includes('支持') || msg.includes('哪些交易所') || msg.includes('交易所') || msg.includes('exchange') || msg.includes('binance') || msg.includes('hyperliquid')) {
-      reply = currentLang === 'zh'
-        ? '🏦 支持的交易所：\n\n• Hyperliquid ✅\n• Binance ✅\n• OKX ✅\n• dYdX ✅\n• Apex ✅\n• GMX ✅\n\n只要有 API 都能接！'
-        : '🏦 Supported Exchanges:\n\n• Hyperliquid ✅\n• Binance ✅\n• OKX ✅\n• dYdX ✅\n• Apex ✅\n• GMX ✅\n\nAny exchange with API works!';
-    } else if (msg.includes('安装') || msg.includes('部署') || msg.includes('设置') || msg.includes('install') || msg.includes('setup')) {
-      reply = currentLang === 'zh'
-        ? '🔧 安装步骤（30分钟）：\n\n1. 安装 Python 3.8+\n2. pip install -r requirements.txt\n3. 配置 API Key\n4. python strategy.py\n\n详细教程在策略包内！'
-        : '🔧 Install steps (30 min):\n\n1. Install Python 3.8+\n2. pip install -r requirements.txt\n3. Configure API Key\n4. python strategy.py';
-    } else if (msg.includes('策略') || msg.includes('什么策略') || msg.includes('指标') || msg.includes('strategy') || msg.includes('indicator')) {
-      reply = currentLang === 'zh'
-        ? '📊 策略类型：\n\n• EMA 均线交叉\n• RSI 超买超卖\n• MACD 趋势跟踪\n• 布林带突破\n• 多时间框架确认\n\n支持 Pine Script + Python！'
-        : '📊 Strategy Types:\n\n• EMA crossover\n• RSI overbought/oversold\n• MACD trend following\n• Bollinger breakout\n• Multi-timeframe confirmation\n\nPine Script + Python supported!';
-    } else if (msg.includes('api') || msg.includes('密钥') || msg.includes('key')) {
-      reply = currentLang === 'zh'
-        ? '🔑 API Key 配置：\n\n1. 交易所后台 → API 管理\n2. 创建新密钥（只勾选「交易」权限）\n3. 复制 API Key + Secret\n4. 填入 config.json\n\n⚠️ 不要开启「提币」权限！'
-        : '🔑 API Key Setup:\n\n1. Exchange dashboard → API\n2. Create new key (Trade only)\n3. Copy API Key + Secret\n4. Add to config.json\n\n⚠️ NEVER enable Withdraw!';
-    } else if (msg.includes('杠杆') || msg.includes('几倍') || msg.includes('leverage')) {
-      reply = currentLang === 'zh'
-        ? '⚡ 杠杆设置：\n\n• 默认：5-10倍\n• 可自定义：1-50倍\n• 建议：新手 ≤ 5倍\n\n⚠️ 杠杆越高，风险越大！'
-        : '⚡ Leverage:\n\n• Default: 5-10x\n• Customizable: 1-50x\n• Recommended: ≤ 5x for beginners\n\n⚠️ Higher leverage = higher risk!';
-    } else if (msg.includes('止损') || msg.includes('止盈') || msg.includes('stop') || msg.includes('take profit')) {
-      reply = currentLang === 'zh'
-        ? '🛡️ 止损/止盈：\n\n• 自动止损：每笔交易内置\n• 默认止损：-3% to -5%\n• 止盈：+5% to +10%\n• 可自定义参数\n\n保护本金第一！'
-        : '🛡️ Stop Loss/Take Profit:\n\n• Auto stop loss on every trade\n• Default SL: -3% to -5%\n• Default TP: +5% to +10%\n• Fully customizable\n\nProtect capital first!';
-    } else if (msg.includes('教程') || msg.includes('指南') || msg.includes('tutorial') || msg.includes('guide')) {
-      reply = currentLang === 'zh'
-        ? '📖 教程内容：\n\n• 视频教程（15分钟）\n• 图文步骤（截图详细）\n• 常见问题解答\n• AI 客服 24h 在线\n\n购买后立即获取！'
-        : '📖 Tutorial Included:\n\n• Video guide (15 min)\n• Step-by-step screenshots\n• FAQ section\n• 24/7 AI support\n\nGet instant access after purchase!';
-    } else if (msg.includes('更新') || msg.includes('新策略') || msg.includes('update') || msg.includes('new strategy')) {
-      reply = currentLang === 'zh'
-        ? '🔄 更新策略：\n\n• 高级版含 3 个月更新\n• 新策略持续开发中\n• 社群优先体验\n\n订阅后自动推送！'
-        : '🔄 Strategy Updates:\n\n• Premium = 3 months updates\n• New strategies in development\n• Community early access\n\nAuto-delivered to subscribers!';
-    } else if (msg.includes('怎么用') || msg.includes('使用') || msg.includes('如何') || msg.includes('how to') || msg.includes('how do')) {
-      reply = currentLang === 'zh'
-        ? '🚀 使用方法：\n\n1. 购买策略包\n2. 安装 Python 环境\n3. 配置 API Key\n4. 运行策略脚本\n\nAI 全天自动交易，你不用盯盘！'
-        : '🚀 How to Use:\n\n1. Buy strategy package\n2. Install Python\n3. Configure API Key\n4. Run strategy script\n\nAI trades 24/7, no chart watching!';
-    } else if (msg.includes('python') || msg.includes('编程') || msg.includes('代码') || msg.includes('code') || msg.includes('programming')) {
-      reply = currentLang === 'zh'
-        ? '💻 技术细节：\n\n• Python 3.8+ 环境\n• 不需要编程基础\n• 配置文件傻瓜式操作\n• 源代码可自定义\n\n技术党可深度定制！'
-        : '💻 Technical Details:\n\n• Python 3.8+ required\n• No coding experience needed\n• Simple config file\n• Source code customizable\n\nAdvanced users can modify!';
-    } else {
-      reply = currentLang === 'zh'
-        ? '🤔 收到！我需要人工处理这个问题。\n\n常见问题可直接问：\n• 「多少钱」\n• 「怎么安装」\n• 「支持哪些交易所」\n• 「安全吗」\n• 「怎么退款」\n\n人工客服会在24小时内回复。'
-        : '🤔 Got it! Need human support for this.\n\nCommon questions:\n• "How much"\n• "How to install"\n• "Which exchanges"\n• "Is it safe"\n• "Refund policy"\n\nHuman support replies within 24h.';
-    }
-    addMessage('bot', reply);
-  }, 800);
-}
-function sendQuick(type) {
-  const msgs = { product: '📦', install: '🔧', paid: '💰', error: '🐛' };
-  const input = document.getElementById('chatInput');
-  if (type === 'product') input.value = currentLang === 'zh' ? '我想了解产品详情' : 'Product details';
-  else if (type === 'install') input.value = currentLang === 'zh' ? '怎么安装？' : 'How to install?';
-  else if (type === 'paid') input.value = currentLang === 'zh' ? '我已经付款了' : 'I\'ve paid';
-  else if (type === 'error') input.value = currentLang === 'zh' ? '遇到报错了' : 'Got an error';
-  sendMessage();
-}
-function handleKeyPress(e) { if (e.key === 'Enter') sendMessage(); }
-
-// Image Upload
-let pendingImage = null;
-function handleImageUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  if (!file.type.startsWith('image/')) {
-    alert(currentLang === 'zh' ? '请选择图片文件' : 'Please select an image file');
-    return;
-  }
-  if (file.size > 5 * 1024 * 1024) {
-    alert(currentLang === 'zh' ? '图片大小不能超过 5MB' : 'Image size must be less than 5MB');
-    return;
-  }
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    pendingImage = e.target.result;
-    addImageMessage('user', pendingImage);
-    document.getElementById('chatFileInput').value = '';
-    setTimeout(() => {
-      const reply = currentLang === 'zh'
-        ? '📸 收到截图！请稍等，我正在验证付款...\n\n同时请告诉我你的邮箱地址，方便发送下载链接。'
-        : '📸 Screenshot received! Please wait while I verify the payment...\n\nAlso provide your email for the download link.';
-      addMessage('bot', reply);
-    }, 800);
-  };
-  reader.readAsDataURL(file);
-}
-function addImageMessage(sender, imageData) {
-  const div = document.createElement('div');
-  div.className = 'chat-message ' + sender;
-  const img = document.createElement('img');
-  img.src = imageData;
-  img.className = 'chat-image-preview';
-  img.style.cursor = 'pointer';
-  img.onclick = function() { window.open(imageData, '_blank'); };
-  div.appendChild(img);
-  document.getElementById('chatMessages').appendChild(div);
-  document.getElementById('chatMessages').scrollTop = 999999;
-}
-
-// FAQ toggle
-document.querySelectorAll('.faq-q').forEach(q => {
-  q.addEventListener('click', () => { q.parentElement.classList.toggle('active'); });
-});
-
-// Modal close on overlay
-document.getElementById('paymentModal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal(); });
-
-// Close lang dropdown on outside click
-document.addEventListener('click', (e) => {
-  if (!e.target.closest('.lang-selector')) document.getElementById('langDropdown').classList.remove('show');
-});
-
-// Scroll helpers
-function showRisk() { document.querySelector('.risk-section').scrollIntoView({ behavior: 'smooth' }); }
-function showFAQ() { document.querySelector('.faq-section').scrollIntoView({ behavior: 'smooth' }); }
-function showPolicy() {
-  toggleChat();
-  setTimeout(() => {
-    addMessage('user', currentLang === 'zh' ? '客服政策' : 'Support Policy');
-    setTimeout(() => {
-      addMessage('bot', currentLang === 'zh'
-        ? '📋 客服政策：\n\n• 24h AI 客服在线\n• 安装问题优先处理\n• 付款确认后即时发货\n• 不提供投资建议'
-        : '📋 Support Policy:\n\n• 24/7 AI support\n• Installation help priority\n• Instant delivery after payment\n• No investment advice');
-    }, 500);
-  }, 300);
-}
+var stripeLinks={starter:'https://buy.stripe.com/bJe9AV7HY7892uZbQX6kg00',standard:'https://buy.stripe.com/9B64gB1jA3VX6Lf5sz6kg01',premium:'https://buy.stripe.com/3cI6oJ0fw7897Pjg7d6kg02'};
+(function checkPaymentSuccess(){var p=new URLSearchParams(window.location.search);if(p.get('payment')==='success'){var t=p.get('tier')||'standard';var pr={starter:'体验版 Starter',standard:'标准版 Standard',premium:'高级版 Premium'};var dl={starter:'#download_starter',standard:'#download_standard',premium:'#download_premium'};var e=document.getElementById('cardProductName');if(e)e.textContent='TradeBot '+(pr[t]||pr['standard']);var d=document.getElementById('downloadLink');if(d)d.href=dl[t]||dl['standard'];var s=document.getElementById('successModal');if(s)s.classList.add('show');}})();
+function openStripePayment(){var btn=document.getElementById('stripeBtn');var txt=document.getElementById('stripeBtnText');btn.classList.add('loading');txt.textContent=currentLang==='zh'?'⏳ 正在打开...':'⏳ Opening...';setTimeout(function(){window.open(stripeLinks[currentTier],'_blank');btn.classList.remove('loading');var t=i18n[currentLang]?i18n[currentLang].stripeBtn:'🔒 信用卡支付';txt.textContent=t;setTimeout(function(){alert(currentLang==='zh'?'💡 提示：付款完成后，请返回此页面查看下载链接。':'💡 Tip: After payment, return to this page for download link.');},1500);},500);}
+function closeSuccessModal(){var s=document.getElementById('successModal');if(s)s.classList.remove('show');var u=new URL(window.location);u.searchParams.delete('payment');u.searchParams.delete('tier');window.history.replaceState({},'',u);}
+var i18n={zh:{heroBadge:'🤖 AI 自动交易 · 24h 运行',heroLine1:'让',heroLine2:'替你交易',heroLine3:'把情绪关在门外',heroDesc:'TradeBot 策略包 · 支持多交易所自动执行经过验证的交易策略，无需盯盘，告别 FOMO / FUD / 扛单。',heroCta:'立即购买 · $0.9 起',heroNote:'支持 Hyperliquid、Binance、OKX 等多平台',exchangesTitle:'支持平台',exHyperliquid:'Hyperliquid',exBinance:'Binance',exOKX:'OKX',exDyDx:'dYdX',exApex:'Apex',exGMX:'GMX',pain1:'看到别人赚钱就忍不住追高',pain2:'恐慌抛售后错过大反弹',pain3:'持仓时焦虑到睡不着觉',pain4:'不知道什么时候该买该卖',whatTitle:'Skill Package 是什么？',whatDesc:'一套完整的自动交易解决方案。购买后获得策略包 + 安装教程 + AI 客服，30 分钟完成部署，之后 AI 24h 自动为你执行交易。',feature1Title:'策略包',feature1Desc:'配置好的参数，即开即用，无需编程',feature2Title:'AI 自动执行',feature2Desc:'24h 运行，无需盯盘，策略自动下单',feature3Title:'自动止损',feature3Desc:'内置止损逻辑，控制单笔最大亏损',feature4Title:'AI 客服 24h',feature4Desc:'安装问题随时问，专属客服支持',stepsTitle:'4步开始自动交易',step1Title:'购买策略包',step1Desc:'选择套餐，使用 USDT/USDC 支付，付款后即时收到下载链接。',step2Title:'安装部署（30分钟）',step2Desc:'按教程配置 Python 环境 + API Key，有问题 AI 客服随时帮你。',step3Title:'启动策略',step3Desc:'运行脚本，AI 自动开始监控信号，发现机会自动下单。',step4Title:'躺平收钱',step4Desc:'无需盯盘，睡前、工作中、通勤时，AI 都在帮你执行策略。',pricingTitle:'选择你的套餐',pricingSubtitle:'按需选择，体验 / 标准 / 高级三种方案',starterName:'体验版 Starter',starterDesc:'尝鲜体验，先试试水',starterFeat1:'单个核心策略包',starterFeat2:'完整图文安装教程',starterFeat3:'基础 AI 客服支持',starterFeat4:'风险提示书',selectStarter:'选择体验版',standardName:'标准版 Standard',standardDesc:'认真使用，稳定运行',standardFeat1:'3 个核心策略包',standardFeat2:'完整图文安装教程',standardFeat3:'优先 AI 客服（更快响应）',standardFeat4:'风险提示书',selectStandard:'选择标准版 ⭐',premiumName:'高级版 Premium',premiumDesc:'深度用户，持续更新',premiumFeat1:'全部策略包（含未来更新）',premiumFeat2:'图文 + 视频教程',premiumFeat3:'专属优先 AI 客服',premiumFeat4:'策略更新服务（3个月）',premiumFeat5:'一对一安装协助 × 1次',selectPremium:'选择高级版',riskWarning:'加密货币交易有风险，请阅读',riskLink:'风险提示书',faqTitle:'常见问题',faq1Q:'资金安全吗？谁在操作我的账户？',faq1A:'资金永远在你自己交易所账户，我们只提供策略包，不接触你的资金。API Key 完全由你掌控，可随时撤销。',faq2Q:'我需要懂编程吗？',faq2A:'不需要。教程专为非技术背景编写，30 分钟按步骤操作即可。有问题随时找 AI 客服。',faq3Q:'策略能保证赚钱吗？',faq3A:'没有任何策略能保证盈利。策略基于技术分析（EMA、RSI、MACD等），趋势行情中表现好，震荡行情中可能小幅亏损。过去的回测结果不代表未来表现。',faq4Q:'付款后多久能收到？',faq4A:'TRC20 链通常 3 秒内确认，确认后即时自动发货。ERC20/BEP20 约 1-5 分钟。',faq5Q:'可以退款吗？',faq5A:'不支持。产品为虚拟商品，一经售出概不退换。购买前请完整阅读产品介绍和风险提示。',faq6Q:'支持哪些交易所？',faq6A:'目前支持 Hyperliquid、Binance、OKX、dYdX、Apex、GMX 等主流中心化及去中心化合约平台。',riskBoxTitle:'⚠️ 重要风险提示（购买前必读）',risk1:'加密货币交易存在极高风险，可能导致本金全部损失',risk2:'本产品可能使用杠杆交易，亏损会被同步放大',risk3:'策略过往表现不代表未来收益',risk4:'请勿使用借贷资金或生活必需资金进行交易',risk5:'本产品不构成投资建议，盈亏由用户自行承担',risk6:'一经售出，概不退换',footerSlogan:'让情绪成为过去，让利润自己走进来。',footerRisk:'风险提示',footerTerms:'使用条款',footerSupport:'客服政策',buy:'购买',payAmount:'实付',tabCard:'信用卡',tabCrypto:'USDT',cardProduct:'商品',cardDelivery:'发货方式',cardDeliveryAuto:'付款后自动发送下载链接',cardPaymentMethod:'支付方式',stripeBtn:'🔒 安全支付 via Stripe',stripeSecureNote:'🔒 由 Stripe 提供安全保障，支持 135+ 种货币',copyAddressBtn:'📋 一键复制地址',paymentWarning:'请务必使用 TRC20 网络，其他网络可能导致资金丢失',contactSupport:'💬 我已支付，联系客服发货',trc20Note:'推荐使用 TRC20 链 USDT，手续费最低（≈ $0.2）',payStepsTitle:'📝 支付步骤：',payStep1:'1️⃣ 复制上方 TRC20 地址',payStep2:'2️⃣ 在钱包中选择 TRC20 网络，转账对应金额 USDT',payStep3:'3️⃣ 支付完成后截图保存交易凭证',payStep4:'4️⃣ 点击下方按钮联系客服发货 👇',deliveryNote:'付款确认后即时发货（通常 <1 分钟）',online:'在线 · 平均响应 <1分钟',quickProduct:'📦 产品详情',quickInstall:'🔧 安装教程',quickPaid:'💰 我已付款',quickError:'🐛 报错求助',encrypted:'🔒 对话已加密 · AI 客服 24h 在线',typeMessage:'输入消息...',tierStarter:'体验版',tierStandard:'标准版',tierPremium:'高级版',paymentSuccessTitle:'支付成功！',paymentSuccessDesc:'你的下载链接已生成，请点击下方按钮获取策略包。',downloadHint:'点击下方按钮下载（链接 48 小时内有效）',downloadBtn:'⬇️ 下载策略包',closeBtn:'关闭'},en:{heroBadge:'🤖 AI Auto Trading · 24/7 Running',heroLine1:'Let',heroLine2:'AI Trade For You',heroLine3:'No More Emotional Trading',heroDesc:'TradeBot Strategy Package · Automated execution across multiple exchanges.',heroCta:'Buy Now · From $0.9',heroNote:'Supports Hyperliquid, Binance, OKX & more',exchangesTitle:'Supported Exchanges',exHyperliquid:'Hyperliquid',exBinance:'Binance',exOKX:'OKX',exDyDx:'dYdX',exApex:'Apex',exGMX:'GMX',pain1:'FOMO buying when seeing others profit',pain2:'Panic selling then missing the rebound',pain3:"Can't sleep while holding positions",pain4:"Don't know when to buy or sell",whatTitle:'What is Skill Package?',whatDesc:'A complete automated trading solution.',feature1Title:'Strategy Package',feature1Desc:'Pre-configured, ready to use, no coding needed',feature2Title:'AI Auto Execution',feature2Desc:'Runs 24/7, auto order placement',feature3Title:'Auto Stop Loss',feature3Desc:'Built-in stop loss to control max loss per trade',feature4Title:'24h AI Support',feature4Desc:'Ask anytime for installation help',stepsTitle:'4 Steps to Start',step1Title:'Buy Package',step1Desc:'Choose plan, pay with USDT/USDC, instant delivery.',step2Title:'Install (30 min)',step2Desc:'Setup Python + API Key, AI support available.',step3Title:'Launch Strategy',step3Desc:'AI starts monitoring signals and placing orders.',step4Title:'Relax & Profit',step4Desc:'AI works while you sleep, work, commute.',pricingTitle:'Choose Your Plan',pricingSubtitle:'Three tiers: Starter / Standard / Premium',starterName:'Starter',starterDesc:'Try it out',starterFeat1:'1 core strategy',starterFeat2:'Installation guide',starterFeat3:'Basic AI support',starterFeat4:'Risk disclosure',selectStarter:'Choose Starter',standardName:'Standard',standardDesc:'For serious users',standardFeat1:'3 core strategies',standardFeat2:'Installation guide',standardFeat3:'Priority AI support',standardFeat4:'Risk disclosure',selectStandard:'Choose Standard ⭐',premiumName:'Premium',premiumDesc:'Power users, continuous updates',premiumFeat1:'All strategies + future updates',premiumFeat2:'Guide + video tutorials',premiumFeat3:'Exclusive priority support',premiumFeat4:'Strategy updates (3 months)',premiumFeat5:'One-on-one setup assistance',selectPremium:'Choose Premium',riskWarning:'Crypto trading involves risks. Please read',riskLink:'Risk Disclosure',faqTitle:'FAQ',faq1Q:'Is my fund safe?',faq1A:'Funds stay in your exchange account. We never touch your funds. You control the API Key.',faq2Q:'Do I need coding skills?',faq2A:'No. Guides are written for non-technical users.',faq3Q:'Can strategies guarantee profits?',faq3A:'No strategy can guarantee profits. Past results dont guarantee future performance.',faq4Q:'How soon after payment?',faq4A:'TRC20 confirms in ~3 seconds, instant delivery.',faq5Q:'Can I get a refund?',faq5A:'No refunds. Digital product, all sales final.',faq6Q:'Which exchanges are supported?',faq6A:'Hyperliquid, Binance, OKX, dYdX, Apex, GMX and more.',riskBoxTitle:'⚠️ Important Risk Warning',risk1:'Crypto trading carries extreme risk',risk2:'Leverage magnifies losses',risk3:'Past performance ≠ future results',risk4:'Do not trade with borrowed money',risk5:'Not investment advice',risk6:'All sales final',footerSlogan:'Leave emotions behind, let profits come to you.',footerRisk:'Risk Disclosure',footerTerms:'Terms',footerSupport:'Support',buy:'Buy',payAmount:'Pay',tabCard:'Credit Card',tabCrypto:'USDT',cardProduct:'Product',cardDelivery:'Delivery',cardDeliveryAuto:'Auto-send download link after payment',cardPaymentMethod:'Payment Methods',stripeBtn:'🔒 Secure Checkout via Stripe',stripeSecureNote:'🔒 Secured by Stripe, 135+ currencies supported',copyAddressBtn:'📋 Copy Address',paymentWarning:'Must use TRC20 network, other networks may lose funds',contactSupport:"💬 I've Paid, Contact Support",trc20Note:'TRC20 USDT recommended, lowest fee (~$0.2)',payStepsTitle:'📝 Payment Steps:',payStep1:'1️⃣ Copy the TRC20 address above',payStep2:'2️⃣ From your wallet, send USDT via TRC20 network',payStep3:'3️⃣ Save a screenshot of the transaction',payStep4:'4️⃣ Click button below to contact support',deliveryNote:'Instant delivery after payment confirmation (<1 min)',online:'Online · Avg response <1 min',quickProduct:'📦 Product Details',quickInstall:'🔧 Installation',quickPaid:"💰 I've Paid",quickError:'🐛 Error Help',encrypted:'🔒 Encrypted · AI Support 24/7',typeMessage:'Type message...',tierStarter:'Starter',tierStandard:'Standard',tierPremium:'Premium',paymentSuccessTitle:'Payment Successful!',paymentSuccessDesc:'Your download link is ready. Click below to get your strategy package.',downloadHint:'Click to download (link valid for 48h)',downloadBtn:'⬇️ Download Strategy Package',closeBtn:'Close'}};
+var currentLang='zh',chatOpen=false,prices={starter:0.9,standard:4.99,premium:14.99},priceText={starter:'$0.9',standard:'$4.99',premium:'$14.99'},currentTier='standard';
+function toggleLang(){document.getElementById('langDropdown').classList.toggle('show')}
+function setLang(lang){currentLang=lang;var n={zh:'🇨🇳 中文',en:'🇺🇸 English',ja:'🇯🇵 日本語',ko:'🇰🇷 한국어',ru:'🇷🇺 Русский',tr:'🇹🇷 Türkçe',vi:'🇻🇳 Tiếng Việt',es:'🇪🇸 Español',pt:'🇵🇹 Português'};document.getElementById('currentLang').textContent=n[lang]||'🇺🇸 English';document.querySelectorAll('.lang-option').forEach(function(e){e.classList.remove('active')});event.target.classList.add('active');document.getElementById('langDropdown').classList.remove('show');updatePageLanguage();updatePaymentModal()}
+function updatePageLanguage(){var t=i18n[currentLang]||i18n['en'];document.querySelectorAll('[data-i18n]').forEach(function(e){var k=e.getAttribute('data-i18n');if(t[k])e.textContent=t[k]});document.querySelectorAll('[data-i18n-placeholder]').forEach(function(e){var k=e.getAttribute('data-i18n-placeholder');if(t[k])e.placeholder=t[k]})}
+function selectTier(tier){currentTier=tier;var t=i18n[currentLang]||i18n['en'];var k='tier'+tier.charAt(0).toUpperCase()+tier.slice(1);document.getElementById('modalTier').textContent=t[k]||tier;document.getElementById('paymentModal').classList.add('show');switchPayMethod('card');updatePaymentModal()}
+function updatePaymentModal(){var p=priceText[currentTier];document.getElementById('cardAmount').textContent=p;document.getElementById('cryptoAmount').textContent=prices[currentTier];var pr={starter:'体验版 Starter',standard:'标准版 Standard',premium:'高级版 Premium'};var e=document.getElementById('cardProductName');if(e)e.textContent='TradeBot '+(pr[currentTier]||pr['standard'])}
+function closeModal(){document.getElementById('paymentModal').classList.remove('show')}
+function switchPayMethod(m){document.getElementById('tabCard').classList.toggle('active',m==='card');document.getElementById('tabCrypto').classList.toggle('active',m==='crypto');document.getElementById('panelCard').classList.toggle('active',m==='card');document.getElementById('panelCrypto').classList.toggle('active',m==='crypto')}
+function copyAddress(){var addr=document.querySelector('.wallet-address').textContent;if(navigator.clipboard){navigator.clipboard.writeText(addr).then(function(){var btn=document.querySelector('.copy-btn');btn.textContent='✅ 已复制！';setTimeout(function(){btn.textContent=i18n[currentLang]&&i18n[currentLang].copyAddressBtn||'📋 一键复制地址'},2000)})}else{var ta=document.createElement('textarea');ta.value=addr;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);var btn=document.querySelector('.copy-btn');btn.textContent='✅ 已复制！';setTimeout(function(){btn.textContent=i18n[currentLang]&&i18n[currentLang].copyAddressBtn||'📋 一键复制地址'},2000)}}
+function contactSupportAfterPay(){closeModal();if(!chatOpen)toggleChat();setTimeout(function(){addMessage('user',currentLang==='zh'?'💰 我已付款':"💰 I've paid");setTimeout(function(){addMessage('bot',currentLang==='zh'?'✅ 收到！请发送支付截图，我会立即为你发货。\n\n同时请告诉我你的邮箱地址，方便发送下载链接。':"✅ Received! Please send payment screenshot and I'll deliver immediately.\n\nAlso provide your email for the download link.")},500)},300)}
+function toggleChat(){chatOpen=!chatOpen;document.getElementById('chatWindow').classList.toggle('show',chatOpen);document.getElementById('chatFab').style.display=chatOpen?'none':'block';if(chatOpen&&document.getElementById('chatMessages').children.length===0){addMessage('bot',currentLang==='zh'?'👋 你好！我是 TradeBot AI 客服。\n\n有什么可以帮你的？\n• 产品介绍和定价\n• 如何安装部署\n• 付款和发货问题':'👋 Hi! I\'m TradeBot AI Support.\n\nHow can I help?\n• Product details & pricing\n• Installation guide\n• Payment & delivery')}}
+function addMessage(s,t){var d=document.createElement('div');d.className='chat-message '+s;d.textContent=t;document.getElementById('chatMessages').appendChild(d);document.getElementById('chatMessages').scrollTop=999999}
+function sendMessage(){var i=document.getElementById('chatInput');var t=i.value.trim();if(!t)return;addMessage('user',t);i.value='';setTimeout(function(){var m=t.toLowerCase();var r;if(m.includes('付款')||m.includes('转账')||m.includes('支付')||m.includes('paid')||m.includes('pay')){r=currentLang==='zh'?'💰 付款方式：\n\n1. 选择套餐 → 复制 TRC20 地址\n2. 钱包转账 USDT\n3. 截图发给我 → 立即发货\n\n⚠️ 请保留转账截图':'💰 Payment steps:\n\n1. Choose plan → Copy TRC20 address\n2. Send USDT from wallet\n3. Send screenshot → Instant delivery\n\n⚠️ Keep your tx screenshot'}else if(m.includes('价格')||m.includes('多少钱')||m.includes('费用')||m.includes('price')||m.includes('cost')||m.includes('how much')){r=currentLang==='zh'?'📦 套餐价格：\n\n• 入门版 $0.9（体验）\n• 标准版 $4.99（主力）\n• 高级版 $14.99（专业）\n\n💎 支持信用卡和 USDT':'📦 Pricing:\n\n• Starter $0.9 (Trial)\n• Standard $4.99 (Main)\n• Premium $14.99 (Pro)\n\n💎 Credit card & USDT accepted'}else if(m.includes('安全')||m.includes('风险')||m.includes('亏损')||m.includes('safe')||m.includes('risk')||m.includes('loss')){r=currentLang==='zh'?'⚠️ 风险提示：\n\n• 资金始终在你自己的交易所账户\n• 我们无法接触你的资金\n• API Key 只能交易，不能提现\n• 杠杆交易有高风险，请谨慎':'⚠️ Risk Warning:\n\n• Funds stay in YOUR exchange account\n• We can NEVER touch your funds\n• API Key = trade only, no withdraw\n• Leverage = high risk, trade carefully'}else if(m.includes('退款')||m.includes('退钱')||m.includes('refund')){r=currentLang==='zh'?'❌ 不支持退款\n\n数字商品一经售出，概不退换。\n建议先购买入门版 $0.9 体验。':'❌ No Refunds\n\nDigital products, all sales final.\nTry Starter $0.9 first.'}else if(m.includes('支持')||m.includes('哪些交易所')||m.includes('交易所')||m.includes('exchange')||m.includes('binance')||m.includes('hyperliquid')){r=currentLang==='zh'?'🏦 支持的交易所：\n\n• Hyperliquid ✅\n• Binance ✅\n• OKX ✅\n• dYdX ✅\n• Apex ✅\n• GMX ✅\n\n只要有 API 都能接！':'🏦 Supported Exchanges:\n\n• Hyperliquid ✅\n• Binance ✅\n• OKX ✅\n• dYdX ✅\n• Apex ✅\n• GMX ✅\n\nAny exchange with API works!'}else if(m.includes('安装')||m.includes('部署')||m.includes('设置')||m.includes('install')||m.includes('setup')){r=currentLang==='zh'?'🔧 安装步骤（30分钟）：\n\n1. 安装 Python 3.8+\n2. pip install -r requirements.txt\n3. 配置 API Key\n4. python strategy.py\n\n详细教程在策略包内！':'🔧 Install steps (30 min):\n\n1. Install Python 3.8+\n2. pip install -r requirements.txt\n3. Configure API Key\n4. python strategy.py'}else if(m.includes('策略')||m.includes('什么策略')||m.includes('指标')||m.includes('strategy')||m.includes('indicator')){r=currentLang==='zh'?'📊 策略类型：\n\n• EMA 均线交叉\n• RSI 超买超卖\n• MACD 趋势跟踪\n• 布林带突破\n• 多时间框架确认\n\n支持 Pine Script + Python！':'📊 Strategy Types:\n\n• EMA crossover\n• RSI overbought/oversold\n• MACD trend following\n• Bollinger breakout\n• Multi-timeframe confirmation\n\nPine Script + Python supported!'}else if(m.includes('api')||m.includes('密钥')||m.includes('key')){r=currentLang==='zh'?'🔑 API Key 配置：\n\n1. 交易所后台 → API 管理\n2. 创建新密钥（只勾选「交易」权限）\n3. 复制 API Key + Secret\n4. 填入 config.json\n\n⚠️ 不要开启「提币」权限！':'🔑 API Key Setup:\n\n1. Exchange dashboard → API\n2. Create new key (Trade only)\n3. Copy API Key + Secret\n4. Add to config.json\n\n⚠️ NEVER enable Withdraw!'}else if(m.includes('杠杆')||m.includes('几倍')||m.includes('leverage')){r=currentLang==='zh'?'⚡ 杠杆设置：\n\n• 默认：5-10倍\n• 可自定义：1-50倍\n• 建议：新手 ≤ 5倍\n\n⚠️ 杠杆越高，风险越大！':'⚡ Leverage:\n\n• Default: 5-10x\n• Customizable: 1-50x\n• Recommended: ≤ 5x for beginners\n\n⚠️ Higher leverage = higher risk!'}else if(m.includes('止损')||m.includes('止盈')||m.includes('stop')||m.includes('take profit')){r=currentLang==='zh'?'🛡️ 止损/止盈：\n\n• 自动止损：每笔交易内置\n• 默认止损：-3% to -5%\n• 止盈：+5% to +10%\n• 可自定义参数\n\n保护本金第一！':'🛡️ Stop Loss/Take Profit:\n\n• Auto stop loss on every trade\n• Default SL: -3% to -5%\n• Default TP: +5% to +10%\n• Fully customizable\n\nProtect capital first!'}else if(m.includes('信用卡')||m.includes('stripe')||m.includes('credit card')||m.includes('card')){r=currentLang==='zh'?'💳 信用卡支付：\n\n支持 Visa / Mastercard / Amex\n点击购买 → 选择信用卡标签 → 点击 Stripe 支付按钮\n\n由 Stripe 提供安全保障，支持 135+ 种货币！':'💳 Credit Card Payment:\n\nSupports Visa / Mastercard / Amex\nClick Buy → Select Credit Card tab → Click Stripe payment button\n\nSecured by Stripe, 135+ currencies supported!'}else{r=currentLang==='zh'?'🤔 收到！我需要人工处理这个问题。\n\n常见问题可直接问：\n• 「多少钱」\n• 「怎么安装」\n• 「支持哪些交易所」\n• 「安全吗」\n• 「怎么退款」\n• 「信用卡怎么付」\n\n人工客服会在24小时内回复。':'🤔 Got it! Need human support for this.\n\nCommon questions:\n• "How much"\n• "How to install"\n• "Which exchanges"\n• "Is it safe"\n• "Refund policy"\n• "Credit card payment"\n\nHuman support replies within 24h.'}addMessage('bot',r)},800)}
+function sendQuick(t){var i=document.getElementById('chatInput');if(t==='product')i.value=currentLang==='zh'?'我想了解产品详情':'Product details';else if(t==='install')i.value=currentLang==='zh'?'怎么安装？':'How to install?';else if(t==='paid')i.value=currentLang==='zh'?'我已经付款了':"I've paid";else if(t==='error')i.value=currentLang==='zh'?'遇到报错了':'Got an error';sendMessage()}
+function handleKeyPress(e){if(e.key==='Enter')sendMessage()}
+function handleImageUpload(e){var f=e.target.files[0];if(!f)return;if(!f.type.startsWith('image/')){alert(currentLang==='zh'?'请选择图片文件':'Please select an image file');return}if(f.size>5*1024*1024){alert(currentLang==='zh'?'图片大小不能超过 5MB':'Image size must be less than 5MB');return}var r=new FileReader();r.onload=function(ev){addImageMessage('user',ev.target.result);document.getElementById('chatFileInput').value='';setTimeout(function(){addMessage('bot',currentLang==='zh'?'📸 收到截图！请稍等，我正在验证付款...\n\n同时请告诉我你的邮箱地址，方便发送下载链接。':'📸 Screenshot received! Please wait while I verify the payment...\n\nAlso provide your email for the download link.')},800)};r.readAsDataURL(f)}
+function addImageMessage(s,i){var d=document.createElement('div');d.className='chat-message '+s;var img=document.createElement('img');img.src=i;img.className='chat-image-preview';img.style.cursor='pointer';img.onclick=function(){window.open(i,'_blank')};d.appendChild(img);document.getElementById('chatMessages').appendChild(d);document.getElementById('chatMessages').scrollTop=999999}
+document.querySelectorAll('.faq-q').forEach(function(q){q.addEventListener('click',function(){q.parentElement.classList.toggle('active')})});
+document.getElementById('paymentModal').addEventListener('click',function(e){if(e.target===e.currentTarget)closeModal()});
+document.getElementById('successModal').addEventListener('click',function(e){if(e.target===e.currentTarget)closeSuccessModal()});
+document.addEventListener('click',function(e){if(!e.target.closest('.lang-selector'))document.getElementById('langDropdown').classList.remove('show')});
+function showRisk(){document.querySelector('.risk-section').scrollIntoView({behavior:'smooth'})}
+function showFAQ(){document.querySelector('.faq-section').scrollIntoView({behavior:'smooth'})}
+function showPolicy(){toggleChat();setTimeout(function(){addMessage('user',currentLang==='zh'?'客服政策':'Support Policy');setTimeout(function(){addMessage('bot',currentLang==='zh'?'📋 客服政策：\n\n• 24h AI 客服在线\n• 安装问题优先处理\n• 付款确认后即时发货\n• 不提供投资建议':'📋 Support Policy:\n\n• 24/7 AI support\n• Installation help priority\n• Instant delivery after payment\n• No investment advice')},500)},300)}
 </script>
 </body>
 </html>
