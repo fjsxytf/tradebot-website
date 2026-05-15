@@ -344,13 +344,25 @@
     <div class="pay-panel" id="panelCrypto">
       <p style="color:var(--text-muted);font-size:14px;margin-bottom:8px" data-i18n="payAmount">实付</p>
       <div class="pay-amount-display"><span class="amount" id="cryptoAmount">4.99</span><span class="currency">USDT</span></div>
-      <div class="wallet-info">
-        <div class="wallet-label">📋 TRC20 钱包地址 (USDT)</div>
-        <div class="wallet-address">TY58AoPsaDo5gpEaaddHTphVhZRHpFtC1j</div>
-        <button class="copy-btn" onclick="copyAddress()" data-i18n="copyAddressBtn">📋 一键复制地址</button>
+      <div style="margin-bottom:14px">
+        <label style="font-size:13px;color:var(--text-muted);display:block;margin-bottom:6px">Select Payment Chain</label>
+        <select id="chainSelect" onchange="switchChain(this.value)" style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:14px;cursor:pointer;appearance:auto">
+          <option value="trc20" selected>TRC20 (USDT) - Recommended, lowest fee ~$0.2</option>
+          <option value="solana">Solana (SOL/USDC/USDT) - Fast ~$0.01</option>
+          <option value="eth">Ethereum (USDT/USDC/ETH)</option>
+          <option value="bsc">BSC (USDT/USDC/BNB) - Low fee</option>
+          <option value="polygon">Polygon (USDT/USDC/MATIC) - Very low fee</option>
+          <option value="arbitrum">Arbitrum (USDT/USDC)</option>
+          <option value="avalanche">Avalanche (USDT/USDC/AVAX)</option>
+        </select>
       </div>
-      <div class="inline-warning">⚠️ <span data-i18n="paymentWarning">请务必使用 TRC20 网络，其他网络可能导致资金丢失</span></div>
-      <p class="payment-note"><span data-i18n="trc20Note">推荐使用 TRC20 链 USDT，手续费最低（≈ $0.2）</span></p>
+      <div class="wallet-info">
+        <div class="wallet-label" id="walletLabel">TRC20 Wallet Address (USDT)</div>
+        <div class="wallet-address" id="walletAddress">TY58AoPsaDo5gpEaaddHTphVhZRHpFtC1j</div>
+        <button class="copy-btn" onclick="copyAddress()" data-i18n="copyAddressBtn">Copy Address</button>
+      </div>
+      <div class="inline-warning" id="chainWarning">Warning: Use the selected network only</div>
+      <p class="payment-note" id="chainNote"><span>TRC20 USDT recommended, lowest fee (~$0.2)</span></p>
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:16px">
         <p style="font-size:14px;font-weight:600;margin-bottom:12px" data-i18n="payStepsTitle">📝 支付步骤：</p>
         <p style="font-size:13px;color:var(--text-muted);margin-bottom:6px" data-i18n="payStep1">1️⃣ 复制上方 TRC20 地址</p>
@@ -443,8 +455,9 @@ function showRisk(){document.querySelector('.risk-section').scrollIntoView({beha
 function showFAQ(){document.querySelector('.faq-section').scrollIntoView({behavior:'smooth'})}
 function showPolicy(){toggleChat();setTimeout(function(){addMessage('user',currentLang==='zh'?'客服政策':'Support Policy');setTimeout(function(){addMessage('bot',currentLang==='zh'?'📋 客服政策：\n\n• 24h AI 客服在线\n• 安装问题优先处理\n• 付款确认后即时发货\n• 不提供投资建议':'📋 Support Policy:\n\n• 24/7 AI support\n• Installation help priority\n• Instant delivery after payment\n• No investment advice')},500)},300)}
 /* ===== TRC20 TXID Auto-Verify ===== */
-var VERIFY_API='/api/verify-trx';
-async function verifyTRX(){var txid=document.getElementById('txidInput').value.trim();if(!txid)return;var btn=document.getElementById('verifyBtn');var st=document.getElementById('verifyStatus');var btnTxt=btn.querySelector('span');btn.disabled=true;btnTxt.textContent=currentLang==='zh'?'⏳ 验证中...':'⏳ Verifying...';st.style.display='block';st.innerHTML='<span class="verify-loading"></span>'+(currentLang==='zh'?'正在查询链上交易...':'Querying blockchain...');try{var res=await fetch(VERIFY_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({txid:txid,tier:currentTier})});var data=await res.json();if(data.success){var dl=data.downloadLink;st.className='verify-success';st.innerHTML='✅ '+(currentLang==='zh'?'付款验证通过！':'Payment verified!')+'<br><br><a href="'+dl+'" target="_blank" class="btn btn-primary" style="text-decoration:none;display:inline-block;margin-top:8px;padding:10px 20px">⬇️ '+(currentLang==='zh'?'下载策略包':'Download Strategy Package')+'</a>';document.getElementById('downloadLink').href=dl;document.getElementById('successModal').classList.add('show')}else{st.className='verify-error';var errMsg=data.error||'Verification failed';if(currentLang!=='zh'&&data.error)errMsg=data.error;st.innerHTML='❌ '+errMsg}}catch(err){st.className='verify-error';st.innerHTML='❌ '+(currentLang==='zh'?'网络错误，请重试':'Network error, please retry')}finally{btn.disabled=false;btnTxt.textContent='✅ '+(i18n[currentLang]?i18n[currentLang].verifyBtnText:'Verify Payment')}}
+var VERIFY_API='https://tradebot-verify.ytf0218.workers.dev/verify';var selectedChain='trc20';
+var CHAIN_ADDRESSES={trc20:{addr:'TY58AoPsaDo5gpEaaddHTphVhZRHpFtC1j',label:'TRC20 Wallet (USDT)',note:'TRC20 USDT recommended, lowest fee (~$0.2)'},solana:{addr:'64gAokVjhcFtRfbSBXYdgvL7ax7eVow7bDyu6YaSHUUG',label:'Solana Wallet (SOL/USDC/USDT)',note:'Solana fees very low (~$0.01), supports SOL, USDC, USDT'},eth:{addr:'0x2d221B9D7a5cEa48d6900B73306DF558A5649799',label:'Ethereum Wallet (USDT/USDC/ETH)',note:'ETH mainnet higher fees (~$1-5), good for large payments'},bsc:{addr:'0x2d221B9D7a5cEa48d6900B73306DF558A5649799',label:'BSC Wallet (USDT/USDC/BNB)',note:'BSC low fees (~$0.1-0.5), supports USDT, USDC, BNB'},polygon:{addr:'0x2d221B9D7a5cEa48d6900B73306DF558A5649799',label:'Polygon Wallet (USDT/USDC/MATIC)',note:'Polygon very low fees (~$0.01-0.05)'},arbitrum:{addr:'0x2d221B9D7a5cEa48d6900B73306DF558A5649799',label:'Arbitrum Wallet (USDT/USDC)',note:'Arbitrum low fees, L2 fast confirmation'},avalanche:{addr:'0x2d221B9D7a5cEa48d6900B73306DF558A5649799',label:'Avalanche Wallet (USDT/USDC/AVAX)',note:'Avalanche C-Chain fast and low cost'}};function switchChain(chain){selectedChain=chain;var info=CHAIN_ADDRESSES[chain]||CHAIN_ADDRESSES.trc20;document.getElementById('walletLabel').textContent=info.label;document.getElementById('walletAddress').textContent=info.addr;document.getElementById('chainNote').innerHTML='<span>'+info.note+'</span>';}
+async function verifyTRX(){var txid=document.getElementById('txidInput').value.trim();if(!txid)return;var btn=document.getElementById('verifyBtn');var st=document.getElementById('verifyStatus');var btnTxt=btn.querySelector('span');btn.disabled=true;btnTxt.textContent=currentLang==='zh'?'⏳ 验证中...':'⏳ Verifying...';st.style.display='block';st.innerHTML='<span class="verify-loading"></span>'+(currentLang==='zh'?'正在查询链上交易...':'Querying blockchain...');try{var res=await fetch(VERIFY_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({txid:txid,tier:currentTier,chain:selectedChain})});var data=await res.json();if(data.success){var dl=data.downloadLink;st.className='verify-success';st.innerHTML='✅ '+(currentLang==='zh'?'付款验证通过！':'Payment verified!')+'<br><br><a href="'+dl+'" target="_blank" class="btn btn-primary" style="text-decoration:none;display:inline-block;margin-top:8px;padding:10px 20px">⬇️ '+(currentLang==='zh'?'下载策略包':'Download Strategy Package')+'</a>';document.getElementById('downloadLink').href=dl;document.getElementById('successModal').classList.add('show')}else{st.className='verify-error';var errMsg=data.error||'Verification failed';if(currentLang!=='zh'&&data.error)errMsg=data.error;st.innerHTML='❌ '+errMsg}}catch(err){st.className='verify-error';st.innerHTML='❌ '+(currentLang==='zh'?'网络错误，请重试':'Network error, please retry')}finally{btn.disabled=false;btnTxt.textContent='✅ '+(i18n[currentLang]?i18n[currentLang].verifyBtnText:'Verify Payment')}}
 </script>
 </body>
 </html>
