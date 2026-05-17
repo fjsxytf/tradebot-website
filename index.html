@@ -459,5 +459,53 @@ var VERIFY_API='https://tradebot-verify.ytf0218.workers.dev/verify';var selected
 var CHAIN_ADDRESSES={trc20:{addr:'TY58AoPsaDo5gpEaaddHTphVhZRHpFtC1j',label:'TRC20 Wallet (USDT)',note:'TRC20 USDT recommended, lowest fee (~$0.2)'},solana:{addr:'64gAokVjhcFtRfbSBXYdgvL7ax7eVow7bDyu6YaSHUUG',label:'Solana Wallet (SOL/USDC/USDT)',note:'Solana fees very low (~$0.01), supports SOL, USDC, USDT'},eth:{addr:'0x2d221B9D7a5cEa48d6900B73306DF558A5649799',label:'Ethereum Wallet (USDT/USDC/ETH)',note:'ETH mainnet higher fees (~$1-5), good for large payments'},bsc:{addr:'0x2d221B9D7a5cEa48d6900B73306DF558A5649799',label:'BSC Wallet (USDT/USDC/BNB)',note:'BSC low fees (~$0.1-0.5), supports USDT, USDC, BNB'},polygon:{addr:'0x2d221B9D7a5cEa48d6900B73306DF558A5649799',label:'Polygon Wallet (USDT/USDC/MATIC)',note:'Polygon very low fees (~$0.01-0.05)'},arbitrum:{addr:'0x2d221B9D7a5cEa48d6900B73306DF558A5649799',label:'Arbitrum Wallet (USDT/USDC)',note:'Arbitrum low fees, L2 fast confirmation'},avalanche:{addr:'0x2d221B9D7a5cEa48d6900B73306DF558A5649799',label:'Avalanche Wallet (USDT/USDC/AVAX)',note:'Avalanche C-Chain fast and low cost'}};function switchChain(chain){selectedChain=chain;var info=CHAIN_ADDRESSES[chain]||CHAIN_ADDRESSES.trc20;document.getElementById('walletAddress').textContent=info.addr;var t=translations[currentLang]||translations.en;var wlKey='wl'+chain.charAt(0).toUpperCase()+chain.slice(1);var ntKey='note'+chain.charAt(0).toUpperCase()+chain.slice(1);document.getElementById('walletLabel').textContent=t[wlKey]||info.label;document.getElementById('chainNote').innerHTML='<span>'+(t[ntKey]||info.note)+'</span>';if(document.getElementById('chainWarning')){document.getElementById('chainWarning').textContent=t.chainWarn||'';}}
 async function verifyTRX(){var txid=document.getElementById('txidInput').value.trim();if(!txid)return;var btn=document.getElementById('verifyBtn');var st=document.getElementById('verifyStatus');var btnTxt=btn.querySelector('span');btn.disabled=true;btnTxt.textContent=currentLang==='zh'?'⏳ 验证中...':'⏳ Verifying...';st.style.display='block';st.innerHTML='<span class="verify-loading"></span>'+(currentLang==='zh'?'正在查询链上交易...':'Querying blockchain...');try{var res=await fetch(VERIFY_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({txid:txid,tier:currentTier,chain:selectedChain})});var data=await res.json();if(data.valid){var dl=data.downloadUrl;st.className='verify-success';st.innerHTML='✅ '+(currentLang==='zh'?'付款验证通过！':'Payment verified!')+'<br><br><a href="'+dl+'" target="_blank" class="btn btn-primary" style="text-decoration:none;display:inline-block;margin-top:8px;padding:10px 20px">⬇️ '+(currentLang==='zh'?'下载策略包':'Download Strategy Package')+'</a>';document.getElementById('downloadLink').href=dl;document.getElementById('successModal').classList.add('show')}else{st.className='verify-error';var errMsg=data.error||'Verification failed';if(currentLang!=='zh'&&data.error)errMsg=data.error;st.innerHTML='❌ '+errMsg}}catch(err){st.className='verify-error';st.innerHTML='❌ '+(currentLang==='zh'?'网络错误，请重试':'Network error, please retry')}finally{btn.disabled=false;btnTxt.textContent='✅ '+(i18n[currentLang]?i18n[currentLang].verifyBtnText:'Verify Payment')}}
 </script>
+<script>
+// AI Chat: override sendMessage to use /api/chat with keyword fallback
+function keywordReply(t) {
+  var m = t.toLowerCase();
+  var r;
+  if(m.includes('付款')||m.includes('转账')||m.includes('支付')||m.includes('paid')||m.includes('pay')){r=currentLang==='zh'?'💰 付款方式：\n\n1. 选择套餐 → 复制 TRC20 地址\n2. 钱包转账 USDT\n3. 截图发给我 → 立即发货\n\n⚠️ 请保留转账截图':'💰 Payment steps:\n\n1. Choose plan → Copy TRC20 address\n2. Send USDT from wallet\n3. Send screenshot → Instant delivery\n\n⚠️ Keep your tx screenshot'}else if(m.includes('价格')||m.includes('多少钱')||m.includes('费用')||m.includes('price')||m.includes('cost')||m.includes('how much')){r=currentLang==='zh'?'📦 套餐价格：\n\n• 入门版 $0.9（体验）\n• 标准版 $4.99（主力）\n• 高级版 $14.99（专业）\n\n💎 支持信用卡和 USDT':'📦 Pricing:\n\n• Starter $0.9 (Trial)\n• Standard $4.99 (Main)\n• Premium $14.99 (Pro)\n\n💎 Credit card & USDT accepted'}else if(m.includes('安全')||m.includes('风险')||m.includes('亏损')||m.includes('safe')||m.includes('risk')||m.includes('loss')){r=currentLang==='zh'?'⚠️ 风险提示：\n\n• 资金始终在你自己的交易所账户\n• 我们无法接触你的资金\n• API Key 只能交易，不能提现\n• 杠杆交易有高风险，请谨慎':'⚠️ Risk Warning:\n\n• Funds stay in YOUR exchange account\n• We can NEVER touch your funds\n• API Key = trade only, no withdraw\n• Leverage = high risk, trade carefully'}else if(m.includes('退款')||m.includes('退钱')||m.includes('refund')){r=currentLang==='zh'?'❌ 不支持退款\n\n数字商品一经售出，概不退换。\n建议先购买入门版 $0.9 体验。':'❌ No Refunds\n\nDigital products, all sales final.\nTry Starter $0.9 first.'}else if(m.includes('支持')||m.includes('哪些交易所')||m.includes('交易所')||m.includes('exchange')||m.includes('binance')||m.includes('hyperliquid')){r=currentLang==='zh'?'🏦 支持的交易所：\n\n• Hyperliquid ✅\n• Binance ✅\n• OKX ✅\n• dYdX ✅\n• Apex ✅\n• GMX ✅\n\n只要有 API 都能接！':'🏦 Supported Exchanges:\n\n• Hyperliquid ✅\n• Binance ✅\n• OKX ✅\n• dYdX ✅\n• Apex ✅\n• GMX ✅\n\nAny exchange with API works!'}else if(m.includes('安装')||m.includes('部署')||m.includes('设置')||m.includes('install')||m.includes('setup')){r=currentLang==='zh'?'🔧 安装步骤（30分钟）：\n\n1. 安装 Python 3.8+\n2. pip install -r requirements.txt\n3. 配置 API Key\n4. python strategy.py\n\n详细教程在策略包内！':'🔧 Install steps (30 min):\n\n1. Install Python 3.8+\n2. pip install -r requirements.txt\n3. Configure API Key\n4. python strategy.py'}else if(m.includes('策略')||m.includes('什么策略')||m.includes('指标')||m.includes('strategy')||m.includes('indicator')){r=currentLang==='zh'?'📊 策略类型：\n\n• EMA 均线交叉\n• RSI 超买超卖\n• MACD 趋势跟踪\n• 布林带突破\n• 多时间框架确认\n\n支持 Pine Script + Python！':'📊 Strategy Types:\n\n• EMA crossover\n• RSI overbought/oversold\n• MACD trend following\n• Bollinger breakout\n• Multi-timeframe confirmation\n\nPine Script + Python supported!'}else if(m.includes('api')||m.includes('密钥')||m.includes('key')){r=currentLang==='zh'?'🔑 API Key 配置：\n\n1. 交易所后台 → API 管理\n2. 创建新密钥（只勾选「交易」权限）\n3. 复制 API Key + Secret\n4. 填入 config.json\n\n⚠️ 不要开启「提币」权限！':'🔑 API Key Setup:\n\n1. Exchange dashboard → API\n2. Create new key (Trade only)\n3. Copy API Key + Secret\n4. Add to config.json\n\n⚠️ NEVER enable Withdraw!'}else if(m.includes('杠杆')||m.includes('几倍')||m.includes('leverage')){r=currentLang==='zh'?'⚡ 杠杆设置：\n\n• 默认：5-10倍\n• 可自定义：1-50倍\n• 建议：新手 ≤ 5倍\n\n⚠️ 杠杆越高，风险越大！':'⚡ Leverage:\n\n• Default: 5-10x\n• Customizable: 1-50x\n• Recommended: ≤ 5x for beginners\n\n⚠️ Higher leverage = higher risk!'}else if(m.includes('止损')||m.includes('止盈')||m.includes('stop')||m.includes('take profit')){r=currentLang==='zh'?'🛡️ 止损/止盈：\n\n• 自动止损：每笔交易内置\n• 默认止损：-3% to -5%\n• 止盈：+5% to +10%\n• 可自定义参数\n\n保护本金第一！':'🛡️ Stop Loss/Take Profit:\n\n• Auto stop loss on every trade\n• Default SL: -3% to -5%\n• Default TP: +5% to +10%\n• Fully customizable\n\nProtect capital first!'}else if(m.includes('信用卡')||m.includes('stripe')||m.includes('credit card')||m.includes('card')){r=currentLang==='zh'?'💳 信用卡支付：\n\n支持 Visa / Mastercard / Amex\n点击购买 → 选择信用卡标签 → 点击 Stripe 支付按钮\n\n由 Stripe 提供安全保障，支持 135+ 种货币！':'💳 Credit Card Payment:\n\nSupports Visa / Mastercard / Amex\nClick Buy → Select Credit Card tab → Click Stripe payment button\n\nSecured by Stripe, 135+ currencies supported!'}else{r=currentLang==='zh'?'🤔 收到！我需要人工处理这个问题。\n\n常见问题可直接问：\n• 「多少钱」\n• 「怎么安装」\n• 「支持哪些交易所」\n• 「安全吗」\n• 「怎么退款」\n• 「信用卡怎么付」\n\n人工客服会在24小时内回复。':'🤔 Got it! Need human support for this.\n\nCommon questions:\n• "How much"\n• "How to install"\n• "Which exchanges"\n• "Is it safe"\n• "Refund policy"\n• "Credit card payment"\n\nHuman support replies within 24h.'}
+  return r;
+}
+
+function sendMessage(){
+  var i=document.getElementById('chatInput');
+  var t=i.value.trim();
+  if(!t)return;
+  addMessage('user',t);
+  i.value='';
+  
+  // Show typing indicator
+  var typingId='typing-'+Date.now();
+  var d=document.createElement('div');
+  d.id=typingId;
+  d.className='chat-message bot';
+  d.textContent=currentLang==='zh'?'⏳ 正在思考...':'⏳ Thinking...';
+  document.getElementById('chatMessages').appendChild(d);
+  document.getElementById('chatMessages').scrollTop=999999;
+  
+  fetch('/api/chat',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({message:t})
+  })
+  .then(r=>r.json())
+  .then(data=>{
+    var el=document.getElementById(typingId);
+    if(el)el.parentNode.removeChild(el);
+    if(data.success&&data.reply){
+      addMessage('bot',data.reply);
+    }else{
+      addMessage('bot',keywordReply(t));
+    }
+  })
+  .catch(err=>{
+    var el=document.getElementById(typingId);
+    if(el)el.parentNode.removeChild(el);
+    addMessage('bot',keywordReply(t));
+  });
+}
+</script>
+
 </body>
 </html>
