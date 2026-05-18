@@ -59,7 +59,7 @@ export default {
       return json({ error: 'Method not allowed' }, 405);
     }
 
-    const apiKey = env.DEESEEK_API_KEY;
+    const apiKey = env.DEEPSEEK_API_KEY;
     if (!apiKey) {
       console.error('DEESEEK_API_KEY not configured');
       return json({ error: 'Service unavailable. Please try again later.' }, 503);
