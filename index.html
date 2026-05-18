@@ -489,23 +489,35 @@ function sendMessage(){
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({message:t})
   })
-  .then(r=>{console.log('API response status:', r.status); return r.json()})
+  .then(r=>{
+    if(!r.ok){
+      return r.text().then(text => {
+        throw new Error('HTTP ' + r.status + ': ' + text.substring(0,200));
+      });
+    }
+    return r.json()
+  })
   .then(data=>{
-    console.log('API response data:', data);
     var el=document.getElementById(typingId);
     if(el)el.parentNode.removeChild(el);
     if(data.success&&data.reply){
       addMessage('bot',data.reply);
     }else{
-      console.log('API returned no success/reply, using keyword fallback');
-      addMessage('bot',keywordReply(t));
+      // Show debug info for iPad user
+      var debugInfo = currentLang==='zh' ? 
+        '⚠️ API 调试信息：\n' + JSON.stringify(data).substring(0,300) :
+        '⚠️ API Debug: \n' + JSON.stringify(data).substring(0,300);
+      addMessage('bot',debugInfo + '\n\n---\n\n' + keywordReply(t));
     }
   })
   .catch(err=>{
-    console.log('Fetch error:', err);
     var el=document.getElementById(typingId);
     if(el)el.parentNode.removeChild(el);
-    addMessage('bot',keywordReply(t));
+    // Show error in chat for iPad user
+    var errMsg = currentLang==='zh' ? 
+      '⚠️ API 调用失败：\n' + err.message + '\n\n以下是我能回答的：' :
+      '⚠️ API Error:\n' + err.message + '\n\nFallback response:';
+    addMessage('bot',errMsg + '\n\n' + keywordReply(t));
   });
 }
 </script>
