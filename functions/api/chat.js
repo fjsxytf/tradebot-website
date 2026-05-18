@@ -64,7 +64,7 @@ export async function onRequestPost(context) {
     return json({ error: 'Invalid JSON' }, 400);
   }
 
-  const { message } = body;
+  const { message, lang } = body;
 
   if (!message || typeof message !== 'string' || !message.trim()) {
     return json({ error: 'Missing message' }, 400);
@@ -80,7 +80,7 @@ export async function onRequestPost(context) {
       body: JSON.stringify({
         model: DEESEEK_MODEL,
         messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'system', content: SYSTEM_PROMPT + (lang && lang !== 'en' ? `\n\nCRITICAL: The user has selected ${lang} as their website language. You MUST reply in ${lang}. Even if they write in another language, respond in ${lang}.` : '') },
           { role: 'user', content: message }
         ],
         max_tokens: 500,
