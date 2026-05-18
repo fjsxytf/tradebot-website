@@ -489,17 +489,20 @@ function sendMessage(){
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({message:t})
   })
-  .then(r=>r.json())
+  .then(r=>{console.log('API response status:', r.status); return r.json()})
   .then(data=>{
+    console.log('API response data:', data);
     var el=document.getElementById(typingId);
     if(el)el.parentNode.removeChild(el);
     if(data.success&&data.reply){
       addMessage('bot',data.reply);
     }else{
+      console.log('API returned no success/reply, using keyword fallback');
       addMessage('bot',keywordReply(t));
     }
   })
   .catch(err=>{
+    console.log('Fetch error:', err);
     var el=document.getElementById(typingId);
     if(el)el.parentNode.removeChild(el);
     addMessage('bot',keywordReply(t));
