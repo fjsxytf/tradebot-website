@@ -51,7 +51,7 @@ IMPORTANT:
 export async function onRequestPost(context) {
   const { request, env } = context;
 
-  const apiKey = env.DEEPSEEK_API_KEY;
+  const apiKey = env.DEESEEK_API_KEY;
   if (!apiKey) {
     console.error('DEEPSEEK_API_KEY not configured');
     return json({ error: 'Service unavailable. Please try again later.' }, 503);
