@@ -6,7 +6,7 @@
   <title>TradeBot Skill Package - AI Auto Trading</title>
   <meta name="description" content="加密货币自动交易策略包，支持多交易所，让AI帮你告别FOMO和FUD，稳定增长资产。">
   <style>
-    :root{--primary:#00d4aa;--primary-dark:#00b894;--bg:#0d0d0f;--bg-card:#16161a;--bg-card2:#1e1e24;--text:#e8e8f0;--text-muted:#8888a0;--accent:#ff6b6b;--accent2:#ffd93d;--border:#2a2a35}
+    :root{--primary:#c9a87c;--primary-dark:#a8895e;--bg:linear-gradient(180deg,#3d2817 0%,#5c3d2e 40%,#7a5a48 100%);--bg-solid:#3d2817;--bg-card:rgba(255,255,255,0.08);--bg-card2:rgba(255,255,255,0.12);--text:#f0e6dc;--text-muted:#b8a99a;--accent:#e07a5f;--accent2:#f2cc8f;--border:rgba(255,255,255,0.15)}
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
     a{color:var(--primary);text-decoration:none}
@@ -372,7 +372,7 @@
       </div>
       <div id="trxVerifySection" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:12px">
         <label style="font-size:13px;font-weight:600;display:block;margin-bottom:8px" data-i18n="txidLabel">🔍 输入交易 TXID（自动验证）</label>
-        <input type="text" id="txidInput" placeholder="粘贴 TXID，例如：9a8b7c6d..." style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-family:monospace;font-size:13px;box-sizing:border-box;outline:none" oninput="document.getElementById('verifyBtn').disabled=!this.value.trim()">
+        <input type="text" id="txidInput" placeholder="粘贴 TXID，例如：9a8b7c6d..." style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-solid);color:var(--text);font-family:monospace;font-size:13px;box-sizing:border-box;outline:none" oninput="document.getElementById('verifyBtn').disabled=!this.value.trim()">
         <button id="verifyBtn" class="btn btn-primary" onclick="verifyTRX()" disabled style="width:100%;margin-top:10px;padding:12px;font-size:15px">✅ <span data-i18n="verifyBtnText">验证付款并获取下载链接</span></button>
         <div id="verifyStatus" style="margin-top:10px;display:none"></div>
       </div>
