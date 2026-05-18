@@ -10,7 +10,7 @@
  * Default reply language: English.
  */
 
-const DEESEEK_API_URL = 'https://api.deepseek.com/chat/completions';
+const DEEPSEEK_API_URL = 'https://api.deepseek.com/chat/completions';
 const DEESEEK_MODEL = 'deepseek-chat';
 
 const SYSTEM_PROMPT = `You are the AI customer service assistant for TradeBot products. You ONLY answer product-related questions.
@@ -48,94 +48,79 @@ IMPORTANT:
 - Keep replies concise, friendly, and use emojis appropriately.
 - Do NOT reveal internal information about the company or developers.`;
 
-export default {
-  async fetch(request, env) {
-    // CORS preflight
-    if (request.method === 'OPTIONS') {
-      return new Response(null, { headers: corsHeaders() });
-    }
+export async function onRequestPost(context) {
+  const { request, env } = context;
 
-    if (request.method !== 'POST') {
-      return json({ error: 'Method not allowed' }, 405);
-    }
-
-    const apiKey = env.DEEPSEEK_API_KEY;
-    if (!apiKey) {
-      console.error('DEESEEK_API_KEY not configured');
-      return json({ error: 'Service unavailable. Please try again later.' }, 503);
-    }
-
-    let body;
-    try {
-      body = await request.json();
-    } catch (e) {
-      return json({ error: 'Invalid JSON' }, 400);
-    }
-
-    const { message } = body;
-
-    if (!message || typeof message !== 'string' || !message.trim()) {
-      return json({ error: 'Missing message' }, 400);
-    }
-
-    try {
-      const deepSeekRes = await fetch(DEESEEK_API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-          model: DEESEEK_MODEL,
-          messages: [
-            { role: 'system', content: SYSTEM_PROMPT },
-            { role: 'user', content: message }
-          ],
-          max_tokens: 500,
-          temperature: 0.7
-        })
-      });
-
-      if (!deepSeekRes.ok) {
-        const errText = await deepSeekRes.text().catch(() => '');
-        console.error('DeepSeek API error:', deepSeekRes.status, errText);
-        return json({ error: 'AI service error. Please try again.' }, 502);
-      }
-
-      const deepSeekData = await deepSeekRes.json();
-      const reply = deepSeekData.choices?.[0]?.message?.content;
-
-      if (!reply) {
-        console.error('DeepSeek returned empty reply:', JSON.stringify(deepSeekData));
-        return json({ error: 'AI service error. Please try again.' }, 502);
-      }
-
-      return json({
-        success: true,
-        reply: reply.trim()
-      });
-
-    } catch (err) {
-      console.error('Chat endpoint error:', err);
-      return json({ error: 'Server error. Please try again.' }, 500);
-    }
+  const apiKey = env.DEEPSEEK_API_KEY;
+  if (!apiKey) {
+    console.error('DEEPSEEK_API_KEY not configured');
+    return json({ error: 'Service unavailable. Please try again later.' }, 503);
   }
-};
+
+  let body;
+  try {
+    body = await request.json();
+  } catch (e) {
+    return json({ error: 'Invalid JSON' }, 400);
+  }
+
+  const { message } = body;
+
+  if (!message || typeof message !== 'string' || !message.trim()) {
+    return json({ error: 'Missing message' }, 400);
+  }
+
+  try {
+    const deepSeekRes = await fetch(DEEPSEEK_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: DEESEEK_MODEL,
+        messages: [
+          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'user', content: message }
+        ],
+        max_tokens: 500,
+        temperature: 0.7
+      })
+    });
+
+    if (!deepSeekRes.ok) {
+      const errText = await deepSeekRes.text().catch(() => '');
+      console.error('DeepSeek API error:', deepSeekRes.status, errText);
+      return json({ error: 'AI service error. Please try again.' }, 502);
+    }
+
+    const deepSeekData = await deepSeekRes.json();
+    const reply = deepSeekData.choices?.[0]?.message?.content;
+
+    if (!reply) {
+      console.error('DeepSeek returned empty reply:', JSON.stringify(deepSeekData));
+      return json({ error: 'AI service error. Please try again.' }, 502);
+    }
+
+    return json({
+      success: true,
+      reply: reply.trim()
+    });
+
+  } catch (err) {
+    console.error('Chat endpoint error:', err);
+    return json({ error: 'Server error. Please try again later.' }, 500);
+  }
+}
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
     headers: {
       'Content-Type': 'application/json',
-      ...corsHeaders()
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type'
     }
   });
-}
-
-function corsHeaders() {
-  return {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type'
-  };
 }
