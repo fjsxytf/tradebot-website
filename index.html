@@ -711,7 +711,7 @@ function setLang(lang){
     console.log('[setLang] Called with:', lang);
     console.log('[setLang] i18n object:', typeof i18n, i18n ? Object.keys(i18n) : 'undefined');
     console.log('[setLang] i18n[lang] exists:', i18n && i18n[lang] ? 'YES' : 'NO');
-    console.log('[setLang] updatePageLanguage exists:', typeof updatePageLanguage);currentLang=lang;var n={zh:'🇨🇳 中文',en:'🇺🇸 English',ja:'🇯🇵 日本語',ko:'🇰🇷 한국어',ru:'🇷🇺 Русский',tr:'🇹🇷 Türkçe',vi:'🇻🇳 Tiếng Việt',es:'🇪🇸 Español',pt:'🇵🇹 Português'};document.getElementById('currentLang').textContent=n[lang]||'🇺🇸 English';document.querySelectorAll('.lang-option').forEach(function(e){e.classList.remove('active')});event.target.classList.add('active');document.getElementById('langDropdown').classList.remove('show');updatePageLanguage();updatePaymentModal()}
+    console.log('[setLang] updatePageLanguage exists:', typeof updatePageLanguage);currentLang=lang;var n={zh:'🇨🇳 中文',en:'🇺🇸 English',ja:'🇯🇵 日本語',ko:'🇰🇷 한국어',ru:'🇷🇺 Русский',tr:'🇹🇷 Türkçe',vi:'🇻🇳 Tiếng Việt',es:'🇪🇸 Español',pt:'🇵🇹 Português'};document.getElementById('currentLang').textContent=n[lang]||'🇺🇸 English';document.querySelectorAll('.lang-option').forEach(function(e){e.classList.remove('active')});try{event.target.classList.add('active')}catch(e){};document.getElementById('langDropdown').classList.remove('show');updatePageLanguage();updatePaymentModal()}
 function updatePageLanguage(){
     console.log('[updatePageLanguage] currentLang:', currentLang);
     console.log('[updatePageLanguage] i18n[currentLang]:', i18n && i18n[currentLang] ? Object.keys(i18n[currentLang]).length + ' keys' : 'undefined');
