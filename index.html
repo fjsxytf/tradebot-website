@@ -744,24 +744,17 @@ var VERIFY_API='https://tradebot-verify.ytf0218.workers.dev/verify';var selected
 var CHAIN_ADDRESSES={trc20:{addr:'TY58AoPsaDo5gpEaaddHTphVhZRHpFtC1j',label:'TRC20 Wallet (USDT)',note:'TRC20 USDT recommended, lowest fee (~$0.2)'},solana:{addr:'64gAokVjhcFtRfbSBXYdgvL7ax7eVow7bDyu6YaSHUUG',label:'Solana Wallet (SOL/USDC/USDT)',note:'Solana fees very low (~$0.01), supports SOL, USDC, USDT'},eth:{addr:'0x2d221B9D7a5cEa48d6900B73306DF558A5649799',label:'Ethereum Wallet (USDT/USDC/ETH)',note:'ETH mainnet higher fees (~$1-5), good for large payments'},bsc:{addr:'0x2d221B9D7a5cEa48d6900B73306DF558A5649799',label:'BSC Wallet (USDT/USDC/BNB)',note:'BSC low fees (~$0.1-0.5), supports USDT, USDC, BNB'},polygon:{addr:'0x2d221B9D7a5cEa48d6900B73306DF558A5649799',label:'Polygon Wallet (USDT/USDC/MATIC)',note:'Polygon very low fees (~$0.01-0.05)'},arbitrum:{addr:'0x2d221B9D7a5cEa48d6900B73306DF558A5649799',label:'Arbitrum Wallet (USDT/USDC)',note:'Arbitrum low fees, L2 fast confirmation'},avalanche:{addr:'0x2d221B9D7a5cEa48d6900B73306DF558A5649799',label:'Avalanche Wallet (USDT/USDC/AVAX)',note:'Avalanche C-Chain fast and low cost'}};function switchChain(chain){selectedChain=chain;var info=CHAIN_ADDRESSES[chain]||CHAIN_ADDRESSES.trc20;document.getElementById('walletAddress').textContent=info.addr;var t=translations[currentLang]||translations.en;var wlKey='wl'+chain.charAt(0).toUpperCase()+chain.slice(1);var ntKey='note'+chain.charAt(0).toUpperCase()+chain.slice(1);document.getElementById('walletLabel').textContent=t[wlKey]||info.label;document.getElementById('chainNote').innerHTML='<span>'+(t[ntKey]||info.note)+'</span>';if(document.getElementById('chainWarning')){document.getElementById('chainWarning').textContent=t.chainWarn||'';}}
 async function verifyTRX(){var txid=document.getElementById('txidInput').value.trim();if(!txid)return;var btn=document.getElementById('verifyBtn');var st=document.getElementById('verifyStatus');var btnTxt=btn.querySelector('span');btn.disabled=true;btnTxt.textContent=currentLang==='zh'?'⏳ 验证中...':'⏳ Verifying...';st.style.display='block';st.innerHTML='<span class="verify-loading"></span>'+(currentLang==='zh'?'正在查询链上交易...':'Querying blockchain...');try{var res=await fetch(VERIFY_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({txid:txid,tier:currentTier,chain:selectedChain})});var data=await res.json();if(data.valid){var dl=data.downloadUrl;st.className='verify-success';st.innerHTML='✅ '+(currentLang==='zh'?'付款验证通过！':'Payment verified!')+'<br><br><a href="'+dl+'" target="_blank" class="btn btn-primary" style="text-decoration:none;display:inline-block;margin-top:8px;padding:10px 20px">⬇️ '+(currentLang==='zh'?'下载策略包':'Download Strategy Package')+'</a>';document.getElementById('downloadLink').href=dl;document.getElementById('successModal').classList.add('show')}else{st.className='verify-error';var errMsg=data.error||'Verification failed';if(currentLang!=='zh'&&data.error)errMsg=data.error;st.innerHTML='❌ '+errMsg}}catch(err){st.className='verify-error';st.innerHTML='❌ '+(currentLang==='zh'?'网络错误，请重试':'Network error, please retry')}finally{btn.disabled=false;btnTxt.textContent='✅ '+(i18n[currentLang]?i18n[currentLang].verifyBtnText:'Verify Payment')}}
 
-  // Auto-detect language from URL hash (e.g., #en, #zh)
-  
-  
-  
-  
-  // Auto-detect language from URL hash (e.g., #en, #zh)
-  window.addEventListener('DOMContentLoaded', function() {
-    var hash = window.location.hash.replace('#', '') || 'zh';
-    console.log('[i18n] Hash detected:', hash);
-    console.log('[i18n] i18n object:', typeof i18n);
-    console.log('[i18n] i18n[hash] exists:', i18n && i18n[hash] ? 'YES' : 'NO');
-    if (typeof i18n !== 'undefined' && i18n[hash]) {
-      console.log('[i18n] Switching to:', hash);
-      if (typeof setLang === 'function') {
-        setLang(hash);
-      }
+  // Auto-detect language from URL hash
+  (function(){
+    var hash=window.location.hash.replace('#','');
+    if(hash&&hash!=='zh'&&i18n&&i18n[hash]){
+      currentLang=hash;
+      document.getElementById('currentLang').textContent={'en':'\u{1F1FA}\u{1F1F8} English','ja':'\u{1F1EF}\u{1F1F5} \u65E5\u672C\u8A9E','ko':'\u{1F1F0}\u{1F1F7} \uD55C\uAD6D\uC5B4','ru':'\u{1F1F7}\u{1F1FA} \u0420\u0443\u0441\u0441\u043A\u0438\u0439','tr':'\u{1F1F9}\u{1F1F7} T\u00FCrk\u00E7e','vi':'\u{1F1FB}\u{1F1F3} Ti\u1EBFng Vi\u1EC7t','es':'\u{1F1EA}\u{1F1F8} Espa\u00F1ol','pt':'\u{1F1F5}\u{1F1F9} Portugu\u00EAs'}[hash]||'\u{1F1FA}\u{1F1F8} English';
+      var t=i18n[currentLang]||i18n['en'];
+      document.querySelectorAll('[data-i18n]').forEach(function(e){var k=e.getAttribute('data-i18n');if(t[k])e.textContent=t[k]});
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(function(e){var k=e.getAttribute('data-i18n-placeholder');if(t[k])e.placeholder=t[k]});
     }
-  });
+  })();
   
   </script>
 <script>
