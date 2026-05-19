@@ -735,12 +735,21 @@ var CHAIN_ADDRESSES={trc20:{addr:'TY58AoPsaDo5gpEaaddHTphVhZRHpFtC1j',label:'TRC
 async function verifyTRX(){var txid=document.getElementById('txidInput').value.trim();if(!txid)return;var btn=document.getElementById('verifyBtn');var st=document.getElementById('verifyStatus');var btnTxt=btn.querySelector('span');btn.disabled=true;btnTxt.textContent=currentLang==='zh'?'⏳ 验证中...':'⏳ Verifying...';st.style.display='block';st.innerHTML='<span class="verify-loading"></span>'+(currentLang==='zh'?'正在查询链上交易...':'Querying blockchain...');try{var res=await fetch(VERIFY_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({txid:txid,tier:currentTier,chain:selectedChain})});var data=await res.json();if(data.valid){var dl=data.downloadUrl;st.className='verify-success';st.innerHTML='✅ '+(currentLang==='zh'?'付款验证通过！':'Payment verified!')+'<br><br><a href="'+dl+'" target="_blank" class="btn btn-primary" style="text-decoration:none;display:inline-block;margin-top:8px;padding:10px 20px">⬇️ '+(currentLang==='zh'?'下载策略包':'Download Strategy Package')+'</a>';document.getElementById('downloadLink').href=dl;document.getElementById('successModal').classList.add('show')}else{st.className='verify-error';var errMsg=data.error||'Verification failed';if(currentLang!=='zh'&&data.error)errMsg=data.error;st.innerHTML='❌ '+errMsg}}catch(err){st.className='verify-error';st.innerHTML='❌ '+(currentLang==='zh'?'网络错误，请重试':'Network error, please retry')}finally{btn.disabled=false;btnTxt.textContent='✅ '+(i18n[currentLang]?i18n[currentLang].verifyBtnText:'Verify Payment')}}
 
   // Auto-detect language from URL hash (e.g., #en, #zh)
-  (function() {
+  
+  
+  
+  
+  // Auto-detect language from URL hash (e.g., #en, #zh)
+  window.addEventListener('DOMContentLoaded', function() {
     var hash = window.location.hash.replace('#', '') || 'zh';
-    if (i18n[hash]) {
-      setLang(hash);
+    console.log('[i18n] Hash detected:', hash);
+    if (typeof i18n !== 'undefined' && i18n[hash]) {
+      console.log('[i18n] Switching to:', hash);
+      if (typeof setLang === 'function') {
+        setLang(hash);
+      }
     }
-  })();
+  });
   
   </script>
 <script>
