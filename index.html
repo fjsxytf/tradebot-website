@@ -610,12 +610,6 @@ async function verifyTRX(){var txid=document.getElementById('txidInput').value.t
     var lang='';
     try{var p=new URLSearchParams(window.location.search);lang=p.get('lang')||''}catch(e){}
     if(!lang){try{lang=window.location.hash.replace('#','')}catch(e){}}
-    // DEBUG: show on page
-    var dbg=document.createElement('div');
-    dbg.id='i18n-debug';dbg.style.cssText='position:fixed;top:0;left:0;right:0;background:red;color:#fff;padding:8px;z-index:999999;font-size:14px;';
-    dbg.textContent='[DEBUG] lang='+JSON.stringify(lang)+' search='+JSON.stringify(window.location.search)+' hash='+JSON.stringify(window.location.hash)+' i18n='+typeof i18n+(typeof i18n!=='undefined'?' keys='+Object.keys(i18n).join(','):'');
-    document.body.appendChild(dbg);
-    setTimeout(function(){var d=document.getElementById('i18n-debug');if(d)d.remove()},8000);
     if(lang&&lang!=='zh'&&typeof i18n!=='undefined'&&i18n[lang]){
       currentLang=lang;
       try{document.getElementById('currentLang').textContent={'en':'EN','ja':'JP','ko':'KR','ru':'RU','tr':'TR','vi':'VN','es':'ES','pt':'PT'}[lang]||'EN'}catch(e){}
